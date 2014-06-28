@@ -1,0 +1,8 @@
+# Set everything for take off ~ ap,flight,plane
+
+debug 1,Setting controls for take off.
+deliver clientSocket,default,set /controls/engines/engine/throttle 1
+deliver clientSocket,default,set /controls/flight/elevator -0.1
+
+deliver clientSocket,default,set /controls/gear/brake-left 0
+deliver clientSocket,default,set /controls/gear/brake-right 0

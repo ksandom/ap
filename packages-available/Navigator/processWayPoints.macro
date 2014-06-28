@@ -1,0 +1,54 @@
+# Process the way points in the resultSet. --processWayPoints=instanceName[,noLast] . if noLast has a value, the last values won't be saved. This is useful for nesting. ~ nav,waypoints,hidden
+
+# TODO instanceName could probably be taken from the first waypoint. That way we wouldn't have to require it in the parameters for this macro.
+
+set Navigator,getNext,
+	# Remove the first waypoint
+	removeWaypoint ~!Result,instanceName!~,~!Result,key!~
+	
+	# Clear out our last values since they are not relevant for the new way point.
+	removeLastValues ~!Result,instanceName!~
+	
+	# Get the waypoints back so the first one can be chosen again.
+	retrieveResults Navigator,instances,~!Global,processWayPoints-0!~
+	
+	# Do it all again
+	# processWayPoints ~!Result,instanceName!~,noLast
+
+# We just want to work with the waypoints.
+retrieveResults Navigator,instances,~!Result,key!~
+
+# Calculate the status of each waypoint, and store it.
+getWaypointStatus
+stashResults Navigator,instances,~!Global,processWayPoints-0!~
+
+first
+
+
+loop
+	# Save our last values unless noLast has been set.
+	if ~!Global,processWayPoints-1!~,==,,
+		setNested AP,state,~!Global,processWayPoints-0!~,lastDistance,~!AP,state,~!Global,processWayPoints-0!~,distance!~
+		setNested AP,state,~!Global,processWayPoints-0!~,lastTrack-goal,~!AP,state,~!Global,processWayPoints-0!~,track-goal!~
+	
+	# Put the calculated values from getWaypointStatus into the current state.
+	setNested AP,state,~!Global,processWayPoints-0!~,distance,~!Result,distance!~
+	setNested AP,state,~!Global,processWayPoints-0!~,track-goal,~!Result,heading!~
+	
+	setNested AP,state,~!Global,processWayPoints-0!~,destination,longitude,~!Result,longitude!~
+	setNested AP,state,~!Global,processWayPoints-0!~,destination,latitude,~!Result,latitude!~
+	
+	# If we have a previous distance and heading, let's do stuff.
+	if ~!AP,state,~!Global,processWayPoints-0!~,lastDistance!~,!=,,
+		basicMaths Navigator,distanceChange,~!AP,state,~!Global,processWayPoints-0!~,lastDistance!~,-,~!AP,state,~!Global,processWayPoints-0!~,distance!~
+		basicMaths Navigator,sensitiveChange,~!Navigator,distanceChange!~,*,10
+		
+		# Are we close to the way point?
+		debug 3,is if ~!Navigator,sensitiveChange!~,>,~!AP,state,~!Global,processWayPoints-0!~,distance!~ ?
+		if ~!Navigator,sensitiveChange!~,>,~!AP,state,~!Global,processWayPoints-0!~,distance!~,
+			# NOTE At the moment the threshold is simply that we will exceed it in the next iteration... That is really close!
+			
+			debug 1,processWayPoints: ~!Result,instanceName!~ reached waypoint ~!Result,longitude!~,~!Result,latitude!~.
+			
+			callFeature ~!Navigator,getNext!~
+	

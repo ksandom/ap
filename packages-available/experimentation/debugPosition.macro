@@ -1,0 +1,4 @@
+# Debug what's happening when position comes in. ~ ap,experimentation
+
+verbosity 3
+deliver clientSocket,default,ls /position

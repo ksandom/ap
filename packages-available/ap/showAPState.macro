@@ -1,0 +1,10 @@
+# Show the autopilot state ~ ap,experimentation
+#onDefine aliasFeature showAPState,showAP
+
+if ~!Global,showAPState!~,==,,
+	get AP,state
+else
+	get AP,~!Global,showAPState!~
+
+nested
+outNow

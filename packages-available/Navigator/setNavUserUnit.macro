@@ -1,0 +1,15 @@
+# Set the user unit of measuring distance for the navigator. --setNavUserUnit=meters|km|miles|feet ~ nav,unit
+
+if ~!Global,setNavUserUnit-0!~,==,meters,
+	set Navigator,unit,~!Global,setNavUserUnit-0!~
+	set Navigator,unitBaseMeasurement,40075160
+elseIf ~!Global,setNavUserUnit-0!~,==,km,
+	set Navigator,unit,~!Global,setNavUserUnit-0!~
+	set Navigator,unitBaseMeasurement,40075.16
+elseIf ~!Global,setNavUserUnit-0!~,==,miles,
+	set Navigator,unit,~!Global,setNavUserUnit-0!~
+	set Navigator,unitBaseMeasurement,24901.55
+elseIf ~!Global,setNavUserUnit-0!~,==,feet,
+	set Navigator,unit,~!Global,setNavUserUnit-0!~
+	set Navigator,unitBaseMeasurement,131479713.54
+

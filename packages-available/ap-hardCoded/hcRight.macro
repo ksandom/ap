@@ -1,0 +1,5 @@
+# Turn the plane right. ~ ap,flight,plane
+
+debug 1,Setting controls to turn right.
+deliver clientSocket,default,set /controls/flight/aileron 0.2
+deliver clientSocket,default,set /controls/flight/rudder 0.3

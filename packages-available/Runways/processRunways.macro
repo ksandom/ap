@@ -1,0 +1,56 @@
+# Translate the runway data into a form that is more useful for the autopilot. ~ runway,process
+# This translation assumes that it has come from http://ourairports.com/data/runways.csv .
+
+# This is what we need to do map the data
+set Tmp,mapVariables,
+	if ~!Result,~!Tmp,begin!~_ident!~,!=,,
+		isolate
+			set Tmp,key,~!Result,airport_ident!~-~!Result,~!Tmp,begin!~_ident!~-~!Tmp,begin!~
+			
+			debug 2,Processing record id="~!Result,id!~" airport="~!Result,airport_ident!~" key="Runways,runways,~!Tmp,key!~"
+			
+			setNested Runways,runways,~!Tmp,key!~,airport,~!Result,airport_ident!~
+			setNested Runways,runways,~!Tmp,key!~,runway,~!Result,~!Tmp,begin!~_ident!~
+			
+			setNested Runways,runways,~!Tmp,key!~,surface,~!Result,surface!~
+			setNested Runways,runways,~!Tmp,key!~,lighted,~!Result,lighted!~
+			setNested Runways,runways,~!Tmp,key!~,closed,~!Result,closed!~
+			
+			setNested Runways,runways,~!Tmp,key!~,length,~!Result,length_ft!~
+			setNested Runways,runways,~!Tmp,key!~,width,~!Result,width_ft!~
+			
+			setNested Runways,runways,~!Tmp,key!~,longitudeBegin,~!Result,~!Tmp,begin!~_longitude_deg!~
+			setNested Runways,runways,~!Tmp,key!~,latitudeBegin,~!Result,~!Tmp,begin!~_latitude_deg!~
+			
+			setNested Runways,runways,~!Tmp,key!~,longitudeEnd,~!Result,~!Tmp,end!~_longitude_deg!~
+			setNested Runways,runways,~!Tmp,key!~,latitudeEnd,~!Result,~!Tmp,end!~_latitude_deg!~
+				
+			
+			setNested Runways,runways,~!Tmp,key!~,officialHeading,~!Result,~!Tmp,begin!~_heading_degT!~
+			# The heading provided isn't accurate enough for our needs, so we calculate it.
+			2CoordsToAngle Tmp,angle,~!Result,~!Tmp,begin!~_longitude_deg!~,~!Result,~!Tmp,begin!~_latitude_deg!~,~!Result,~!Tmp,end!~_longitude_deg!~,~!Result,~!Tmp,end!~_latitude_deg!~
+			radiansToDegrees Tmp,angle,~!Tmp,angle!~
+			setNested Runways,runways,~!Tmp,key!~,heading,~!Tmp,angle!~
+			unset Tmp,angle
+			
+			indexRunway ~!Tmp,key!~,~!Result,le_longitude_deg!~,~!Result,le_latitude_deg!~,2
+			indexRunway ~!Tmp,key!~,~!Result,le_longitude_deg!~,~!Result,le_latitude_deg!~,1
+			
+			unset Tmp,key,
+	else
+		debug 1,No ~!Tmp,begin!~. Potentially broken record? The id is "~!Result,id!~"
+
+
+
+debug 1,Processing runways.
+		
+loopLite
+	# First runway
+	set Tmp,begin,le
+	set Tmp,end,he
+	callFeature ~!Tmp,mapVariables!~
+	
+	# Second runway
+	set Tmp,begin,he
+	set Tmp,end,le
+	callFeature ~!Tmp,mapVariables!~

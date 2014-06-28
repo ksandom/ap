@@ -1,0 +1,4 @@
+# Set the origin of our current segment of the journey. --setOrigin,instanceName,longitude,latitude ~ hidden,nav,waypoints
+
+setNested Navigator,origins,~!Global,setOrigin-0!~,longitude,~!Global,setOrigin-1!~
+setNested Navigator,origins,~!Global,setOrigin-0!~,latitude,~!Global,setOrigin-2!~

@@ -1,0 +1,8 @@
+# Level out for stable flight ~ AP
+
+set Tmp,instanceName,~!Global,levelOut-0!~
+if ~!Tmp,instanceName!~,==,,
+	set Tmp,instanceName,default
+
+setNested AP,state,~!Tmp,instanceName!~,pitch-goal,0
+setAPState sustain,~!Tmp,instanceName!~

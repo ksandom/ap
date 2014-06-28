@@ -1,0 +1,9 @@
+# Add a waypoint at the end of the current runway. --currentRunwayEnd=[instanceName] . instanceName defaults to default. ~ route
+
+set Route,instanceName,~!Global,currentRunwayEnd-0!~
+if ~!Route,instanceName!~,==,,
+	set Route,instanceName,default
+
+whereAmI ~!Route,instanceName!~
+loop
+	addWaypoint ~!Route,instanceName!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~

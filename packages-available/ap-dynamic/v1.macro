@@ -1,0 +1,7 @@
+# Run this when we reach the point of no return http://en.wikipedia.org/wiki/V1_speed#V1 . --v1=[instanceName] ~ AP
+
+set Tmp,instanceName,~!Global,v1-0!~
+if ~!Tmp,instanceName!~,==,,
+	set Tmp,instanceName,default
+
+setNested AP,state,~!Tmp,instanceName!~,takeOffAbortOK,0

@@ -1,0 +1,220 @@
+# Create some base rules that other planes can inherit from. --APRules-base=[instanceName] . instanceName defaults to "default". ~ AP,rules,plane
+
+set Tmp,instanceName,~!Global,APRules-base-0!~
+if ~!Tmp,instanceName!~,==,,
+	set Tmp,instanceName,default
+
+
+# TODO double check out the events are called (I can't remember). If they don't convey the instanceName (which I think they don't), it can be set in this macro as the value being passed, and also being amended to the event name so that there isn't clash.
+
+# Base settings
+# Roll
+setNested ["AP","stateRules","base","base","roll","input","min","-45"]
+setNested ["AP","stateRules","base","base","roll","input","center","0"]
+setNested ["AP","stateRules","base","base","roll","input","max","45"]
+setNested ["AP","stateRules","base","base","roll","input","multiplier","10"]
+
+setNested ["AP","stateRules","base","base","roll","output","min","1"]
+setNested ["AP","stateRules","base","base","roll","output","center","0"]
+setNested ["AP","stateRules","base","base","roll","output","max","-1"]
+setNested ["AP","stateRules","base","base","roll","output","multiplier","1"]
+
+# TODO These need to be abstracted out
+setNested ["AP","stateRules","base","base","roll","input","variable","AP,state,~!Tmp,instanceName!~,roll-deg"]
+setNested ["AP","stateRules","base","base","roll","input","goal","AP,state,~!Tmp,instanceName!~,roll-goal"]
+setNested ["AP","stateRules","base","base","roll","destination","variable","AP,state,~!Tmp,instanceName!~,aileron-req"]
+setNested ["AP","stateRules","base","base","roll","destination","textOutput","set /controls/flight/aileron ~%value%~"]
+
+
+
+# Pitch
+setNested ["AP","stateRules","base","base","pitch","input","min","-90"]
+setNested ["AP","stateRules","base","base","pitch","input","center","0"]
+setNested ["AP","stateRules","base","base","pitch","input","max","90"]
+setNested ["AP","stateRules","base","base","pitch","input","multiplier","3"]
+
+setNested ["AP","stateRules","base","base","pitch","output","min","-1"]
+setNested ["AP","stateRules","base","base","pitch","output","center","0"]
+setNested ["AP","stateRules","base","base","pitch","output","max","1"]
+setNested ["AP","stateRules","base","base","pitch","output","multiplier","0.8"]
+
+# TODO These need to be abstracted out
+setNested ["AP","stateRules","base","base","pitch","input","variable","AP,state,~!Tmp,instanceName!~,pitch-deg"]
+setNested ["AP","stateRules","base","base","pitch","input","goal","AP,state,~!Tmp,instanceName!~,pitch-goal"]
+setNested ["AP","stateRules","base","base","pitch","destination","variable","AP,state,~!Tmp,instanceName!~,elevator-req"]
+setNested ["AP","stateRules","base","base","pitch","destination","textOutput","set /controls/flight/elevator ~%value%~"]
+
+
+# Yaw
+setNested ["AP","stateRules","base","base","yaw","input","min","-45"]
+setNested ["AP","stateRules","base","base","yaw","input","center","0"]
+setNested ["AP","stateRules","base","base","yaw","input","max","45"]
+setNested ["AP","stateRules","base","base","yaw","input","multiplier","10"]
+
+setNested ["AP","stateRules","base","base","yaw","output","min","0.4"]
+setNested ["AP","stateRules","base","base","yaw","output","center","0"]
+setNested ["AP","stateRules","base","base","yaw","output","max","-0.4"]
+setNested ["AP","stateRules","base","base","yaw","output","multiplier","1"]
+
+# TODO These need to be abstracted out
+setNested ["AP","stateRules","base","base","yaw","input","variable","AP,state,~!Tmp,instanceName!~,track-deviance"]
+setNested ["AP","stateRules","base","base","yaw","input","goal","AP,stateRules,base,base,yaw,input,center"]
+setNested ["AP","stateRules","base","base","yaw","destination","variable","AP,state,~!Tmp,instanceName!~,rudder-req"]
+setNested ["AP","stateRules","base","base","yaw","destination","textOutput","set /controls/flight/rudder ~%value%~"]
+
+
+# +Altitude
+setNested ["AP","stateRules","baseAltitude","base",~!AP,stateRules,base!~]
+
+setNested ["AP","stateRules","baseAltitude","base","altitude","input","min","-1"]
+setNested ["AP","stateRules","baseAltitude","base","altitude","input","center","0"]
+setNested ["AP","stateRules","baseAltitude","base","altitude","input","max","300"]
+setNested ["AP","stateRules","baseAltitude","base","altitude","input","multiplier","1"]
+
+setNested ["AP","stateRules","baseAltitude","base","altitude","output","min","-1"]
+setNested ["AP","stateRules","baseAltitude","base","altitude","output","center","0"]
+setNested ["AP","stateRules","baseAltitude","base","altitude","output","max","1"]
+setNested ["AP","stateRules","baseAltitude","base","altitude","output","multiplier","1"]
+
+# TODO These need to be abstracted out
+setNested ["AP","stateRules","baseAltitude","base","altitude","input","variable","AP,state,~!Tmp,instanceName!~,altitude-deviance"]
+setNested ["AP","stateRules","baseAltitude","base","altitude","input","goal","AP,stateRules,baseAltitude,base,altitude,input,center"]
+setNested ["AP","stateRules","baseAltitude","base","altitude","destination","variable","AP,state,~!Tmp,instanceName!~,throttle-req"]
+setNested ["AP","stateRules","baseAltitude","base","altitude","destination","textOutput","set /controls/engines/engine/throttle ~%value%~"]
+
+
+
+
+
+# More specific rules
+# Stand on the runway
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "stand", ~!AP,stateRules,base,base!~]
+
+
+
+# Take off - roll forward
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "rollForward", ~!AP,stateRules,base,base!~]
+
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","min","-1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","center","0"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","max","40"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","multiplier","1"]
+
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","output","min","1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","output","center","0"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","output","max","-1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","output","multiplier","0.5"]
+
+# TODO These need to be abstracted out
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","variable","AP,state,~!Tmp,instanceName!~,groundspeed-kt"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","goal","AP,state,~!Tmp,instanceName!~,groundspeed-goal"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","destination","variable","AP,state,~!Tmp,instanceName!~,throttle-req"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","destination","textOutput","set /controls/engines/engine/throttle ~%value%~"]
+
+
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","events","ready","description","We seem to be moving. Let's go!"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","events","ready","testValue","3"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","events","ready","operator",">"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","events","ready","operator",">"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","events","ready","eventName","AP,takeOffReady"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","rollForward","groundspeed","input","events","ready","debugLevel","1"]
+
+# TODO Check that this is instance aware
+registerForEvent AP,takeOffReady,setAPState,takeOffAccelerate
+
+
+
+# Take off - accelerate
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "takeOffAccelerate", ~!AP,stateRules,base,base!~]
+
+# Speed based events
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","min","-1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","center","0"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","max","4000"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","multiplier","1"]
+
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","output","min","1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","output","center","0"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","output","max","-1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","output","multiplier","1"]
+
+# TODO These need to be abstracted out
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","variable","AP,state,~!Tmp,instanceName!~,airspeed-kt"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","goal","0"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","destination","variable",""]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","destination","textOutput",""]
+
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","events","v1","testValue","AP,state,~!Tmp,instanceName!~,v1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","events","v1","description","V1 - Passed point of no return."]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","events","v1","operator",">"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","events","v1","eventName","AP,takeOffV1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","events","v1","debugLevel","1"]
+
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","events","v2","description","V2 Rotate!"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","events","v2","testValue","AP,state,~!Tmp,instanceName!~,v2"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","events","v2","description","V2 - Rorate!"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","events","v2","operator",">"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","events","v2","eventName","AP,takeOffV2"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffAccelerate","speedEvents","input","events","v2","debugLevel","1"]
+
+registerForEvent AP,takeOffV2,v2
+
+
+
+# Take off - abort
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "takeOffAbort", ~!AP,stateRules,base,base!~]
+
+
+
+# Take off - climb
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "takeOffClimb", ~!AP,stateRules,base,base!~]
+
+# Pitch
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","pitch","algorithm","acceleration"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","pitch","input","maxChangePerSecond","7"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","pitch","input","overshootTime","3"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","pitch","output","accelerateMultiplier","0.3"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","pitch","output","decelerateMultiplier","0.1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","pitch","output","seedPercent","0.1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","pitch","output","allowPanic","0"]
+
+
+# Altitude events
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","min","-1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","center","0"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","max","100000"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","multiplier","1"]
+
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","output","min","-1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","output","center","0"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","output","max","1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","output","multiplier","1"]
+
+# TODO These need to be abstracted out
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","variable","AP,state,~!Tmp,instanceName!~,altitude-agl-ft"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","goal","AP,stateRules,~!Tmp,instanceName!~,takeOffClimb,altitudeEvents,input,center"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","destination","variable",""]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","destination","textOutput",""]
+
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","gearUp","testValue","60"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","gearUp","description","We're high enough to raise the gear."]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","gearUp","operator",">"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","gearUp","eventName","AP,gearUp"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","gearUp","debugLevel","1"]
+
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","reduceFlaps","testValue","400"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","reduceFlaps","description","Reduce flaps."]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","reduceFlaps","operator",">"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","reduceFlaps","eventName","AP,reduceFlaps"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","reduceFlaps","debugLevel","1"]
+
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","flapsUp","testValue","700"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","flapsUp","description","Flaps up."]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","flapsUp","operator",">"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","flapsUp","eventName","AP,flapsUp"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","takeOffClimb","altitudeEvents","input","events","flapsUp","debugLevel","1"]
+
+
+
+# Sustain flight
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "base", ~!AP,stateRules,base,base!~]

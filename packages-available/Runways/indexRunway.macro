@@ -1,0 +1,18 @@
+# Index a runway using co-ordinates and referencing it's key. --indexRunway=key,longitude,latitude,[indexLevel] . indexLevel is the accuracy of the desired index measured in the number of decimal places. It defaults to 2. ~ runways,index
+
+if ~!Global,indexRunway-3!~,==,,
+	set Tmp,indexLevel,2
+else
+	set Tmp,indexLevel,~!Global,indexRunway-3!~
+
+round Tmp,longitude,~!Global,indexRunway-1!~,~!Tmp,indexLevel!~
+round Tmp,latitude,~!Global,indexRunway-2!~,~!Tmp,indexLevel!~
+
+set Tmp,indexKey,~!Tmp,longitude!~-~!Tmp,latitude!~
+
+setNested ["Runways","index","~!Tmp,indexLevel!~","~!Tmp,indexKey!~","~!Global,indexRunway-0!~","key","~!Global,indexRunway-0!~"]
+
+unset Tmp,indexLevel
+unset Tmp,longitude
+unset Tmp,latitude
+unset Tmp,indexKey

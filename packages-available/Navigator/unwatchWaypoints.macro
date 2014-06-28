@@ -1,0 +1,5 @@
+# Unwatch waypoints. --unwatchWaypoints=[instanceName] ~ nav,waypoints
+#onDefine aliasFeature unwatchWaypoints,unwatchWP
+
+
+unregisterForEvent Timer,showWPState,listWaypoints,~!Global,unwatchWaypoints!~

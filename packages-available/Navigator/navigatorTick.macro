@@ -1,0 +1,13 @@
+# Make sure that anything that needs to be processed, get's processed. ~ nav,hidden
+
+isolate
+	retrieveResults Navigator,instances
+	loop
+		if ~!Result,key!~,!=,0,
+			set Navigator,instanceName,~!Result,key!~
+			if ~!Navigator,origins,~!Navigator,instanceName!~,longitude!~,==,,
+				setOrigin ~!Navigator,instanceName!~,~!AP,state,~!Navigator,instanceName!~,longitude-deg!~,~!AP,state,~!Navigator,instanceName!~,latitude-deg!~
+			
+			isolate processWayPoints,~!Navigator,instanceName!~
+			if ~!Navigator,instanceName!~,!=,,
+				calculateDeviance ~!Navigator,instanceName!~

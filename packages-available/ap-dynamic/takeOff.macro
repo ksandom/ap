@@ -1,0 +1,47 @@
+# Make the plane take off ~ AP,dynamic
+
+set Tmp,toInstanceName,~!Global,takeOff-0!~
+if ~!Tmp,toInstanceName!~,==,,
+	set Tmp,toInstanceName,default
+
+debug 1,blah ~!Tmp,toInstanceName!~
+
+# Set up the navigation. This will need to be replaced with something more intellegent once I'm ready to add proper routes.
+currentRunwayEnd ~!Tmp,toInstanceName!~
+# runwayTrajectory ~!Tmp,toInstanceName!~
+
+
+# Prepare the plane for flight
+deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/flight/flaps 0.3
+deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/flight/slats 0.2
+deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/flight/speedbrake-level 0
+
+# Allow the take off to begin
+deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/gear/brake-parking 0
+deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/gear/brake-left 0
+deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/gear/brake-right 0
+
+# Prepare AP for take off
+setNested AP,state,~!Tmp,toInstanceName!~,pitch-goal,0
+setNested AP,state,~!Tmp,toInstanceName!~,altitude-goal,2000
+
+
+
+# Last minute Sanity check
+set Tmp,ready,1
+APRequireValue ["~!AP,state,~!Tmp,toInstanceName!~,v1!~","v1 is required for safe take off. The current value is \"~!AP,state,~!Tmp,toInstanceName!~,v1!~\"","10","Tmp,ready"]
+APRequireValue ["~!AP,state,~!Tmp,toInstanceName!~,v2!~","v2 is required for safe take off. The current value is \"~!AP,state,~!Tmp,toInstanceName!~,v1!~\"","10","Tmp,ready"]
+
+
+
+
+if ~!Tmp,ready!~,==,1,
+	# Tell the AP to begin take off
+	setAPState rollForward,~!Tmp,toInstanceName!~
+	setNested ["AP","state","~!Tmp,toInstanceName!~","groundspeed-goal","10"]
+	debug 1,We're ready to take off. The altitude-goal has been set to ~!AP,state,~!Tmp,toInstanceName!~,altitude-goal!~
+else
+	debug 1,We're not ready to take off. Check v1 and v2. Probably the plane profile has not been set.
+
+unset Tmp,ready
+unset Tmp,toInstanceName

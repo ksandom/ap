@@ -1,0 +1,29 @@
+# Which runway is closest to a given set of co-ordinates? --getCloseRunways=longitude,latitude,indexLevel ~ runway
+
+collectionLoad Runways
+
+if ~!Global,getCloseRunwayss-2!~,==,,
+	set Tmp,indexLevel,2
+else
+	set Tmp,indexLevel,~!Global,getCloseRunways-2!~
+
+round Tmp,longitude,~!Global,getCloseRunways-0!~,~!Tmp,indexLevel!~
+round Tmp,latitude,~!Global,getCloseRunways-1!~,~!Tmp,indexLevel!~
+
+if ~!Tmp,longitude!~~!Tmp,latitude!~,!=,00,
+	set Tmp,indexKey,~!Tmp,longitude!~-~!Tmp,latitude!~
+	
+	debug 1,Looking for runways in Runways,index,~!Tmp,indexLevel!~,~!Tmp,indexKey!~
+	retrieveResults Runways,index,~!Tmp,indexLevel!~,~!Tmp,indexKey!~
+	
+	
+	loopLite
+		retrieveResults Runways,runways,~!Result,key!~
+		setCategory Result
+		clearResults
+
+
+unset Tmp,indexLevel
+unset Tmp,longitude
+unset Tmp,latitude
+unset Tmp,indexKey

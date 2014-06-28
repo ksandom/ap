@@ -1,0 +1,4 @@
+# Disengage the autopilot. --disenageAP=[instanceName] Note that instanceName is this currently ignored and thus the disengage is applied to ALL instances. ~ ap
+
+createPipe balance,null
+deletePipe balance,clientSocket

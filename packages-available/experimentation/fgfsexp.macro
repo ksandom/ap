@@ -1,0 +1,19 @@
+# Experiment with flightgear connection ~ experimentation
+
+# Create faucets and basic relationships
+createSocketClientFaucet clientSocket,,quit,quit,12345,127.0.0.1
+deliver clientSocket,_control,EOL rn
+createTermFaucet terminal
+
+createPipe terminal,clientSocket
+createPipe clientSocket,terminal
+
+
+
+# Start up
+createTimer main,100000
+
+registerForEvent Timer,main,deliverAll
+startMainLoop
+
+

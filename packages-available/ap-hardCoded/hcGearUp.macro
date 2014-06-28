@@ -1,0 +1,4 @@
+# Raise the landing gear. ~ AP
+#onDefine registerForEvent AP,gearUp,hcGearUp
+
+deliver clientSocket,default,set /controls/gear/gear-down false

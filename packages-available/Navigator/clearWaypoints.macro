@@ -1,0 +1,11 @@
+# Clear all way points. --clearWaypoints=instanceName ~ nav,waypoint,user
+#onDefine registerForEvent AP,reset,clearWaypoints
+
+if ~!Global,clearWaypoints!~,==,,
+	set Tmp,waypoints,default
+else
+	set Tmp,waypoints,~!Global,clearWaypoints!~
+
+unset Navigator,instances,~!Tmp,waypoints!~
+
+unset Tmp,waypoints

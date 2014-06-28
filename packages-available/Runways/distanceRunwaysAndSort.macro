@@ -1,0 +1,6 @@
+# Calculate the distance to each runway location from the requested location. --distanceRunwaysAndSort=longitude,latitude ~ runways
+
+loopLite
+	2CoordsToDistance Result,distance,~!Global,distanceRunwaysAndSort-0!~,~!Global,distanceRunwaysAndSort-1!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+
+sortOnItemKey distance

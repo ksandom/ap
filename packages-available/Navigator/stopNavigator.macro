@@ -1,0 +1,4 @@
+# Start the navigator. ~ nav
+
+unregisterForEvent Timer,navigator,navigatorTick
+

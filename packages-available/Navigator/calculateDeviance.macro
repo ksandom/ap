@@ -1,0 +1,96 @@
+# Calculate how far off we are from the requested course. This is really useful when a precise, straight path is required. For a more relaxed path, the heading is more likely to be useful. --calculateDeviance=instanceName ~ nav,waypoints,calculation
+
+setNested Navigator,deviance,instanceName,~!Global,calculateDeviance-0!~
+
+
+
+# get origin
+setNested ["Navigator","deviance","origin",~!Navigator,origins,~!Navigator,deviance,instanceName!~!~]
+
+
+
+# get actual position
+setNested ["Navigator","deviance","position","longitude",~!AP,state,~!Navigator,deviance,instanceName!~,longitude-deg!~]
+setNested ["Navigator","deviance","position","latitude",~!AP,state,~!Navigator,deviance,instanceName!~,latitude-deg!~]
+
+
+
+# get destination
+setNested ["Navigator","deviance","destination",~!AP,state,~!Navigator,deviance,instanceName!~,destination!~]
+
+
+
+# calculate angle and distance from origin to actual position.
+2CoordsToAngle Tmp,angle,~!Navigator,deviance,origin,longitude!~,~!Navigator,deviance,origin,latitude!~,~!Navigator,deviance,position,longitude!~,~!Navigator,deviance,position,latitude!~
+2CoordsToDistance Tmp,distance,~!Navigator,deviance,origin,longitude!~,~!Navigator,deviance,origin,latitude!~,~!Navigator,deviance,position,longitude!~,~!Navigator,deviance,position,latitude!~
+setNested Navigator,deviance,position,angle,~!Tmp,angle!~
+setNested Navigator,deviance,position,distance,~!Tmp,distance!~
+
+unset Tmp,angle
+unset Tmp,distance
+
+
+
+# get angle to requested course from origin.
+degreesToRadians Tmp,destinationAngle,~!AP,state,~!Navigator,deviance,instanceName!~,track-goal!~
+setNested ["Navigator","deviance","destination","angle","~!Tmp,destinationAngle!~"]
+unset Tmp,destinationAngle
+
+
+
+# calculate coordinates of where we would be if we were on the requested course.
+angleAndDistanceToCoord Tmp,shouldBeOffsets,~!Navigator,deviance,destination,angle!~,~!Navigator,deviance,position,distance!~
+basicMaths Tmp,shouldBeLongitude,~!Navigator,deviance,origin,longitude!~,+,~!Tmp,shouldBeOffsets,x!~
+basicMaths Tmp,shouldBeLatitude,~!Navigator,deviance,origin,latitude!~,+,~!Tmp,shouldBeOffsets,y!~
+
+setNested Navigator,deviance,shouldBe,longitude,~!Tmp,shouldBeLongitude!~
+setNested Navigator,deviance,shouldBe,latitude,~!Tmp,shouldBeLatitude!~
+
+unset Tmp,shouldBeLongitude
+unset Tmp,shouldBeLatitude
+
+
+
+# calculate the distance between where we are and where we should be.
+2CoordsToDistance Tmp,deviance,~!Navigator,deviance,position,longitude!~,~!Navigator,deviance,position,latitude!~,~!Navigator,deviance,shouldBe,longitude!~,~!Navigator,deviance,shouldBe,latitude!~
+
+
+# Take direction into account
+if ~!Navigator,deviance,position,angle!~,==,undefined,
+	debug 3,calculateDeviance: On track.  Navigator,deviance,position,angle==~!Navigator,deviance,position,angle!~
+elseIf ~!Navigator,deviance,position,angle!~,<,~!Navigator,deviance,destination,angle!~,
+	debug 3,calculateDeviance: Left.  if ~!Navigator,deviance,position,angle!~,<,~!Navigator,deviance,destination,angle!~,
+	basicMaths Tmp,deviance,~!Tmp,deviance!~,*,-1
+else
+	debug 3,calculateDeviance: Right.  if ~!Navigator,deviance,position,angle!~,<,~!Navigator,deviance,destination,angle!~,
+
+
+# Give us the meters equivalent.
+degreesToMeters Tmp,devianceInMeters,~!Tmp,deviance!~
+
+
+# Send it where needed.
+setNested AP,state,~!Navigator,deviance,instanceName!~,course-deviance,~!Tmp,deviance!~
+setNested AP,state,~!Navigator,deviance,instanceName!~,course-devianceInMeters,~!Tmp,devianceInMeters!~
+setNested Navigator,deviance,~!Navigator,deviance,instanceName!~,course-deviance,~!Tmp,deviance!~
+setNested Navigator,deviance,~!Navigator,deviance,instanceName!~,cource-devianceInMeters,~!Tmp,devianceInMeters!~
+
+speedBasedDeviance
+
+
+
+pass
+	# TODO Debugging remove these lines
+	debug 1,calculateDeviance: The debugging is coming from there.
+	retrieveResults Navigator,deviance
+	nested
+	outNow
+
+
+
+# Clean up
+unset Tmp,deviance
+unset Tmp,devianceInMeters
+unset Tmp,instanceName
+unset Navigator,deviance
+unset Tmp,shouldBeOffsets

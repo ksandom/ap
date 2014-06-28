@@ -1,0 +1,8 @@
+# Watch the current state of the auto pilot. ~ ap,state
+#onDefine aliasFeature watchAPState,watchAP
+
+load startAP
+
+createTimer showAPState,500000
+registerForEvent Timer,showAPState,showAPState,~!Global,watchAPState!~
+

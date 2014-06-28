@@ -1,0 +1,5 @@
+# Which runway is closest to a given set of co-ordinates? --whichRunwayIsClosest=longitude,latitude,indexLevel ~ runway
+
+getCloseRunways ~!Global,whichRunwayIsClosest-0!~,~!Global,whichRunwayIsClosest-1!~,~!Global,whichRunwayIsClosest-2!~
+distanceRunwaysAndSort ~!Global,whichRunwayIsClosest-0!~,~!Global,whichRunwayIsClosest-1!~
+first

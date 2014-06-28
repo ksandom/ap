@@ -1,0 +1,523 @@
+# Load the autopilot rules for a generic plane. ~ AP,rules,plane
+
+
+
+# Stand
+# Roll
+setNested ["AP","stateRules","genericPlane","stand","roll","algorithm","acceleration"]
+setNested ["AP","stateRules","genericPlane","stand","roll","output","accelerateMultiplier","0.2"]
+setNested ["AP","stateRules","genericPlane","stand","roll","output","decelerateMultiplier","0.5"]
+setNested ["AP","stateRules","genericPlane","stand","roll","input","maxChangePerSecond","5"]
+
+setNested ["AP","stateRules","genericPlane","stand","roll","input","variable","AP,state,default,roll-deg"]
+setNested ["AP","stateRules","genericPlane","stand","roll","input","min","-180"]
+setNested ["AP","stateRules","genericPlane","stand","roll","input","center","0"]
+setNested ["AP","stateRules","genericPlane","stand","roll","input","max","180"]
+setNested ["AP","stateRules","genericPlane","stand","roll","input","goal","AP,state,default,roll-goal"]
+setNested ["AP","stateRules","genericPlane","stand","roll","input","multiplier","3"]
+
+setNested ["AP","stateRules","genericPlane","stand","roll","output","min","1"]
+setNested ["AP","stateRules","genericPlane","stand","roll","output","center","0"]
+setNested ["AP","stateRules","genericPlane","stand","roll","output","max","-1"]
+setNested ["AP","stateRules","genericPlane","stand","roll","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","stand","roll","destination","variable","AP,state,default,aileron-req"]
+setNested ["AP","stateRules","genericPlane","stand","roll","destination","textOutput","set /controls/flight/aileron ~%value%~"]
+
+
+
+# Pitch
+setNested ["AP","stateRules","genericPlane","stand","pitch","input","variable","AP,state,default,pitch-deg"]
+setNested ["AP","stateRules","genericPlane","stand","pitch","input","min","-90"]
+setNested ["AP","stateRules","genericPlane","stand","pitch","input","center","0"]
+setNested ["AP","stateRules","genericPlane","stand","pitch","input","max","90"]
+setNested ["AP","stateRules","genericPlane","stand","pitch","input","goal","AP,state,default,pitch-goal"]
+setNested ["AP","stateRules","genericPlane","stand","pitch","input","multiplier","3"]
+
+setNested ["AP","stateRules","genericPlane","stand","pitch","output","min","-1"]
+setNested ["AP","stateRules","genericPlane","stand","pitch","output","center","0"]
+setNested ["AP","stateRules","genericPlane","stand","pitch","output","max","1"]
+setNested ["AP","stateRules","genericPlane","stand","pitch","output","multiplier","0.8"]
+
+setNested ["AP","stateRules","genericPlane","stand","pitch","destination","variable","AP,state,default,elevator-req"]
+setNested ["AP","stateRules","genericPlane","stand","pitch","destination","textOutput","set /controls/flight/elevator ~%value%~"]
+
+
+
+# Yaw
+setNested ["AP","stateRules","genericPlane","stand","yaw","algorithm","acceleration"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","output","accelerateMultiplier","0.2"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","output","decelerateMultiplier","0.5"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","input","maxChangePerSecond","5"]
+
+setNested ["AP","stateRules","genericPlane","stand","yaw","input","variable","AP,state,default,track-deviance"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","input","min","-180"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","input","center","0"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","input","max","180"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","input","multiplier","1"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","input","goal","AP,stateRules,genericPlane,stand,yaw,input,center"]
+
+setNested ["AP","stateRules","genericPlane","stand","yaw","output","min","1"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","output","center","0"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","output","max","-1"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","output","multiplier","0.1"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","output","seedPercent","0.04"]
+
+setNested ["AP","stateRules","genericPlane","stand","yaw","destination","variable","AP,state,default,rudder-req"]
+setNested ["AP","stateRules","genericPlane","stand","yaw","destination","textOutput","set /controls/flight/rudder ~%value%~"]
+
+
+
+
+
+
+# Take off - roll forward
+# Roll
+setNested ["AP","stateRules","genericPlane","rollForward","roll","algorithm","acceleration"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","output","accelerateMultiplier","0.2"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","output","decelerateMultiplier","0.5"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","input","maxChangePerSecond","5"]
+
+setNested ["AP","stateRules","genericPlane","rollForward","roll","input","variable","AP,state,default,roll-deg"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","input","min","-180"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","input","center","0"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","input","max","180"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","input","goal","AP,state,default,roll-goal"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","input","multiplier","3"]
+
+setNested ["AP","stateRules","genericPlane","rollForward","roll","output","min","1"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","output","center","0"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","output","max","-1"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","rollForward","roll","destination","variable","AP,state,default,aileron-req"]
+setNested ["AP","stateRules","genericPlane","rollForward","roll","destination","textOutput","set /controls/flight/aileron ~%value%~"]
+
+
+
+# Pitch
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","input","variable","AP,state,default,pitch-deg"]
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","input","min","-90"]
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","input","center","0"]
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","input","max","90"]
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","input","goal","AP,state,default,pitch-goal"]
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","input","multiplier","3"]
+
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","output","min","-1"]
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","output","center","0"]
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","output","max","1"]
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","output","multiplier","0.8"]
+
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","destination","variable","AP,state,default,elevator-req"]
+setNested ["AP","stateRules","genericPlane","rollForward","pitch","destination","textOutput","set /controls/flight/elevator ~%value%~"]
+
+
+
+# Yaw
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","algorithm","acceleration"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","output","accelerateMultiplier","0.2"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","output","decelerateMultiplier","0.5"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","input","maxChangePerSecond","5"]
+
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","input","variable","AP,state,default,track-deviance"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","input","min","-180"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","input","center","0"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","input","max","180"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","input","multiplier","3"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","input","goal","AP,stateRules,genericPlane,rollForward,yaw,input,center"]
+
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","output","min","1"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","output","center","0"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","output","max","-1"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","output","multiplier","0.8"]
+
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","destination","variable","AP,state,default,rudder-req"]
+setNested ["AP","stateRules","genericPlane","rollForward","yaw","destination","textOutput","set /controls/flight/rudder ~%value%~"]
+
+
+# Speed
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","variable","AP,state,default,groundspeed-kt"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","min","-1"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","center","0"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","max","40"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","multiplier","1"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","goal","AP,state,default,groundspeed-goal"]
+
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","output","min","1"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","output","center","0"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","output","max","-1"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","output","multiplier","0.5"]
+
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","destination","variable","AP,state,default,throttle-req"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","destination","textOutput","set /controls/engines/engine/throttle ~%value%~"]
+
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","events","ready","description","We seem to be moving. Let's go!"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","events","ready","testValue","3"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","events","ready","operator",">"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","events","ready","operator",">"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","events","ready","eventName","AP,takeOffReady"]
+setNested ["AP","stateRules","genericPlane","rollForward","groundspeed","input","events","ready","debugLevel","1"]
+
+registerForEvent AP,takeOffReady,setAPState,takeOffAccelerate
+
+
+# Take off - accelerate
+# Roll
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","algorithm","acceleration"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","output","accelerateMultiplier","0.2"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","output","decelerateMultiplier","0.5"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","input","maxChangePerSecond","5"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","input","variable","AP,state,default,roll-deg"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","input","min","-180"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","input","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","input","max","180"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","input","goal","AP,state,default,roll-goal"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","input","multiplier","3"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","output","min","1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","output","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","output","max","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","destination","variable","AP,state,default,aileron-req"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","destination","textOutput","set /controls/flight/aileron ~%value%~"]
+
+# Pitch
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","input","variable","AP,state,default,pitch-deg"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","input","min","-90"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","input","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","input","max","90"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","input","goal","AP,state,default,pitch-goal"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","input","multiplier","5"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","output","min","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","output","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","output","max","1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","destination","variable","AP,state,default,elevator-req"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","pitch","destination","textOutput","set /controls/flight/elevator ~%value%~"]
+
+
+
+# Yaw
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","algorithm","direct"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","output","accelerateMultiplier","0.05"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","output","decelerateMultiplier","0.5"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","input","maxChangePerSecond","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","input","variable","AP,state,default,speedBasedDevianceInMeters"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","input","min","-90"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","input","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","input","max","90"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","input","multiplier","1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","input","goal","AP,stateRules,genericPlane,takeOffAccelerate,yaw,input,center"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","output","min","0.3"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","output","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","output","max","-0.3"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","destination","variable","AP,state,default,rudder-req"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","yaw","destination","textOutput","set /controls/flight/rudder ~%value%~"]
+
+
+
+# Altitude based speed
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","input","variable","AP,state,default,altitude-deviance"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","input","min","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","input","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","input","max","300"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","input","multiplier","1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","input","goal","AP,stateRules,genericPlane,takeOffAccelerate,altitude,input,center"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","output","min","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","output","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","output","max","1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","destination","variable","AP,state,default,throttle-req"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","altitude","destination","textOutput","set /controls/engines/engine/throttle ~%value%~"]
+
+
+
+# Speed based events
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","variable","AP,state,default,airspeed-kt"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","min","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","max","4000"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","multiplier","1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","goal","0"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","output","min","1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","output","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","output","max","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","destination","variable",""]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","destination","textOutput",""]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","events","v1","testValue","AP,state,default,v1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","events","v1","description","V1 - Passed point of no return."]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","events","v1","operator",">"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","events","v1","eventName","AP,takeOffV1"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","events","v1","debugLevel","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","events","v2","description","V2 Rotate!"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","events","v2","testValue","AP,state,default,v2"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","events","v2","description","V2 - Rorate!"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","events","v2","operator",">"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","events","v2","eventName","AP,takeOffV2"]
+setNested ["AP","stateRules","genericPlane","takeOffAccelerate","speedEvents","input","events","v2","debugLevel","1"]
+
+registerForEvent AP,takeOffV2,v2
+
+
+
+
+
+
+# Take off - climb
+# Roll
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","algorithm","acceleration"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","output","accelerateMultiplier","0.2"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","output","decelerateMultiplier","0.5"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","input","maxChangePerSecond","5"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","input","variable","AP,state,default,roll-deg"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","input","min","-45"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","input","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","input","max","45"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","input","goal","AP,state,default,roll-goal"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","input","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","output","min","1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","output","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","output","max","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","output","multiplier","0.4"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","destination","variable","AP,state,default,aileron-req"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","destination","textOutput","set /controls/flight/aileron ~%value%~"]
+
+
+
+# Pitch
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","algorithm","acceleration"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","input","maxChangePerSecond","7"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","input","overshootTime","3"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","output","accelerateMultiplier","0.3"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","output","decelerateMultiplier","0.1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","output","seedPercent","0.1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","output","allowPanic","0"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","input","variable","AP,state,default,pitch-deg"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","input","min","-90"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","input","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","input","max","90"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","input","goal","AP,state,default,pitch-goal"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","input","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","output","min","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","output","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","output","max","1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","destination","variable","AP,state,default,elevator-req"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","destination","textOutput","set /controls/flight/elevator ~%value%~"]
+
+
+
+# Yaw
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","algorithm","acceleration"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","output","accelerateMultiplier","0.004"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","output","decelerateMultiplier","0.05"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","input","maxChangePerSecond","5"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","input","variable","AP,state,default,track-deviance"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","input","min","-180"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","input","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","input","max","180"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","input","multiplier","1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","input","goal","AP,stateRules,genericPlane,takeOffClimb,yaw,input,center"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","output","min","1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","output","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","output","max","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","output","multiplier","0.3"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","destination","variable","AP,state,default,rudder-req"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","yaw","destination","textOutput","set /controls/flight/rudder ~%value%~"]
+
+
+
+# Altitude goal
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","input","variable","AP,state,default,altitude-deviance"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","input","min","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","input","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","input","max","300"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","input","multiplier","1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","input","goal","AP,stateRules,genericPlane,takeOffClimb,altitude,input,center"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","output","min","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","output","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","output","max","1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","destination","variable","AP,state,default,throttle-req"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","destination","textOutput","set /controls/engines/engine/throttle ~%value%~"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","input","events","gearUp","testValue","300"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","input","events","gearUp","description","Level out flight."]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","input","events","gearUp","operator","<"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","input","events","gearUp","eventName","AP,levelOut"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitude","input","events","gearUp","debugLevel","1"]
+registerForEvent AP,levelOut,levelOut
+
+
+
+# Altitude events
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","variable","AP,state,default,altitude-agl-ft"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","min","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","max","100000"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","multiplier","1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","goal","AP,stateRules,genericPlane,takeOffClimb,altitudeEvents,input,center"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","output","min","-1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","output","center","0"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","output","max","1"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","destination","variable",""]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","destination","textOutput",""]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","gearUp","testValue","60"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","gearUp","description","We're high enough to raise the gear."]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","gearUp","operator",">"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","gearUp","eventName","AP,gearUp"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","gearUp","debugLevel","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","reduceFlaps","testValue","400"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","reduceFlaps","description","Reduce flaps."]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","reduceFlaps","operator",">"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","reduceFlaps","eventName","AP,reduceFlaps"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","reduceFlaps","debugLevel","1"]
+
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","flapsUp","testValue","700"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","flapsUp","description","Flaps up."]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","flapsUp","operator",">"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","flapsUp","eventName","AP,flapsUp"]
+setNested ["AP","stateRules","genericPlane","takeOffClimb","altitudeEvents","input","events","flapsUp","debugLevel","1"]
+
+
+
+
+# Take off - abort
+
+
+
+
+
+
+# Sustain flight
+# Roll
+# setNested ["AP","stateRules","genericPlane","sustain","roll","algorithm","acceleration"]
+# setNested ["AP","stateRules","genericPlane","sustain","roll","output","accelerateMultiplier","0.2"]
+# setNested ["AP","stateRules","genericPlane","sustain","roll","output","decelerateMultiplier","0.5"]
+# setNested ["AP","stateRules","genericPlane","sustain","roll","input","maxChangePerSecond","5"]
+
+setNested ["AP","stateRules","genericPlane","sustain","roll","input","variable","AP,state,default,roll-deg"]
+setNested ["AP","stateRules","genericPlane","sustain","roll","input","min","-45"]
+setNested ["AP","stateRules","genericPlane","sustain","roll","input","center","0"]
+setNested ["AP","stateRules","genericPlane","sustain","roll","input","max","45"]
+setNested ["AP","stateRules","genericPlane","sustain","roll","input","goal","AP,state,default,roll-goal"]
+setNested ["AP","stateRules","genericPlane","sustain","roll","input","multiplier","10"]
+
+setNested ["AP","stateRules","genericPlane","sustain","roll","output","min","1"]
+setNested ["AP","stateRules","genericPlane","sustain","roll","output","center","0"]
+setNested ["AP","stateRules","genericPlane","sustain","roll","output","max","-1"]
+setNested ["AP","stateRules","genericPlane","sustain","roll","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","sustain","roll","destination","variable","AP,state,default,aileron-req"]
+setNested ["AP","stateRules","genericPlane","sustain","roll","destination","textOutput","set /controls/flight/aileron ~%value%~"]
+
+
+
+# Pitch
+setNested ["AP","stateRules","genericPlane","sustain","pitch","input","variable","AP,state,default,pitch-deg"]
+setNested ["AP","stateRules","genericPlane","sustain","pitch","input","min","-90"]
+setNested ["AP","stateRules","genericPlane","sustain","pitch","input","center","0"]
+setNested ["AP","stateRules","genericPlane","sustain","pitch","input","max","90"]
+setNested ["AP","stateRules","genericPlane","sustain","pitch","input","goal","AP,state,default,pitch-goal"]
+setNested ["AP","stateRules","genericPlane","sustain","pitch","input","multiplier","3"]
+
+setNested ["AP","stateRules","genericPlane","sustain","pitch","output","min","-1"]
+setNested ["AP","stateRules","genericPlane","sustain","pitch","output","center","0"]
+setNested ["AP","stateRules","genericPlane","sustain","pitch","output","max","1"]
+setNested ["AP","stateRules","genericPlane","sustain","pitch","output","multiplier","0.8"]
+
+setNested ["AP","stateRules","genericPlane","sustain","pitch","destination","variable","AP,state,default,elevator-req"]
+setNested ["AP","stateRules","genericPlane","sustain","pitch","destination","textOutput","set /controls/flight/elevator ~%value%~"]
+
+
+
+# Yaw
+# setNested ["AP","stateRules","genericPlane","sustain","yaw","algorithm","acceleration"]
+# setNested ["AP","stateRules","genericPlane","sustain","yaw","output","accelerateMultiplier","0.06"]
+# setNested ["AP","stateRules","genericPlane","sustain","yaw","output","decelerateMultiplier","0.05"]
+# setNested ["AP","stateRules","genericPlane","sustain","yaw","input","maxChangePerSecond","5"]
+
+setNested ["AP","stateRules","genericPlane","sustain","yaw","input","variable","AP,state,default,track-deviance"]
+setNested ["AP","stateRules","genericPlane","sustain","yaw","input","min","-45"]
+setNested ["AP","stateRules","genericPlane","sustain","yaw","input","center","0"]
+setNested ["AP","stateRules","genericPlane","sustain","yaw","input","max","45"]
+setNested ["AP","stateRules","genericPlane","sustain","yaw","input","multiplier","10"]
+setNested ["AP","stateRules","genericPlane","sustain","yaw","input","goal","AP,stateRules,genericPlane,sustain,yaw,input,center"]
+
+setNested ["AP","stateRules","genericPlane","sustain","yaw","output","min","0.4"]
+setNested ["AP","stateRules","genericPlane","sustain","yaw","output","center","0"]
+setNested ["AP","stateRules","genericPlane","sustain","yaw","output","max","-0.4"]
+setNested ["AP","stateRules","genericPlane","sustain","yaw","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","sustain","yaw","destination","variable","AP,state,default,rudder-req"]
+setNested ["AP","stateRules","genericPlane","sustain","yaw","destination","textOutput","set /controls/flight/rudder ~%value%~"]
+
+
+
+# Altitude
+setNested ["AP","stateRules","genericPlane","sustain","altitude","input","variable","AP,state,default,altitude-deviance"]
+setNested ["AP","stateRules","genericPlane","sustain","altitude","input","min","-1"]
+setNested ["AP","stateRules","genericPlane","sustain","altitude","input","center","0"]
+setNested ["AP","stateRules","genericPlane","sustain","altitude","input","max","300"]
+setNested ["AP","stateRules","genericPlane","sustain","altitude","input","multiplier","1"]
+setNested ["AP","stateRules","genericPlane","sustain","altitude","input","goal","AP,stateRules,genericPlane,sustain,altitude,input,center"]
+
+setNested ["AP","stateRules","genericPlane","sustain","altitude","output","min","-1"]
+setNested ["AP","stateRules","genericPlane","sustain","altitude","output","center","0"]
+setNested ["AP","stateRules","genericPlane","sustain","altitude","output","max","1"]
+setNested ["AP","stateRules","genericPlane","sustain","altitude","output","multiplier","1"]
+
+setNested ["AP","stateRules","genericPlane","sustain","altitude","destination","variable","AP,state,default,throttle-req"]
+setNested ["AP","stateRules","genericPlane","sustain","altitude","destination","textOutput","set /controls/engines/engine/throttle ~%value%~"]
+
+
+
+pass
+	# Yaw to Roll feedback 
+	setNested ["AP","stateRules","genericPlane","sustain","yawToRollFeedbackPart2","input","variable","AP,state,default,roll-deg"]
+	setNested ["AP","stateRules","genericPlane","sustain","yawToRollFeedbackPart2","input","min","-1"]
+	setNested ["AP","stateRules","genericPlane","sustain","yawToRollFeedbackPart2","input","center","0"]
+	setNested ["AP","stateRules","genericPlane","sustain","yawToRollFeedbackPart2","input","max","1"]
+	setNested ["AP","stateRules","genericPlane","sustain","yawToRollFeedbackPart2","input","goal","AP,state,default,rudder-req"]
+
+	setNested ["AP","stateRules","genericPlane","sustain","yawToRollFeedbackPart2","output","min","-10"]
+	setNested ["AP","stateRules","genericPlane","sustain","yawToRollFeedbackPart2","output","center","0"]
+	setNested ["AP","stateRules","genericPlane","sustain","yawToRollFeedbackPart2","output","max","10"]
+	setNested ["AP","stateRules","genericPlane","sustain","yawToRollFeedbackPart2","output","multiplier","1"]
+
+	setNested ["AP","stateRules","genericPlane","sustain","yawToRollFeedbackPart2","destination","variable","AP,state,default,roll-goal"]
+	setNested ["AP","stateRules","genericPlane","sustain","yawToRollFeedbackPart2","destination","textOutput",""]
+
+
+

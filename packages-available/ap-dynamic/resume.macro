@@ -1,0 +1,5 @@
+# Resume normal flight. ~ ap,dynamic
+
+setAPState sustain,default
+setNested AP,state,default,altitude-goal,2000
+

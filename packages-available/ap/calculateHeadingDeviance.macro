@@ -1,0 +1,35 @@
+# Calculate how far (in degrees) off course we are. ~ AP,correction,deviance,notInstanceSafe
+# TODO this needs to be made instance safe.
+
+pass
+	# Heading
+	basicMaths Tmp,headingDifference,~!AP,state,default,heading-deg!~,-,~!AP,state,default,heading-goal!~
+	
+	if ~!Tmp,trackDifference!~,<,0,
+		basicMaths Tmp,headingDifference,~!Tmp,headingDifference!~,+,180
+	elseIf ~!Tmp,trackDifference!~,>,180,
+		basicMaths Tmp,headingDifference,~!Tmp,headingDifference!~,-,180
+	setNested AP,state,default,heading-deviance,~!Tmp,headingDifference!~
+	unset Tmp,headingDifference
+
+
+# Track
+# Fix invalid user input. This is so the heading can be manipulated +/- increments without the nedd for regarding the current value.
+if ~!AP,state,default,track-goal!~,>,360,
+	basicMaths ~!AP,state,default,track-goal!~,-,360
+
+basicMaths Tmp,trackDifference,~!AP,state,default,track-deg!~,-,~!AP,state,default,track-goal!~
+
+
+# Choose the shortest way there.
+if ~!Tmp,trackDifference!~,<,-180,
+	debug 2,calculateHeadingDeviance: OOR <-180 = "~!Tmp,trackDifference!~"
+	basicMaths Tmp,trackDifference,360,+,~!Tmp,trackDifference!~
+elseIf ~!Tmp,trackDifference!~,>,180,
+	debug 2,calculateHeadingDeviance: OOR >180 = "~!Tmp,trackDifference!~"
+	basicMaths Tmp,trackDifference,360,-,~!Tmp,trackDifference!~
+	basicMaths Tmp,trackDifference,~!Tmp,trackDifference!~,*,-1
+
+# Set and cleanup
+setNested AP,state,default,track-deviance,~!Tmp,trackDifference!~
+unset Tmp,trackDifference

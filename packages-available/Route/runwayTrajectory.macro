@@ -1,0 +1,34 @@
+# Creates some waypoints in the current direction from the current position. The idea being to run this before take off when in the default position on the runway. This should result in a very precise straight takeOff. --runwayTrajectory=[instanceName[,numberOfWaypoints][,totalDistanceInKM]] . instanceName defaults to "default". numberOfWaypoints defaults to 10. totalDistanceInKM defaults to 10 ~ route,waypoints
+
+
+
+# gives us plenty of time to get well away from the ground before making any erratic changes in direction. Potentially this should be dialed down once we are ready to refine things. I suspect a formula based on the V2 speed could be a good way to work it out. Eg:
+#   Runway length * V2 / 100 * multiplier
+# Where multiplier could be something from 2-5.
+
+
+# Set the defaults
+set Route,instanceName,~!Global,runwayTrajectory-0!~
+if ~!Route,instanceName!~,==,,
+	set Route,instanceName,default
+
+set Route,numberOfWaypoints,~!Global,runwayTrajectory-1!~
+if ~!Route,numberOfWaypoints!~,==,,
+	set Route,numberOfWaypoints,10
+
+set Route,totalDistanceInKM,~!Global,runwayTrajectory-2!~
+if ~!Route,totalDistanceInKM!~,==,,
+	set Route,totalDistanceInKM,10
+
+
+# Calculate stuff
+basicMaths Route,spacing,~!Route,totalDistanceInKM!~,/,~!Route,numberOfWaypoints!~
+
+# There's no need to set a waypoint for our current position because we are already there. So we start with the first increment.
+iterator ~!Route,spacing!~,~!Route,spacing!~,~!Route,totalDistanceInKM!~
+countToVar Tmp,iterations
+debug 1, iterator ~!Route,spacing!~,~!Route,spacing!~,~!Route,totalDistanceInKM!~  ~!Tmp,iterations!~
+loop
+	goDirection ~!Route,instanceName!~,~!AP,state,~!Route,instanceName!~,heading-deg!~,~!Result,line!~
+
+listWaypoints

@@ -1,0 +1,4 @@
+# Get the current roll ~ experimentation
+
+debug 1,inline value "~!AP,state,default,roll-deg!~"
+set Core,serial,blah

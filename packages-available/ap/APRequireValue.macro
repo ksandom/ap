@@ -1,0 +1,10 @@
+# Require a value. --APRequireValue=["inputValueToTest","messageToUser","minimumValue","outputVariableAddress"] ~ AP,validation
+
+if ~!Global,APRequireValue-0!~,==,,
+	debug 1,APRequireValue =="". ~!Global,APRequireValue-1!~
+	setNested ~!Global,APRequireValue-3!~,0
+
+if ~!Global,APRequireValue-2!~,!=,,
+	if ~!Global,APRequireValue-0!~,<,~!Global,APRequireValue-2!~,
+		debug 1,APRequireValue <~!Global,APRequireValue-2!~. ~!Global,APRequireValue-1!~
+		setNested ~!Global,APRequireValue-3!~,0

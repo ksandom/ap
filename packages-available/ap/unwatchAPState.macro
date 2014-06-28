@@ -1,0 +1,5 @@
+# Watch the current state of the auto pilot. ~ ap,state
+#onDefine aliasFeature unwatchAPState,unwatchAP
+
+unregisterForEvent Timer,showAPState,showAPState,~!Global,unwatchAPState!~
+

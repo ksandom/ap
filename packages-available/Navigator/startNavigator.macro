@@ -1,0 +1,9 @@
+# Start up the navigator. ~ nav
+#onDefine registerForEvent AP,started,startNavigator
+
+
+createTimer navigator,100000
+registerForEvent Timer,navigator,navigatorTick
+
+if ~!Navigator,unit!~,==,,
+	setNavUserUnit km

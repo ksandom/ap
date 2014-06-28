@@ -1,0 +1,9 @@
+# Set settings for a b1990d ~ AP,rules,plane,aircraft
+#onDefine aliasFeature plane-b1900d,1900
+
+# NOTE v1 is currently just a dummy number, but to be correct should be calculated based on aircraft specs, loading, conditions and runway length.
+setNested ["AP","state","default","type","plane"]
+setNested ["AP","state","default","v1","80"]
+setNested ["AP","state","default","v2","120"]
+
+registerForEvent Timer,piggyBack,throttlePiggyBack,1,default

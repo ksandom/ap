@@ -1,0 +1,17 @@
+# Calculate a new deviance value that diminishes based on speed. The idea is to reduce the effort as speed increases with the intention to reduce oscilations. It's likely that this will be a fragile solution. It assumes that --calculateDeviance has been run. --speedBasedDeviance=[instanceName] ~ navigator,deviance,calculate
+
+set Tmp,instanceName,~!Global,speedBasedDeviance-0!~
+if ~!Tmp,instanceName!~,==,,
+	set Tmp,instanceName,default
+
+
+if ~!AP,state,~!Tmp,instanceName!~,airspeed-kt!~,>,0,
+	basicMaths Tmp,speedBasedDeviance,~!AP,state,~!Tmp,instanceName!~,course-deviance!~,*,100
+	basicMaths Tmp,speedBasedDeviance,~!Tmp,speedBasedDeviance!~,/,~!AP,state,~!Tmp,instanceName!~,airspeed-kt!~
+	degreesToMeters Tmp,speedBasedDevianceInMeters,~!Tmp,speedBasedDeviance!~
+	
+	setNested AP,state,~!Tmp,instanceName!~,speedBasedDeviance,~!Tmp,speedBasedDeviance!~
+	setNested AP,state,~!Tmp,instanceName!~,speedBasedDevianceInMeters,~!Tmp,speedBasedDevianceInMeters!~
+	
+	unset Tmp,speedBasedDeviance
+	unset Tmp,speedBasedDevianceInMeters

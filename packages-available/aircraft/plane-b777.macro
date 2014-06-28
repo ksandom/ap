@@ -1,0 +1,9 @@
+# Set settings for a boeing 777 ~ AP,rules,plane,aircraft
+#onDefine aliasFeature plane-b777,777
+
+# NOTE v1 is currently just a dummy number, but to be correct should be calculated based on aircraft specs, loading, conditions and runway length.
+setNested ["AP","state","default","type","plane"]
+setNested ["AP","state","default","v1","90"]
+setNested ["AP","state","default","v2","170"]
+
+registerForEvent Timer,piggyBack,throttlePiggyBack,1,default

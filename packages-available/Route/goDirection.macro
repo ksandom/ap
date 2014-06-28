@@ -1,0 +1,22 @@
+# Create a waypoint using a heading and distance from the current position. --goDirection=instanceName,angle,distance ~ route
+
+# Get the current position and calculate the offset for the waypoint.
+getCurrentPosition Route,currentPosition,~!Global,goDirection-0!~
+degreesToRadians Tmp,angle,~!Global,goDirection-1!~
+KMToDegrees Tmp,distance,~!Global,goDirection-2!~
+angleAndDistanceToCoord Route,offsets,~!Tmp,angle!~,~!Tmp,distance!~
+
+# Apply the offset
+basicMaths Route,newPosition-longitude,~!Route,currentPosition,longitude!~,+,~!Route,offsets,x!~
+basicMaths Route,newPosition-latitude,~!Route,currentPosition,latitude!~,+,~!Route,offsets,y!~
+
+# Add the way point
+addWaypoint ~!Global,goDirection-0!~,~!Route,newPosition-longitude!~,~!Route,newPosition-latitude!~
+
+# Clean up
+unset Route,offsets
+unset Route,currentPosition
+unset Route,newPosition-longitude
+unset Route,newPosition-latitude
+unset Tmp,angle
+unset Tmp,distance

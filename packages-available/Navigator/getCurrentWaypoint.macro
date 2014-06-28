@@ -1,0 +1,7 @@
+# Get the current waypoint. --getCurrentWaypoint=Category,variable,instanceName ~ nav,waypoint
+
+isolate
+	retrieveResults Navigator,instances,~!Global,getCurrentWaypoint-2!~
+	first
+	flatten
+	stashResults ~!Global,getCurrentWaypoint-0!~,~!Global,getCurrentWaypoint-1!~

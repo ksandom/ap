@@ -1,0 +1,6 @@
+# Get auto-pilot state ~ ap,state
+#onDefine aliasFeature getAPState,getAP
+
+# deliver clientSocket,default,ls /position
+deliver clientSocket,default,ls /orientation
+# deliver clientSocket,default,ls /engines/engine

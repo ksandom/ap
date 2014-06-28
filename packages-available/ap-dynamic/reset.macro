@@ -1,0 +1,13 @@
+# Reset the simulator and the AP together ~ AP
+
+set Tmp,instanceName,~!Global,reset-0!~
+if ~!Tmp,instanceName!~,==,,
+	set Tmp,instanceName,default
+
+apRules-genericPlane
+deliver clientSocket,~!Tmp,instanceName!~,run reset
+
+setNested AP,state,~!Tmp,instanceName!~,takeOffAbortOK,1
+setAPState stand,~!Tmp,instanceName!~
+
+triggerEvent AP,reset

@@ -1,0 +1,5 @@
+# Watch the status of the waypoints. --watchWaypoints=[instanceName] ~ nav,waypoints
+#onDefine aliasFeature watchWaypoints,watchWP
+
+createTimer showWPState,1000000
+registerForEvent Timer,showWPState,listWaypoints,~!Global,watchWaypoints!~

@@ -1,0 +1,8 @@
+# Load the runway data from CSV. --loadDownloadedRunwaydata=[CSVFile] . If CSVFile is omitted, it will default to runways.csv ~ runways
+
+if ~!Global,loadDownloadedRunwaydata-0!~,==,,
+	debug 1,Loading the runway data.
+	loadCSV runways.csv
+else
+	debug 1,Loading the runway data from ~!Global,loadDownloadedRunwaydata-0!~.
+	loadCSV ~!Global,loadDownloadedRunwaydata-0!~

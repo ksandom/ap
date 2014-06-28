@@ -1,0 +1,18 @@
+# Update the runway data from start to finish. Note that this will replace any previous runway data. --updateRunways=[CSVFile] . If CSVFile is omitted, runways.csv will automatically be downloaded. ~ user,update
+
+debug 1,Clearing out old runways.
+collectionLoad Runways
+unsetCategory Runways
+
+if ~!Global,updateRunways-0!~,!=,,
+	loadDownloadedRunwayData ~!Global,updateRunways-0!~
+else
+	downloadRunways
+	loadDownloadedRunwayData
+
+processRunways
+
+countToVar Tmp,numberOfresults
+clearResultset
+
+debug 1,~!Tmp,numberOfresults!~ runways were processed and saved.

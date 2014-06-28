@@ -1,0 +1,7 @@
+# Download the latest runway definitions from http://ourairports.com/data/runways.csv to the current directory. A big thankyou to http://ourairports.com/data/ . ~ runways,download
+
+
+set Tmp,URL,http://ourairports.com/data/runways.csv
+
+debug 1,Downloading the latest runway data from ~!Tmp,URL!~
+exec curl "~!Tmp,URL!~" > runways.csv 2> /dev/null
