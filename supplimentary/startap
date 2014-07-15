@@ -1,0 +1,23 @@
+#!/bin/bash
+# Description
+#   Start the autopilot in a common configuration.
+#
+# Syntax:
+#   $0 [abreviatedAircraftName]
+#     abreviatedAircraftName is the name of the aircraft to use. This can be found with ap --help=aircraft .
+#
+# Examples:
+#   Simply start the autopilot.
+#     $0 
+#
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+
+if [ "$1" != '' ]; then
+	extra="$extra --$1"
+else
+	extra="$extra --172"
+fi
+
+ap -v --fgfsab $extra --startAP
