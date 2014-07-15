@@ -1,0 +1,21 @@
+#!/bin/bash
+# Description
+#   Start the flight gear flight simulator with the parameters needed for the autopilot to connect.
+#
+# Syntax:
+#   $0 [aircraft]
+#     aircraft is the name of the aircraft to use. This can be found with --show-aircraft .
+#
+# Examples:
+#   Simply start the simulator.
+#     $0 
+#
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+
+if [ "$1" != '' ]; then
+	extra="$extra --aircraft=$1"
+fi
+
+fgfs --telnet=12345 --timeofday=noon --runway=10L $extra
