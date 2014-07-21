@@ -20,4 +20,4 @@ else
 	extra="$extra --172"
 fi
 
-ap -v --fgfsab $extra --startAP
+ap -v --fgfs $extra --startAP
