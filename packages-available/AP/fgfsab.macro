@@ -7,11 +7,9 @@ else
 	set AP,defaultHost,localhost
 
 
+# Base
 createAPFaucets
-
 createFGFSBindings
-
-
 
 
 # Set up the AP
