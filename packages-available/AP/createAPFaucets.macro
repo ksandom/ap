@@ -1,0 +1,22 @@
+# Create the faucets to be used in the AP. ~ AP,hidden
+
+# Create faucets
+debug 2,Creating AP faucets.
+createSocketClientFaucet clientSocket,,quit,quit,12345,~!AP,defaultHost!~
+deliver clientSocket,_control,expectEOL true
+deliver clientSocket,_control,inEOL n
+deliver clientSocket,_control,outEOL rn
+createTermFaucet terminal
+createInlineCallFaucet call
+createCallFaucet prefixAchelOut,toString,achel> ~%value%~
+createNullFaucet null
+
+# Create basic relationships
+debug 2,Creating AP pipes.
+createPipe terminal,call
+createPipe call,terminal
+createPipe terminal,prefixAchelOut
+createPipe prefixAchelOut,terminal
+setFaucetAs terminal,General,echoObject
+# createPipe clientSocket,terminal
+

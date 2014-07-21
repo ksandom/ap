@@ -1,0 +1,20 @@
+# Create FlightGear bindings. ~ AP,fgfs,hidden
+
+# Collect incoming data from client
+createRegexGetFaucet harvestState
+createPipe clientSocket,harvestState
+createPipe harvestState,null
+
+# Feedback from data being sent to the flight sim
+setNested ["AP","stateConfig","feedback","regex","^.*\\/([a-z]*-*[a-z]*) = '(.*)'.*$"]
+setNested ["AP","stateConfig","feedback","destination","AP,state"]
+setNested ["AP","stateConfig","feedback","1","key"]
+setNested ["AP","stateConfig","feedback","2","value"]
+
+# Data coming back from a request
+setNested ["AP","stateConfig","requireResult","regex","^(\\/> )*([a-z]*(-[a-z]*)*).=.*'(.*)'.*$"]
+setNested ["AP","stateConfig","requireResult","destination","AP,state"]
+setNested ["AP","stateConfig","requireResult","2","key"]
+setNested ["AP","stateConfig","requireResult","4","value"]
+
+deliver ["harvestState","_control","setConfigSrc AP,stateConfig"]
