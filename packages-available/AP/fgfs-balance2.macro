@@ -1,0 +1,31 @@
+# Experiment with flightgear abstraction ~ experimentation
+
+# Specify which host to connect to.
+if ~!Global,fgfsab!~,!=,,
+	set AP,defaultHost,~!Global,fgfsab!~
+else
+	set AP,defaultHost,localhost
+
+
+# Base
+createAPFaucets
+createFGFSBindings
+
+
+pass To be replaced,
+	# Set up the AP
+	createBalanceFaucet balance
+	APRules-base
+	
+	createAP default,default
+
+engageAP
+
+# Start up
+createTimer main,100000
+createTimer piggyBack,50000
+
+registerForEvent Timer,main,deliverAll,100
+registerForEvent Achel,finishEarly,startMainLoop
+
+
