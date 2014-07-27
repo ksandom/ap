@@ -6,15 +6,17 @@ if ~!Tmp,toInstanceName!~,==,,
 
 debug 1,blah ~!Tmp,toInstanceName!~
 
-# Set up the navigation. This will need to be replaced with something more intellegent once I'm ready to add proper routes.
-currentRunwayEnd ~!Tmp,toInstanceName!~
-# runwayTrajectory ~!Tmp,toInstanceName!~
 
 
 # Prepare the plane for flight
 deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/flight/flaps 0.3
 deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/flight/slats 0.2
 deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/flight/speedbrake-level 0
+
+# Set up the navigation. This will need to be replaced with something more intellegent once I'm ready to add proper routes.
+currentRunwayEnd ~!Tmp,toInstanceName!~
+# runwayTrajectory ~!Tmp,toInstanceName!~
+
 
 # Allow the take off to begin
 deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/gear/brake-parking 0
@@ -23,7 +25,7 @@ deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/gear/brake-right 0
 
 # Prepare AP for take off
 setNested AP,state,~!Tmp,toInstanceName!~,pitch-goal,0
-setNested AP,state,~!Tmp,toInstanceName!~,altitude-goal,2000
+setNested AP,state,~!Tmp,toInstanceName!~,altitude-goal,~!AP,state,default,safeAltitude!~
 
 
 
