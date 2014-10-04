@@ -1,0 +1,20 @@
+# Fly to and land at a specific runway. --flyTo=[instanceName],runwaySearchRegex . If multiple runways are matched, the first one will be chosen. ~ runways,user
+
+set Tmp,flyToInstance,~!Global,flyTo-0!~
+setIfNothing Tmp,flyToInstance,default
+
+listRunways ~!Global,flyTo-1!~
+
+countToVar Tmp,runways
+if ~!Tmp,runways!~,>,1,
+	first
+	debug 1,flyTo: More than one runway matched. The first one was chosen.
+	outNow
+
+loop
+	debug 1, flyTo: Will fly to co-ordinates ~!Result,latitudeBegin!~,~!Result,longitudeBegin!~
+	addWaypoint ~!Tmp,flyToInstance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+	
+	# TODO handel decent.
+
+unset Tmp,flyToInstance
