@@ -1,0 +1,8 @@
+# List available runways. --listRunways=[searchRegex] ~ runways
+
+getRunways
+
+if ~!Global,listRunways-0!~,!=,,
+	requireEach ~!Global,listRunways-0!~
+
+outNow

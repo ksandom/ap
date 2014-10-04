@@ -1,8 +1,9 @@
 # Which runway is closest to a given set of co-ordinates? --getCloseRunways=longitude,latitude,indexLevel ~ runway
+#onLoaded setFeatureType getCloseRunways,generateRunways
 
 collectionLoad Runways
 
-if ~!Global,getCloseRunwayss-2!~,==,,
+if ~!Global,getCloseRunways-2!~,==,,
 	set Tmp,indexLevel,2
 else
 	set Tmp,indexLevel,~!Global,getCloseRunways-2!~

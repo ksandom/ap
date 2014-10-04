@@ -1,0 +1,3 @@
+<~~ ~!Color,green!~Airport~!Color,default!~: ~%airport%~ ~!Color,green!~Runway~!Color,default!~: ~%runway%~
+  ~!Color,green!~Location~!Color,default!~: ~%latitudeBegin%~,~%longitudeBegin%~ ~!Color,brightBlack!~-> ~!Color,default!~~%latitudeEnd%~,~%longitudeEnd%~~!Color,default!~ ~!Color,green!~Heading~!Color,default!~: ~%heading%~ ~!Color,brightBlack!~(~%officialHeading%~)~!Color,default!~
+  ~!Color,green!~Length~!Color,default!~: ~%length%~ ~!Color,green!~Width~!Color,default!~: ~%width%~ ~!Color,green!~Surface~!Color,default!~: ~%surface%~ ~!Color,green!~Lighted~!Color,default!~: ~%lighted%~ ~!Color,green!~Closed~!Color,default!~: ~%closed%~ ~>

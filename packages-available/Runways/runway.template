@@ -1,0 +1,4 @@
+<~~ ~!Color,green!~Airport~!Color,default!~: ~%airport%~ ~!Color,green!~Runway~!Color,default!~: ~%runway%~
+  ~!Color,green!~Location~!Color,default!~: ~%latitudeBegin%~,~%longitudeBegin%~ ~!Color,brightBlack!~-> ~!Color,default!~~%latitudeEnd%~,~%longitudeEnd%~~!Color,default!~ ~!Color,green!~Heading~!Color,default!~: ~%heading%~ ~!Color,brightBlack!~(~%officialHeading%~)~!Color,default!~
+
+~>

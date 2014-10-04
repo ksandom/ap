@@ -1,0 +1,6 @@
+# Get runways ~ runways,hidden
+#onLoaded setFeatureType getRunways,generateRunways
+
+collectionLoad Runways
+retrieveResults Runways,runways
+

@@ -1,0 +1,4 @@
+# Install the data types to be used with runways. ~ runways,internal,install
+#onDefine registerForEvent Install,dataTypes,installDataTypesForRunways
+
+createDataType runway,runway,runwayMore,runwayLess,,A runway for an airport.
