@@ -50,5 +50,9 @@ loop
 			
 			debug 1,processWayPoints: ~!Result,instanceName!~ reached waypoint ~!Result,longitude!~,~!Result,latitude!~.
 			
+			if ~!Result,eventCategory!~,!=,,
+				if ~!Result,eventName!~,!=,,
+					debug 1,processWayPoints: Triggering requested event ~!Result,eventCategory!~,~!Result,eventName!~ with value "~!Result,eventValue!~".
+			
 			callFeature ~!Navigator,getNext!~
 	
