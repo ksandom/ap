@@ -6,5 +6,6 @@ setNested ["AP","state","default","type","plane"]
 setNested ["AP","state","default","v1","90"]
 setNested ["AP","state","default","v2","170"]
 setNested ["AP","state","default","safeAltitude","4000"]
+setNested ["AP","state","default","cruiseAltitude","25000"]
 
 registerForEvent Timer,piggyBack,throttlePiggyBack,1,default

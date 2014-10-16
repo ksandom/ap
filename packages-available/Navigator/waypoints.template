@@ -4,6 +4,6 @@
 debug: 
 
 <~~
-~!Color,green!~~%instanceName%~ ~!Color,default!~~%latitude%~,~%longitude%~  ~!Color,brightBlack!~(lat,long) ~!Color,yellow!~~%userDistance%~ ~!Color,brightBlack!~(~!Navigator,unit!~) ~!Color,brightBlue!~~%heading%~~!Color,default!~ ~!Color,brightBlack!~(degrees)
+~!Color,green!~~%instanceName%~ ~!Color,default!~~%latitude%~,~%longitude%~  ~!Color,brightBlack!~(lat,long) ~!Color,yellow!~~%userDistance%~ ~!Color,brightBlack!~(~!Navigator,unit!~) ~!Color,brightBlue!~~%heading%~~!Color,default!~ ~!Color,brightBlack!~(degrees) ~!Color,default!~~%eventCategory%~,~%eventName%~
 
 ~>~!Color,brightWhite!~Waypoints ~!Color,default!~~!Navigator,numberOfWayPoints!~

@@ -4,10 +4,6 @@ set Tmp,flyToInstance,~!Global,flyTo-0!~
 setIfNothing Tmp,flyToInstance,default
 
 if ~!Global,flyTo-1!~,!=,,
-	if ~!AP,state,~!Tmp,flyToInstance!~,airspeed-kt!~,<,~!AP,state,~!Tmp,flyToInstance!~,v1!~,
-		debug 1,flyTo: We aren't flying. Let's fix that.
-		takeOff
-	
 	debug 1,flyTo: instance=~!Tmp,flyToInstance!~ request=~!Global,flyTo-1!~
 	listRunways ~!Global,flyTo-1!~
 	
@@ -18,11 +14,14 @@ if ~!Global,flyTo-1!~,!=,,
 		debug 1,flyTo: More than one runway matched. The first one was chosen.
 		outNow
 	
-	loop
-		debug 1, flyTo: Will fly to co-ordinates ~!Result,latitudeBegin!~,~!Result,longitudeBegin!~
-		addWaypoint ~!Tmp,flyToInstance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,Flight,beginDecent,~!Tmp,flyToInstance!~
-		
-		# TODO handel decent. using event Flight,beginDecent (or replace it)
+	if ~!Tmp,runways!~,>,0,
+		debug 1,flyTo: We're ready. Let's do it.
+		if ~!AP,state,~!Tmp,flyToInstance!~,airspeed-kt!~,<,~!AP,state,~!Tmp,flyToInstance!~,v1!~,
+			debug 1,flyTo: We aren't flying. Let's fix that.
+			takeOff
+		plotApproach
+	else
+		debug 1,flyTo: No runways matched. Let's not fly.
 	
 	unset Tmp,flyToInstance
 else

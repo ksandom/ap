@@ -1,0 +1,13 @@
+# Take off and land at the same runway. --roundTrip[=instanceName] ~ ap,navigator
+
+set Tmp,instanceName,~!Global,roundTrip-0!~
+setIfNothing Tmp,instanceName,default
+
+whereAmI ~!Tmp,instanceName!~
+first
+loop
+	# TODO Using part of the location will probably succeed most of the time by fluke. But clashes are a real possibility. Do it properly.
+	set Tmp,runway,~!Result,longitudeBegin!~
+
+flyTo ~!Tmp,instanceName!~,^~!Tmp,runway!~$
+unset Tmp,runway

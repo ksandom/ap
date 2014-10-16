@@ -25,7 +25,7 @@ deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/gear/brake-right 0
 
 # Prepare AP for take off
 setNested AP,state,~!Tmp,toInstanceName!~,pitch-goal,0
-setNested AP,state,~!Tmp,toInstanceName!~,altitude-goal,~!AP,state,default,safeAltitude!~
+setNested AP,state,~!Tmp,toInstanceName!~,altitude-goal,~!AP,state,default,cruiseAltitude!~
 
 
 
