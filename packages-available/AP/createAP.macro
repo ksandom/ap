@@ -21,5 +21,6 @@ setNested ["AP","state","default","track-goal","118"]
 
 setNested ["AP","state","default","altitude-goal","0"]
 setNested ["AP","state","default","groundspeed-goal","0"]
+setNested ["AP","state","default","airspeed-goal","0"]
 
 setAPState stand,~!Tmp,instanceName!~

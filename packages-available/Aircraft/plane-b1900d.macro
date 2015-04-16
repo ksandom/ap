@@ -5,6 +5,7 @@
 setNested ["AP","state","default","type","plane"]
 setNested ["AP","state","default","v1","80"]
 setNested ["AP","state","default","v2","120"]
+setNested ["AP","state","default","vCruise","140"]
 setNested ["AP","state","default","safeAltitude","2000"]
 setNested ["AP","state","default","cruiseAltitude","17000"]
 

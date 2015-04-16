@@ -3,7 +3,6 @@
 setNested Navigator,deviance,instanceName,~!Global,calculateDeviance-0!~
 
 
-
 # get origin
 setNested ["Navigator","deviance","origin",~!Navigator,origins,~!Navigator,deviance,instanceName!~!~]
 
@@ -91,6 +90,5 @@ pass
 # Clean up
 unset Tmp,deviance
 unset Tmp,devianceInMeters
-unset Tmp,instanceName
 unset Navigator,deviance
 unset Tmp,shouldBeOffsets

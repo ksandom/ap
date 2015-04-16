@@ -251,8 +251,29 @@ pass
 registerForEvent AP,sustain,levelOut
 
 
-# Sustain flight
+# Sustain flight - just cruise at what ever speed is natural
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "sustain", ~!AP,stateRules,base,baseAltitude!~]
+
+
+
+# Speed controlled
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "speedControlled", ~!AP,stateRules,base,baseAltitude!~]
+
+# Pitch
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","input","variable","AP,state,~!Tmp,instanceName!~,airspeed-kt"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","input","goal","AP,state,~!Tmp,instanceName!~,airspeed-goal"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","destination","variable","AP,state,~!Tmp,instanceName!~,pitch-goal"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","destination","textOutput",""]
+
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","algorithm","acceleration"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","input","maxChangePerSecond","7"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","input","overshootTime","3"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","output","min","-45"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","output","max","45"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","output","accelerateMultiplier","0.01"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","output","decelerateMultiplier","0.1"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","output","seedPercent","0.01"]
+setNested ["AP","stateRules","~!Tmp,instanceName!~","speedControlled","speed","output","allowPanic","0"]
 
 
 pass

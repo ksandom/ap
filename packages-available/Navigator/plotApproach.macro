@@ -1,7 +1,7 @@
 # Plot the approach to an airport. --plotApproach=[instanceName] . This expects a single runway to be in the resultSet. If there is more than one, it will take the first one. ~ ap,navigator
+parameters instanceName
 
-set Tmp,paInstanceName,~!Global,plotApproach!~
-setIfNothing Tmp,paInstanceName,default
+setIfNothing Me,instanceName,default
 
 #  KSFO-01L-le: 
 #    airport: KSFO
@@ -64,6 +64,7 @@ loop
 	
 	# TODO approach seems off. Have switched xy back. Test.
 	# TODO slow down
+	# TODO flare
 	# TODO stop
 	# TODO more accurate WP for landing
 	# TODO more accurate altitude control
@@ -73,7 +74,9 @@ loop
 	setNested AP,events,beginDecent,
 		debug 1,plotApproach: Begining decent for instance ~!Global,~!AP,events,beginDecent!~!~
 		# TODO the problem is that the instance name is not getting throuigh. take parm.
-		altitude ~!Tmp,toInstanceName!~,~!AP,state,~!Global,~!AP,events,beginDecent!~!~,safeAltitude!~
+		altitude ~!Me,instanceName!~,~!AP,state,~!Global,~!AP,events,beginDecent!~!~,safeAltitude!~
+		# TODO set speedGoal
+		# TODO set to speedControlled
 	
 	registerForEvent Flight,beginDecent,~!AP,events,beginDecent!~
 	debug 1,plotApproach: Registered ~!AP,events,beginDecent!~ to Flight,beginDecent
@@ -84,6 +87,7 @@ loop
 	# put down the gear
 	setNested AP,events,finalApproach,
 		debug 1,plotApproach: Final approach for instance ~!Global,~!AP,events,finalApproach!~!~
+		# TODO set speedGoal
 		altitude ~!Global,~!AP,events,finalApproach!~!~,500
 	
 	registerForEvent Flight,finalApproach,~!AP,events,finalApproach!~
@@ -92,7 +96,8 @@ loop
 	# TODO write beginTouchDown
 	setNested AP,events,beginTouchDown,
 		debug 1,plotApproach: Begining touchdown for instance ~!Global,~!AP,events,beginTouchDown!~!~
-		altitude ~!Tmp,toInstanceName!~,0
+		# TODO set speedGoal
+		altitude ~!Me,instanceName!~,0
 	
 	registerForEvent Flight,beginTouchDown,~!AP,events,beginTouchDown!~
 	debug 1,plotApproach: Registered ~!Global,~!AP,events,beginTouchDown!~!~ to Flight,beginTouchDown

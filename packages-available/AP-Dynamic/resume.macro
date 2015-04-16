@@ -1,5 +1,8 @@
 # Resume normal flight. ~ ap,dynamic
 
-setAPState sustain,default
-setNested AP,state,default,altitude-goal,2000
+set Tmp,instanceName,~!Global,resume!~
+setIfNothing Tmp,instanceName,default
+
+setAPState sustain,~!Tmp,instanceName!~
+setNested AP,state,~!Tmp,instanceName!~,altitude-goal,~!AP,state,~!Tmp,flyToInstance!~,cruiseAltitude!~
 

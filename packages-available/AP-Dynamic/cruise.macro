@@ -1,0 +1,10 @@
+# Put the plane into speedControlled state and set the speed to the airoplane's cruise speed. ~ AP,dynamic
+
+set Tmp,cinstanceName,~!Global,cruise!~
+setIfNothing Tmp,cinstanceName,default
+
+setAPState speedControlled,~!Tmp,cinstanceName!~
+speed ~!Tmp,cinstanceName!~,~!AP,state,~!Tmp,cinstanceName!~,vCruise!~
+
+unset Tmp,cinstanceName
+debug 0,Cruise: ### Got here

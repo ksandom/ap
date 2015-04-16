@@ -1,4 +1,4 @@
-# Set the auto pilot state. --setAPState=instanceName,state ~ AP
+# Set the auto pilot state. --setAPState=state,instanceName ~ AP
 
 setNested AP,state,~!Global,setAPState-1!~,currentState,~!Global,setAPState-0!~
 

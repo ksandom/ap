@@ -4,7 +4,7 @@ set Tmp,toInstanceName,~!Global,takeOff-0!~
 if ~!Tmp,toInstanceName!~,==,,
 	set Tmp,toInstanceName,default
 
-debug 1,blah ~!Tmp,toInstanceName!~
+debug 2,takeOff: instanceName=~!Tmp,toInstanceName!~
 
 
 

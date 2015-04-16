@@ -1,15 +1,15 @@
 # Workout what runway is closest to our current position. --whereAmI=[instanceName] . instanceName defaults to default. ~ runways,user
 
 if ~!Global,whereAmI-0!~,==,,
-	set Tmp,instanceName,default
+	set Tmp,waiInstanceName,default
 else
-	set Tmp,instanceName,~!Global,whereAmI-0!~
+	set Tmp,waiInstanceName,~!Global,whereAmI-0!~
 
 
-debug 1,whichRunwayIsClosest ~!AP,state,~!Tmp,instanceName!~,longitude-deg!~,~!AP,state,~!Tmp,instanceName!~,latitude-deg!~
+debug 1,whichRunwayIsClosest ~!AP,state,~!Tmp,waiInstanceName!~,longitude-deg!~,~!AP,state,~!Tmp,waiInstanceName!~,latitude-deg!~
 
-whichRunwayIsClosest ~!AP,state,~!Tmp,instanceName!~,longitude-deg!~,~!AP,state,~!Tmp,instanceName!~,latitude-deg!~
+whichRunwayIsClosest ~!AP,state,~!Tmp,waiInstanceName!~,longitude-deg!~,~!AP,state,~!Tmp,waiInstanceName!~,latitude-deg!~
 
-unset Tmp,instanceName
+unset Tmp,waiInstanceName
 
 outNow
