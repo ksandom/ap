@@ -1,4 +1,6 @@
 # Remove the last waypoint derived values for a particular instance. --removeLastValues=instanceName ~ nav,waypoint
+parameters instanceName
 
-unset AP,state,~!Global,removeLastValues!~,lastTrack-goal
-unset AP,state,~!Global,removeLastValues!~,distance
+unset AP,state,~!Local,instanceName!~,lastTrack-goal
+unset AP,state,~!Local,instanceName!~,distance
+unset AP,state,~!Local,instanceName!~,beginingDistance

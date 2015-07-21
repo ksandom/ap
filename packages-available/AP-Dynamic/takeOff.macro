@@ -15,7 +15,7 @@ deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/flight/speedbrake-leve
 
 # Set up the navigation. This will need to be replaced with something more intellegent once I'm ready to add proper routes.
 currentRunwayEnd ~!Tmp,toInstanceName!~
-# runwayTrajectory ~!Tmp,toInstanceName!~
+runwayTrajectory ~!Tmp,toInstanceName!~
 
 
 # Allow the take off to begin
