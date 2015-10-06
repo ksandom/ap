@@ -1,10 +1,8 @@
 # Experiment with flightgear abstraction ~ experimentation
+parameters {"host":"localhost"}
 
 # Specify which host to connect to.
-if ~!Global,fgfsab!~,!=,,
-	set AP,defaultHost,~!Global,fgfsab!~
-else
-	set AP,defaultHost,localhost
+set AP,defaultHost,~!Local,host!~
 
 
 # Base

@@ -1,0 +1,11 @@
+# Start up the navigator. --startNavigator=[giveUpSeconds=4] . We aren't always traveling exactly at a waypoint, so will miss it by a certain amount. This amount is heavily influence by speed amoung other things. To prevent us going around in circles when a little deviation is fine, we take giveUpSeconds and multiply it by the current speed to get a distance. If our distance to that waypoint is less than the derived distance, we give up on the current waypoint and move on to the next one. ~ nav
+#onDefine registerForEvent AP,started,startNavigator
+parameters {"giveUpSeconds":"4"}
+
+createTimer navigator,100000
+registerForEvent Timer,navigator,navigatorTick
+
+if ~!Navigator,unit!~,==,,
+	setNavUserUnit km
+
+set Navigator,giveUpSeconds,~!Local,giveUpSeconds!~

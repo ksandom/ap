@@ -1,0 +1,9 @@
+# Convert degress around the globe into the distance chosen. --degreesToDistance=Category,variable,inputDegrees ~ ap,conversion
+parameters Category,variable,inputDegrees
+
+
+basicMaths Local,userDistance,~!Local,inputDegrees!~,*,~!Navigator,unitBaseMeasurement!~
+basicMaths Local,userDistance,~!Local,userDistance!~,/,360
+round ~!Local,Category!~,~!Local,variable!~,~!Local,userDistance!~,2
+
+makeLocalAvailable ~!Local,variable!~
