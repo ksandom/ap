@@ -12,22 +12,23 @@ if ~!Tmp,instanceName!~,==,,
 
 # Base settings
 # Roll
-setNested ["AP","stateRules","base","base","roll","input","min","-45"]
-setNested ["AP","stateRules","base","base","roll","input","center","0"]
-setNested ["AP","stateRules","base","base","roll","input","max","45"]
-setNested ["AP","stateRules","base","base","roll","input","multiplier","10"]
-
-setNested ["AP","stateRules","base","base","roll","output","min","1"]
-setNested ["AP","stateRules","base","base","roll","output","center","0"]
-setNested ["AP","stateRules","base","base","roll","output","max","-1"]
-setNested ["AP","stateRules","base","base","roll","output","multiplier","1"]
-
-# TODO These need to be abstracted out
-setNested ["AP","stateRules","base","base","roll","input","variable","AP,state,~!Tmp,instanceName!~,roll-deg"]
-setNested ["AP","stateRules","base","base","roll","input","goal","AP,state,~!Tmp,instanceName!~,roll-goal"]
-setNested ["AP","stateRules","base","base","roll","destination","variable","AP,state,~!Tmp,instanceName!~,aileron-req"]
-setNested ["AP","stateRules","base","base","roll","destination","textOutput","set /controls/flight/aileron ~%value%~"]
-
+massSet ["AP,stateRules,base,base,roll"],
+	setNested ~!Me,stuff!~,input,min,-45
+	setNested ~!Me,stuff!~,input,center,0
+	setNested ~!Me,stuff!~,input,max,45
+	setNested ~!Me,stuff!~,input,multiplier,10
+	
+	setNested ~!Me,stuff!~,output,min,1
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,-1
+	setNested ~!Me,stuff!~,output,multiplier,1
+	
+	# TODO These need to be abstracted out
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,roll-deg"]
+	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,roll-goal"]
+	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,aileron-req"]
+	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/aileron ~%value%~"]
+	
 
 
 # Pitch
