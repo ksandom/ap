@@ -1,26 +1,22 @@
 # Create an autopilot instance. --createAP=instanceName,apRule . ~ AP
 # TODO make apRule default to the value of instanceName
+parameters {"instanceName":"default","apRule":""}
 
-set Tmp,instanceName,~!Global,createAP-0!~
-if ~!Tmp,instanceName!~,==,,
-	set Tmp,instanceName,default
-
-set Tmp,apRule,~!Global,createAP-1!~
 if ~!Tmp,apRule!~,==,,
-	set Tmp,apRule,~!Tmp,instanceName!~
+	set Tmp,apRule,~!Local,instanceName!~
 
-APRules-base ~!Tmp,instanceName!~
+APRules-base ~!Local,instanceName!~
 
-setNested AP,state,~!Tmp,instanceName!~,apRule,~!Tmp,apRule!~
+setNested AP,state,~!Local,instanceName!~,apRule,~!Tmp,apRule!~
 
-setNested ["AP","state","default","roll-goal","0"]
-setNested ["AP","state","default","pitch-goal","0"]
+setNested ["AP","state","~!Local,instanceName!~","roll-goal","0"]
+setNested ["AP","state","~!Local,instanceName!~","pitch-goal","0"]
 
 # TODO This will need to be abstracted out to a runway at some point.
-setNested ["AP","state","default","track-goal","118"]
+setNested ["AP","state","~!Local,instanceName!~","track-goal","118"]
 
-setNested ["AP","state","default","altitude-goal","0"]
-setNested ["AP","state","default","groundspeed-goal","0"]
-setNested ["AP","state","default","airspeed-goal","0"]
+setNested ["AP","state","~!Local,instanceName!~","altitude-goal","0"]
+setNested ["AP","state","~!Local,instanceName!~","groundspeed-goal","0"]
+setNested ["AP","state","~!Local,instanceName!~","airspeed-goal","0"]
 
-setAPState stand,~!Tmp,instanceName!~
+setAPState stand,~!Local,instanceName!~
