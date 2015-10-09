@@ -50,21 +50,22 @@ massSet ["AP,stateRules,base,base,pitch"],
 
 
 # Yaw
-setNested ["AP","stateRules","base","base","yaw","input","min","-45"]
-setNested ["AP","stateRules","base","base","yaw","input","center","0"]
-setNested ["AP","stateRules","base","base","yaw","input","max","45"]
-setNested ["AP","stateRules","base","base","yaw","input","multiplier","10"]
-
-setNested ["AP","stateRules","base","base","yaw","output","min","0.4"]
-setNested ["AP","stateRules","base","base","yaw","output","center","0"]
-setNested ["AP","stateRules","base","base","yaw","output","max","-0.4"]
-setNested ["AP","stateRules","base","base","yaw","output","multiplier","1"]
-
-# TODO These need to be abstracted out
-setNested ["AP","stateRules","base","base","yaw","input","variable","AP,state,~!Tmp,instanceName!~,track-deviance"]
-setNested ["AP","stateRules","base","base","yaw","input","goal","AP,stateRules,base,base,yaw,input,center"]
-setNested ["AP","stateRules","base","base","yaw","destination","variable","AP,state,~!Tmp,instanceName!~,rudder-req"]
-setNested ["AP","stateRules","base","base","yaw","destination","textOutput","set /controls/flight/rudder ~%value%~"]
+massSet ["AP,stateRules,base,base,yaw"],
+	setNested ~!Me,stuff!~,input,min,-45
+	setNested ~!Me,stuff!~,input,center,0
+	setNested ~!Me,stuff!~,input,max,45
+	setNested ~!Me,stuff!~,input,multiplier,10
+	
+	setNested ~!Me,stuff!~,output,min,0.4
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,-0.4
+	setNested ~!Me,stuff!~,output,multiplier,1
+	
+	# TODO These need to be abstracted out
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,track-deviance"]
+	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,base,yaw,input,center"]
+	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,rudder-req"]
+	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/rudder ~%value%~"]
 
 
 # +Altitude
