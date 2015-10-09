@@ -28,25 +28,25 @@ massSet ["AP,stateRules,base,base,roll"],
 	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,roll-goal"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,aileron-req"]
 	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/aileron ~%value%~"]
-	
 
 
 # Pitch
-setNested ["AP","stateRules","base","base","pitch","input","min","-90"]
-setNested ["AP","stateRules","base","base","pitch","input","center","0"]
-setNested ["AP","stateRules","base","base","pitch","input","max","90"]
-setNested ["AP","stateRules","base","base","pitch","input","multiplier","3"]
-
-setNested ["AP","stateRules","base","base","pitch","output","min","-1"]
-setNested ["AP","stateRules","base","base","pitch","output","center","0"]
-setNested ["AP","stateRules","base","base","pitch","output","max","1"]
-setNested ["AP","stateRules","base","base","pitch","output","multiplier","0.8"]
-
-# TODO These need to be abstracted out
-setNested ["AP","stateRules","base","base","pitch","input","variable","AP,state,~!Tmp,instanceName!~,pitch-deg"]
-setNested ["AP","stateRules","base","base","pitch","input","goal","AP,state,~!Tmp,instanceName!~,pitch-goal"]
-setNested ["AP","stateRules","base","base","pitch","destination","variable","AP,state,~!Tmp,instanceName!~,elevator-req"]
-setNested ["AP","stateRules","base","base","pitch","destination","textOutput","set /controls/flight/elevator ~%value%~"]
+massSet ["AP,stateRules,base,base,pitch"],
+	setNested ~!Me,stuff!~,input,min,-90
+	setNested ~!Me,stuff!~,input,center,0
+	setNested ~!Me,stuff!~,input,max,90
+	setNested ~!Me,stuff!~,input,multiplier,3
+	
+	setNested ~!Me,stuff!~,output,min,-1
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,1
+	setNested ~!Me,stuff!~,output,multiplier,0.8
+	
+	# TODO These need to be abstracted out
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,pitch-deg"]
+	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,pitch-goal"]
+	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,elevator-req"]
+	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/elevator ~%value%~"]
 
 
 # Yaw
