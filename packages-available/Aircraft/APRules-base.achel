@@ -135,15 +135,15 @@ setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "takeOffAccelerate", ~!AP
 massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate"],
 
 	# Speed based events
-	setNested ~!Me,stuff!~,input,min,-1
-	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,4000
-	setNested ~!Me,stuff!~,input,multiplier,1
+	setNested ~!Me,stuff!~,speedEvents,input,min,-1
+	setNested ~!Me,stuff!~,speedEvents,input,center,0
+	setNested ~!Me,stuff!~,speedEvents,input,max,4000
+	setNested ~!Me,stuff!~,speedEvents,input,multiplier,1
 	
-	setNested ~!Me,stuff!~,output,min,1
-	setNested ~!Me,stuff!~,output,center,0
-	setNested ~!Me,stuff!~,output,max,-1
-	setNested ~!Me,stuff!~,output,multiplier,1
+	setNested ~!Me,stuff!~,speedEvents,output,min,1
+	setNested ~!Me,stuff!~,speedEvents,output,center,0
+	setNested ~!Me,stuff!~,speedEvents,output,max,-1
+	setNested ~!Me,stuff!~,speedEvents,output,multiplier,1
 
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,speedEvents,input,variable","AP,state,~!Tmp,instanceName!~,airspeed-kt"]
