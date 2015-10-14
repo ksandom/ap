@@ -10,12 +10,9 @@ createAPFaucets
 createFGFSBindings
 
 
-pass To be replaced,
-	# Set up the AP
-	createBalanceFaucet balance
-	APRules-base
-	
-	createAP default,default
+balanceM2NStart
+APRules-base
+createAP default,default
 
 engageAP
 
