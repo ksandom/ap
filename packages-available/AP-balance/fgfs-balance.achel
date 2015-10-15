@@ -2,6 +2,10 @@
 
 parameters {"host":"localhost"}
 
+aliasFeature balance-createAP,createAP
+aliasFeature balance-engageAP,engageAP
+aliasFeature balance-disengageAP,disengageAP
+
 # Specify which host to connect to.
 set AP,defaultHost,~!Local,host!~
 
@@ -15,9 +19,9 @@ createFGFSBindings
 createBalanceFaucet balance
 APRules-base
 
-createAP default,default
+callFeatureReturn createAP,default,default
 
-engageAP
+callFeatureReturn engageAP
 
 # Start up
 createTimer main,100000

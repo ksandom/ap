@@ -12,9 +12,10 @@ createFGFSBindings
 
 balanceM2NStart
 APRules-base
-createAP default,default
+callFeatureReturn createAP,default,default
 
-engageAP
+callFeatureReturn engageAP
+
 
 # Start up
 createTimer main,100000
