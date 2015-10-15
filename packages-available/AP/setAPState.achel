@@ -1,6 +1,6 @@
 # Set the auto pilot state. --setAPState=state,instanceName ~ AP
+parameters {"state":"stand","instanceName":"default"}
 
-setNested AP,state,~!Global,setAPState-1!~,currentState,~!Global,setAPState-0!~
+setNested AP,state,~!Local,instanceName!~,currentState,~!Local,state!~
 
-deliver ["balance","_control","setConfigSrc AP,stateRules,~!AP,state,~!Global,setAPState-1!~,apRule!~,~!Global,setAPState-0!~"]
-
+deliver ["balance","_control","setConfigSrc AP,stateRules,~!AP,state,~!Local,instanceName!~,apRule!~,~!Local,state!~"]
