@@ -9,8 +9,9 @@ APRules-base ~!Local,instanceName!~
 
 setNested AP,state,~!Local,instanceName!~,apRule,~!Tmp,apRule!~
 
+setNested ["AP","state","~!Local,instanceName!~","roll-goal","0"]
 roll ~!Local,instanceName!~,0
-pitch ~!Local,instanceName!~,20
+pitch ~!Local,instanceName!~,0
 
 # TODO This will need to be abstracted out to a runway at some point.
 track ~!Local,instanceName!~,118
