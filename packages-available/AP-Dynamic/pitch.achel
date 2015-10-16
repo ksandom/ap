@@ -1,4 +1,4 @@
-# Level out for stable flight ~ AP
+# Set the pitch goal. --pitch=instanceName,goal . This is useful for controlling the speed when using a plane. ~ AP
 parameters {"instanceName":"default","pitch":"0"}
 
 setNested AP,state,~!Local,instanceName!~,pitch-goal,~!Local,pitch!~

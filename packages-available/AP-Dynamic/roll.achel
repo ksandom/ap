@@ -1,0 +1,5 @@
+# Set the roll goal. --roll=instanceName,goal ~ AP
+parameters {"instanceName":"default","roll":"0"}
+
+setNested AP,state,~!Local,instanceName!~,roll-goal,~!Local,roll!~
+setAPState sustain,~!Local,instanceName!~

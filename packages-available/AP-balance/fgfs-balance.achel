@@ -1,8 +1,7 @@
 # Experiment with flightgear abstraction ~ experimentation
-
 parameters {"host":"localhost"}
 
-aliasFeature balance-createAP,createAP
+# Alias the features, so the correct ones are used in any given situation
 aliasFeature balance-engageAP,engageAP
 aliasFeature balance-disengageAP,disengageAP
 

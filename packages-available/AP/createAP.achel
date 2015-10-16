@@ -9,14 +9,14 @@ APRules-base ~!Local,instanceName!~
 
 setNested AP,state,~!Local,instanceName!~,apRule,~!Tmp,apRule!~
 
-setNested ["AP","state","~!Local,instanceName!~","roll-goal","0"]
-setNested ["AP","state","~!Local,instanceName!~","pitch-goal","0"]
+roll ~!Local,instanceName!~,0
+pitch ~!Local,instanceName!~,20
 
 # TODO This will need to be abstracted out to a runway at some point.
-setNested ["AP","state","~!Local,instanceName!~","track-goal","118"]
+track ~!Local,instanceName!~,118
 
-setNested ["AP","state","~!Local,instanceName!~","altitude-goal","0"]
-setNested ["AP","state","~!Local,instanceName!~","groundspeed-goal","0"]
-setNested ["AP","state","~!Local,instanceName!~","airspeed-goal","0"]
+altitude ~!Local,instanceName!~,0
+groundSpeed ~!Local,instanceName!~,0
+speed ~!Local,instanceName!~,0
 
 setAPState stand,~!Local,instanceName!~

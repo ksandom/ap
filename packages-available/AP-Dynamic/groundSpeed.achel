@@ -1,0 +1,9 @@
+# Set the desired ground speed of the plane. --groundSpeed=[instanceName],speedInKnots . This is useful for taxiing and other ground activity. ~ AP,dynamic
+
+set Tmp,sinstanceName,~!Global,speed-0!~
+setIfNothing Tmp,sinstanceName,default
+
+debug 1,speed: Set instance ~!Tmp,sinstanceName!~ to ~!Global,speed-1!~
+setNested AP,state,~!Tmp,sinstanceName!~,airspeed-goal,~!Global,speed-1!~
+
+unset Tmp,sinstanceName

@@ -1,0 +1,5 @@
+# Set the track goal. --track=instanceName,goal ~ AP
+parameters {"instanceName":"default","track":"0"}
+
+setNested AP,state,~!Local,instanceName!~,track-goal,~!Local,track!~
+setAPState sustain,~!Local,instanceName!~
