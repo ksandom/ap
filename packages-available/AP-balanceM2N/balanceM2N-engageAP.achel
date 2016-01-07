@@ -1,3 +1,4 @@
 # Engage the autopilot. --enageAP=[instanceName] Note that instanceName is this currently ignored and thus the engage is applied to ALL instances. ~ ap
+parameters {"instanceName":"default"}
 
-pass
+bM2NSetState ~!Local,instanceName!~,state,ruleSet

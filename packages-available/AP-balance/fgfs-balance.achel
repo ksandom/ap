@@ -1,6 +1,9 @@
 # Experiment with flightgear abstraction ~ experimentation
 parameters {"host":"localhost"}
 
+# Trigger any balance related events
+triggerEvent Balance,starting
+
 # Alias the features, so the correct ones are used in any given situation
 aliasFeature balance-engageAP,engageAP
 aliasFeature balance-disengageAP,disengageAP
@@ -29,4 +32,6 @@ createTimer piggyBack,50000
 registerForEvent Timer,main,deliverAll,100
 registerForEvent Achel,finishEarly,startMainLoop
 
+# Trigger any balance related events
+triggerEvent Balance,started
 
