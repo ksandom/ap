@@ -1,9 +1,9 @@
 # Start the auto pilot ~ ap
 
-createTimer getOrientation,600000
-createTimer getPosition,1200000
-createTimer getEngine,2400000
-createTimer calculateStuff,60000
+createTimer getOrientation,600
+createTimer getPosition,1200
+createTimer getEngine,2400
+createTimer calculateStuff,60
 
 
 registerForEvent Timer,getOrientation,deliver,clientSocket,default,ls /orientation
