@@ -8,6 +8,10 @@ ap is the first program/project to really push the boundaries of the new functio
 
     export extraSrc="https://github.com/ksandom/ap.git"; curl https://raw.github.com/ksandom/achel/master/supplimentary/misc/webInstall | bash
 
+For now the autopilot is fairly tightly linked to real world runways. Therefore, I recommend updating the runways before beginning.
+
+    ap -v --updateRunways
+
 ## Running it
 
 You will want flight gear to be running with the --telnet option opening port 12345. You can do this with

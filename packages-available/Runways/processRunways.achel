@@ -40,17 +40,42 @@ set Tmp,mapVariables,
 	else
 		debug 1,No ~!Tmp,begin!~. Potentially broken record? The id is "~!Result,id!~"
 
+set Tmp,sanityCheckRunway,
+	# Make sure we have all the rquired information before we add the runway.
+	set Result,sane,true
+	
+	if ~!Result,le_latitude_deg!~,==,,
+		set Result,sane,false
+	if ~!Result,le_longitude_deg!~,==,,
+		set Result,sane,false
+	if ~!Result,le_ident!~,==,,
+		set Result,sane,false
+	if ~!Result,he_latitude_deg!~,==,,
+		set Result,sane,false
+	if ~!Result,he_longitude_deg!~,==,,
+		set Result,sane,false
+	if ~!Result,he_ident!~,==,,
+		set Result,sane,false
 
 
-debug 1,Processing runways.
-		
+debug 1,Processing runways. (This could take a few minutes.)
+set Runways,attemptedRunways,0
+set Runways,droppedRunways,0
 loopLite
 	# First runway
-	set Tmp,begin,le
-	set Tmp,end,he
-	callFeature ~!Tmp,mapVariables!~
-	
-	# Second runway
-	set Tmp,begin,he
-	set Tmp,end,le
-	callFeature ~!Tmp,mapVariables!~
+	callFeature ~!Tmp,sanityCheckRunway!~
+	if ~!Result,sane!~,==,true,
+		set Tmp,begin,le
+		set Tmp,end,he
+		callFeature ~!Tmp,mapVariables!~
+		
+		# Second runway
+		set Tmp,begin,he
+		set Tmp,end,le
+		callFeature ~!Tmp,mapVariables!~
+		basicMaths Runways,attemptedRunways,~!Runways,attemptedRunways!~,+,1
+	else
+		debug 2,Dropped runway entry id=~!Result,id!~
+		basicMaths Runways,droppedRunways,~!Runways,droppedRunways!~,+,1
+		
+		
