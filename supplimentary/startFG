@@ -18,4 +18,4 @@ if [ "$1" != '' ]; then
 	extra="$extra --aircraft=$1"
 fi
 
-fgfs --telnet=12345 --timeofday=noon --runway=10L $extra
+fgfs --telnet=12345 --timeofday=noon $extra
