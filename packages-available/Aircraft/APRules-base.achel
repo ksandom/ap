@@ -86,7 +86,7 @@ massSet ["AP,stateRules,base,baseAltitude,altitude"],
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,altitude-deviance"]
 	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,baseAltitude,base,altitude,input,center"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,throttle-req"]
-	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/engines/engine/throttle ~%value%~"]
+	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/engines/current-engine/throttle ~%value%~"]
 
 
 
@@ -116,7 +116,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,rollForward,groundspeed"],
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,groundspeed-kt"]
 	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,groundspeed-goal"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,throttle-req"]
-	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/engines/engine/throttle ~%value%~"]
+	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/engines/current-engine/throttle ~%value%~"]
 
 
 	setNested ["~!Me,stuff!~,input,events,ready,description","We seem to be moving. Let's go!"]
