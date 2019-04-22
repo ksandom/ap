@@ -303,7 +303,7 @@ setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","destination",
 
 
 # Pitch
-setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","algorithm","acceleration"]
+# setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","algorithm","acceleration"]
 setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","input","maxChangePerSecond","7"]
 setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","input","overshootTime","3"]
 setNested ["AP","stateRules","genericPlane","takeOffClimb","pitch","output","accelerateMultiplier","0.3"]
