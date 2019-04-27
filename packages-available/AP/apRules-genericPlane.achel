@@ -4,7 +4,7 @@
 
 # Stand
 # Roll
-setNested ["AP","stateRules","genericPlane","stand","roll","algorithm","acceleration"]
+# setNested ["AP","stateRules","genericPlane","stand","roll","algorithm","acceleration"]
 setNested ["AP","stateRules","genericPlane","stand","roll","output","accelerateMultiplier","0.2"]
 setNested ["AP","stateRules","genericPlane","stand","roll","output","decelerateMultiplier","0.5"]
 setNested ["AP","stateRules","genericPlane","stand","roll","input","maxChangePerSecond","5"]
@@ -45,7 +45,7 @@ setNested ["AP","stateRules","genericPlane","stand","pitch","destination","textO
 
 
 # Yaw
-setNested ["AP","stateRules","genericPlane","stand","yaw","algorithm","acceleration"]
+# setNested ["AP","stateRules","genericPlane","stand","yaw","algorithm","acceleration"]
 setNested ["AP","stateRules","genericPlane","stand","yaw","output","accelerateMultiplier","0.2"]
 setNested ["AP","stateRules","genericPlane","stand","yaw","output","decelerateMultiplier","0.5"]
 setNested ["AP","stateRules","genericPlane","stand","yaw","input","maxChangePerSecond","5"]
@@ -73,7 +73,7 @@ setNested ["AP","stateRules","genericPlane","stand","yaw","destination","textOut
 
 # Take off - roll forward
 # Roll
-setNested ["AP","stateRules","genericPlane","rollForward","roll","algorithm","acceleration"]
+# setNested ["AP","stateRules","genericPlane","rollForward","roll","algorithm","acceleration"]
 setNested ["AP","stateRules","genericPlane","rollForward","roll","output","accelerateMultiplier","0.2"]
 setNested ["AP","stateRules","genericPlane","rollForward","roll","output","decelerateMultiplier","0.5"]
 setNested ["AP","stateRules","genericPlane","rollForward","roll","input","maxChangePerSecond","5"]
@@ -114,7 +114,7 @@ setNested ["AP","stateRules","genericPlane","rollForward","pitch","destination",
 
 
 # Yaw
-setNested ["AP","stateRules","genericPlane","rollForward","yaw","algorithm","acceleration"]
+# setNested ["AP","stateRules","genericPlane","rollForward","yaw","algorithm","acceleration"]
 setNested ["AP","stateRules","genericPlane","rollForward","yaw","output","accelerateMultiplier","0.2"]
 setNested ["AP","stateRules","genericPlane","rollForward","yaw","output","decelerateMultiplier","0.5"]
 setNested ["AP","stateRules","genericPlane","rollForward","yaw","input","maxChangePerSecond","5"]
@@ -163,7 +163,7 @@ registerForEvent AP,takeOffReady,setAPState,takeOffAccelerate
 
 # Take off - accelerate
 # Roll
-setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","algorithm","acceleration"]
+# setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","algorithm","acceleration"]
 setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","output","accelerateMultiplier","0.2"]
 setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","output","decelerateMultiplier","0.5"]
 setNested ["AP","stateRules","genericPlane","takeOffAccelerate","roll","input","maxChangePerSecond","5"]
@@ -280,7 +280,7 @@ registerForEvent AP,takeOffV2,v2
 
 # Take off - climb
 # Roll
-setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","algorithm","acceleration"]
+# setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","algorithm","acceleration"]
 setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","output","accelerateMultiplier","0.2"]
 setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","output","decelerateMultiplier","0.5"]
 setNested ["AP","stateRules","genericPlane","takeOffClimb","roll","input","maxChangePerSecond","5"]

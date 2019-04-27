@@ -273,7 +273,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,speedControlled,speed"],
 	setNested ["~!Me,stuff!~","destination","variable","AP,state,~!Tmp,instanceName!~,pitch-goal"]
 	setNested ["~!Me,stuff!~","destination","textOutput",""]
 
-	setNested ["~!Me,stuff!~","algorithm","acceleration"]
+	# setNested ["~!Me,stuff!~","algorithm","acceleration"]
 	setNested ["~!Me,stuff!~","input","maxChangePerSecond","7"]
 	setNested ["~!Me,stuff!~","input","overshootTime","3"]
 	setNested ["~!Me,stuff!~","output","min","-45"]
