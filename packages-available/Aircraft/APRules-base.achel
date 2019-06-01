@@ -16,7 +16,8 @@ massSet ["AP,stateRules,base,base,roll"],
 	setNested ~!Me,stuff!~,input,min,-45
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,45
-	setNested ~!Me,stuff!~,input,multiplier,10
+	setNested ~!Me,stuff!~,input,multiplier,1
+	setNested ~!Me,stuff!~,input,expo,0.1
 	
 	setNested ~!Me,stuff!~,output,min,1
 	setNested ~!Me,stuff!~,output,center,0
@@ -54,7 +55,8 @@ massSet ["AP,stateRules,base,base,yaw"],
 	setNested ~!Me,stuff!~,input,min,-45
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,45
-	setNested ~!Me,stuff!~,input,multiplier,10
+	setNested ~!Me,stuff!~,input,multiplier,1
+	setNested ~!Me,stuff!~,input,expo,1
 	
 	setNested ~!Me,stuff!~,output,min,0.4
 	setNested ~!Me,stuff!~,output,center,0
