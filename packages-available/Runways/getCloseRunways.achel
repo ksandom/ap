@@ -20,7 +20,9 @@ if ~!Tmp,longitude!~~!Tmp,latitude!~,!=,00,
 	
 	loopLite
 		retrieveResults Runways,runways,~!Result,key!~
+		set Local,key,~!Result,key!~
 		setCategory Result
+		set Result,retrieveKey,~!Local,key!~
 		clearResults
 
 
