@@ -1,4 +1,4 @@
 # Tag settings
-  lastWhen='2019-07-16'
-  lastHash='941acaaf506102d4bee24bfd403a0e5d507a9040'
+  lastWhen='2019-07-19'
+  lastHash='317c60369ca49d4922c7b64749ef1949fecc5a22'
   point=0
