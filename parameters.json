@@ -1,1 +1,1 @@
-{"name":"ap","ap":{"packages":{"BASE":{"sourceRepo":"achel","packageRegex":".*"},"SELF":{"sourceRepo":"ap","packageRegex":".*"},"mass":{"sourceRepo":"mass","packageRegex":".*"}},"name":"ap","description":"An auto pilot implemented in Achel.","execName":"ap","packagestui":["soThatTheChangedFlagWillBeSet"]}}
+{"name":"ap","ap":{"packages":{"BASE":{"sourceRepo":"achel","packageRegex":".*"},"SELF":{"sourceRepo":"ap","packageRegex":".*"}},"name":"ap","description":"An auto pilot implemented in Achel.","execName":"ap","packagestui":["soThatTheChangedFlagWillBeSet"]}}
