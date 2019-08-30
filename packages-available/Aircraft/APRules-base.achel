@@ -16,7 +16,8 @@ massSet ["AP,stateRules,base,base,roll"],
 	setNested ~!Me,stuff!~,input,min,-45
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,45
-	setNested ~!Me,stuff!~,input,multiplier,10
+	setNested ~!Me,stuff!~,input,multiplier,1
+	setNested ~!Me,stuff!~,input,expo,0.1
 	
 	setNested ~!Me,stuff!~,output,min,1
 	setNested ~!Me,stuff!~,output,center,0
@@ -54,7 +55,8 @@ massSet ["AP,stateRules,base,base,yaw"],
 	setNested ~!Me,stuff!~,input,min,-45
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,45
-	setNested ~!Me,stuff!~,input,multiplier,10
+	setNested ~!Me,stuff!~,input,multiplier,1
+	setNested ~!Me,stuff!~,input,expo,1
 	
 	setNested ~!Me,stuff!~,output,min,0.4
 	setNested ~!Me,stuff!~,output,center,0
@@ -86,7 +88,7 @@ massSet ["AP,stateRules,base,baseAltitude,altitude"],
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,altitude-deviance"]
 	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,baseAltitude,base,altitude,input,center"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,throttle-req"]
-	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/engines/engine/throttle ~%value%~"]
+	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/engines/current-engine/throttle ~%value%~"]
 
 
 
@@ -116,7 +118,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,rollForward,groundspeed"],
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,groundspeed-kt"]
 	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,groundspeed-goal"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,throttle-req"]
-	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/engines/engine/throttle ~%value%~"]
+	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/engines/current-engine/throttle ~%value%~"]
 
 
 	setNested ["~!Me,stuff!~,input,events,ready,description","We seem to be moving. Let's go!"]
@@ -179,7 +181,7 @@ setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "takeOffClimb", ~!AP,stat
 
 # Pitch
 massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffClimb,pitch"],
-	setNested ["~!Me,stuff!~,algorithm","acceleration"]
+	# setNested ["~!Me,stuff!~,algorithm","acceleration"]
 	setNested ["~!Me,stuff!~,input","maxChangePerSecond","7"]
 	setNested ["~!Me,stuff!~,input","overshootTime","3"]
 	setNested ["~!Me,stuff!~,output","accelerateMultiplier","0.3"]
@@ -273,7 +275,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,speedControlled,speed"],
 	setNested ["~!Me,stuff!~","destination","variable","AP,state,~!Tmp,instanceName!~,pitch-goal"]
 	setNested ["~!Me,stuff!~","destination","textOutput",""]
 
-	setNested ["~!Me,stuff!~","algorithm","acceleration"]
+	# setNested ["~!Me,stuff!~","algorithm","acceleration"]
 	setNested ["~!Me,stuff!~","input","maxChangePerSecond","7"]
 	setNested ["~!Me,stuff!~","input","overshootTime","3"]
 	setNested ["~!Me,stuff!~","output","min","-45"]

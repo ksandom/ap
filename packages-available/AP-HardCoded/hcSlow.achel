@@ -1,7 +1,7 @@
 # Slow down the plane. ~ ap,flight,plane
 
 debug 1,Setting controls to slow the plane down.
-deliver clientSocket,default,set /controls/engines/engine/throttle 0.3
+deliver clientSocket,default,set /controls/engines/current-engine/throttle 0.3
 deliver clientSocket,default,set /controls/flight/flaps 0.2
 deliver clientSocket,default,set /controls/flight/elevator -0.1
 

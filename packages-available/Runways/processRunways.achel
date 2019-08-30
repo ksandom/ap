@@ -6,6 +6,7 @@ set Tmp,mapVariables,
 	if ~!Result,~!Tmp,begin!~_ident!~,!=,,
 		isolate
 			set Tmp,key,~!Result,airport_ident!~-~!Result,~!Tmp,begin!~_ident!~-~!Tmp,begin!~
+			set Tmp,keyCounterPart,~!Result,airport_ident!~-~!Result,~!Tmp,end!~_ident!~-~!Tmp,end!~
 			
 			debug 2,Processing record id="~!Result,id!~" airport="~!Result,airport_ident!~" key="Runways,runways,~!Tmp,key!~"
 			
@@ -24,7 +25,9 @@ set Tmp,mapVariables,
 			
 			setNested Runways,runways,~!Tmp,key!~,longitudeEnd,~!Result,~!Tmp,end!~_longitude_deg!~
 			setNested Runways,runways,~!Tmp,key!~,latitudeEnd,~!Result,~!Tmp,end!~_latitude_deg!~
-				
+			
+			setNested Runways,runways,~!Tmp,key!~,myKey,~!Tmp,key!~
+			setNested Runways,runways,~!Tmp,key!~,myKeyCounterPart,~!Tmp,keyCounterPart!~
 			
 			setNested Runways,runways,~!Tmp,key!~,officialHeading,~!Result,~!Tmp,begin!~_heading_degT!~
 			# The heading provided isn't accurate enough for our needs, so we calculate it.
@@ -40,17 +43,42 @@ set Tmp,mapVariables,
 	else
 		debug 1,No ~!Tmp,begin!~. Potentially broken record? The id is "~!Result,id!~"
 
+set Tmp,sanityCheckRunway,
+	# Make sure we have all the rquired information before we add the runway.
+	set Result,sane,true
+	
+	if ~!Result,le_latitude_deg!~,==,,
+		set Result,sane,false
+	if ~!Result,le_longitude_deg!~,==,,
+		set Result,sane,false
+	if ~!Result,le_ident!~,==,,
+		set Result,sane,false
+	if ~!Result,he_latitude_deg!~,==,,
+		set Result,sane,false
+	if ~!Result,he_longitude_deg!~,==,,
+		set Result,sane,false
+	if ~!Result,he_ident!~,==,,
+		set Result,sane,false
 
 
-debug 1,Processing runways.
-		
+debug 1,Processing runways. (This could take a few minutes.)
+set Runways,attemptedRunways,0
+set Runways,droppedRunways,0
 loopLite
 	# First runway
-	set Tmp,begin,le
-	set Tmp,end,he
-	callFeature ~!Tmp,mapVariables!~
-	
-	# Second runway
-	set Tmp,begin,he
-	set Tmp,end,le
-	callFeature ~!Tmp,mapVariables!~
+	callFeature ~!Tmp,sanityCheckRunway!~
+	if ~!Result,sane!~,==,true,
+		set Tmp,begin,le
+		set Tmp,end,he
+		callFeature ~!Tmp,mapVariables!~
+		
+		# Second runway
+		set Tmp,begin,he
+		set Tmp,end,le
+		callFeature ~!Tmp,mapVariables!~
+		basicMaths Runways,attemptedRunways,~!Runways,attemptedRunways!~,+,1
+	else
+		debug 2,Dropped runway entry id=~!Result,id!~
+		basicMaths Runways,droppedRunways,~!Runways,droppedRunways!~,+,1
+		
+		
