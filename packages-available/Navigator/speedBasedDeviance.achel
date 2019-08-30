@@ -6,6 +6,8 @@ if ~!Tmp,instanceName!~,==,,
 
 
 if ~!AP,state,~!Tmp,instanceName!~,airspeed-kt!~,>,0,
+	# TODO How do degrees and knots relate???
+	# TODO Are all variables coming through?
 	basicMaths Tmp,speedBasedDeviance,~!AP,state,~!Tmp,instanceName!~,course-deviance!~,*,100
 	basicMaths Tmp,speedBasedDeviance,~!Tmp,speedBasedDeviance!~,/,~!AP,state,~!Tmp,instanceName!~,airspeed-kt!~
 	degreesToMeters Tmp,speedBasedDevianceInMeters,~!Tmp,speedBasedDeviance!~
