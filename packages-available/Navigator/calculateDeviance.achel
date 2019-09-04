@@ -68,6 +68,12 @@ else
 degreesToMeters Tmp,devianceInMeters,~!Tmp,deviance!~
 
 
+# Keep track of the previous and current deviance.
+if ~!AP,state,~!Navigator,deviance,instanceName!~,course-deviance!~,!=,,
+	setNested AP,state,~!Navigator,deviance,instanceName!~,course-deviance-previous,~!AP,state,~!Navigator,deviance,instanceName!~,course-deviance!~
+else
+	setNested AP,state,~!Navigator,deviance,instanceName!~,course-deviance-previous,~!Tmp,deviance!~
+
 # Send it where needed.
 setNested AP,state,~!Navigator,deviance,instanceName!~,course-deviance,~!Tmp,deviance!~
 setNested AP,state,~!Navigator,deviance,instanceName!~,course-devianceInMeters,~!Tmp,devianceInMeters!~

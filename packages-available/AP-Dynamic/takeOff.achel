@@ -14,7 +14,7 @@ deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/flight/slats 0.2
 deliver clientSocket,~!Tmp,toInstanceName!~,set /controls/flight/speedbrake-level 0
 
 # Set up the navigation. This will need to be replaced with something more intellegent once I'm ready to add proper routes.
-currentRunwayEnd ~!Tmp,toInstanceName!~
+#currentRunwayEnd ~!Tmp,toInstanceName!~
 runwayTrajectory ~!Tmp,toInstanceName!~
 
 

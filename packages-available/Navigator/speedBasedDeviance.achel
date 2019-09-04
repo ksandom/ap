@@ -1,17 +1,32 @@
 # Calculate a new deviance value that diminishes based on speed. The idea is to reduce the effort as speed increases with the intention to reduce oscilations. It's likely that this will be a fragile solution. It assumes that --calculateDeviance has been run. --speedBasedDeviance=[instanceName] ~ navigator,deviance,calculate
 
-set Tmp,instanceName,~!Global,speedBasedDeviance-0!~
-if ~!Tmp,instanceName!~,==,,
-	set Tmp,instanceName,default
+set Local,instanceName,~!Global,speedBasedDeviance-0!~
+if ~!Local,instanceName!~,==,,
+	set Local,instanceName,default
 
 
-if ~!AP,state,~!Tmp,instanceName!~,airspeed-kt!~,>,0,
-	basicMaths Tmp,speedBasedDeviance,~!AP,state,~!Tmp,instanceName!~,course-deviance!~,*,100
-	basicMaths Tmp,speedBasedDeviance,~!Tmp,speedBasedDeviance!~,/,~!AP,state,~!Tmp,instanceName!~,airspeed-kt!~
-	degreesToMeters Tmp,speedBasedDevianceInMeters,~!Tmp,speedBasedDeviance!~
+if ~!AP,state,~!Local,instanceName!~,airspeed-kt!~,>,0,
+	# TODO How do degrees and knots relate???
+	#  1 knot = 1.852
 	
-	setNested AP,state,~!Tmp,instanceName!~,speedBasedDeviance,~!Tmp,speedBasedDeviance!~
-	setNested AP,state,~!Tmp,instanceName!~,speedBasedDevianceInMeters,~!Tmp,speedBasedDevianceInMeters!~
+	# Get deviance in meters.
+	setNested AP,state,~!Local,instanceName!~,deviance,~!Local,speedBasedDeviance!~
+	degreesToMeters Local,devianceInMeters,~!AP,state,~!Local,instanceName!~,course-deviance!~
+	setNested AP,state,~!Local,instanceName!~,devianceInMeters,~!Local,devianceInMeters!~
 	
-	unset Tmp,speedBasedDeviance
-	unset Tmp,speedBasedDevianceInMeters
+	# Get speed in km/h.
+	basicMaths Local,speedInKMH,~!AP,state,~!Local,instanceName!~,airspeed-kt!~,*,1.852
+	
+	# Get seconds to waypoint.
+	basicMaths Local,speedInMetersPH,~!Local,speedInKMH!~,*,1000
+	basicMaths Local,speedInMetersPS,~!Local,speedInMetersPH!~,*,60
+	basicMaths Local,timeToWaypoint,~!Local,devianceInMeters!~,/,~!Local,speedInMetersPS!~
+	
+	#basicMaths Local,speedBasedDeviance,~!AP,state,~!Local,instanceName!~,course-deviance!~,*,.01
+	#basicMaths Local,speedBasedDeviance,~!Local,speedBasedDeviance!~,/,~!AP,state,~!Local,instanceName!~,airspeed-kt!~
+	#degreesToMeters Local,speedBasedDevianceInMeters,~!Local,speedBasedDeviance!~
+	
+	#setNested AP,state,~!Local,instanceName!~,speedBasedDeviance,~!Local,speedBasedDeviance!~
+	#setNested AP,state,~!Local,instanceName!~,speedBasedDevianceInMeters,~!Local,speedBasedDevianceInMeters!~
+	
+	#debug 1,cource-deviance=~!AP,state,~!Local,instanceName!~,course-deviance!~ airspeed=~!AP,state,~!Local,instanceName!~,airspeed-kt!~
