@@ -5,9 +5,12 @@ if ~!Local,instanceName!~,==,,
 	set Local,instanceName,default
 
 
-if ~!AP,state,~!Local,instanceName!~,airspeed-kt!~,>,0,
+if ~!AP,state,~!Tmp,instanceName!~,airspeed-kt!~,>,0,
 	# TODO How do degrees and knots relate???
-	#  1 knot = 1.852
+	# TODO Are all variables coming through?
+	basicMaths Tmp,speedBasedDeviance,~!AP,state,~!Tmp,instanceName!~,course-deviance!~,*,100
+	basicMaths Tmp,speedBasedDeviance,~!Tmp,speedBasedDeviance!~,/,~!AP,state,~!Tmp,instanceName!~,airspeed-kt!~
+	degreesToMeters Tmp,speedBasedDevianceInMeters,~!Tmp,speedBasedDeviance!~
 	
 	# Get deviance in meters.
 	setNested AP,state,~!Local,instanceName!~,deviance,~!Local,speedBasedDeviance!~
