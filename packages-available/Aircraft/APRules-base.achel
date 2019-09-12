@@ -33,10 +33,13 @@ massSet ["AP,stateRules,base,base,roll"],
 
 # Pitch
 massSet ["AP,stateRules,base,base,pitch"],
+	setNested ~!Me,stuff!~,pid,use,1
+	setNested ["~!Me,stuff!~,algorithm","PID"]
+	
 	setNested ~!Me,stuff!~,input,min,-90
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,90
-	setNested ~!Me,stuff!~,input,multiplier,3
+	setNested ~!Me,stuff!~,input,multiplier,1
 	
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
@@ -52,6 +55,9 @@ massSet ["AP,stateRules,base,base,pitch"],
 
 # Yaw
 massSet ["AP,stateRules,base,base,yaw"],
+	setNested ~!Me,stuff!~,pid,use,1
+	setNested ["~!Me,stuff!~,algorithm","PID"]
+	
 	setNested ~!Me,stuff!~,input,min,-45
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,45
