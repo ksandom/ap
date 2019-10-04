@@ -1,9 +1,7 @@
 # Create some base rules that other planes can inherit from. --APRules-base=[instanceName] . instanceName defaults to "default". ~ AP,rules,plane
+parameters {"instanceName":"default"}
 
-set Tmp,instanceName,~!Global,APRules-base-0!~
-if ~!Tmp,instanceName!~,==,,
-	set Tmp,instanceName,default
-
+set Tmp,instanceName,~!Local,instanceName!~
 
 # TODO double check out the events are called (I can't remember). If they don't convey the instanceName (which I think they don't), it can be set in this macro as the value being passed, and also being amended to the event name so that there isn't clash.
 
@@ -33,8 +31,8 @@ massSet ["AP,stateRules,base,base,roll"],
 
 # Pitch
 massSet ["AP,stateRules,base,base,pitch"],
-	setNested ~!Me,stuff!~,pid,use,1
-	setNested ["~!Me,stuff!~,algorithm","PID"]
+	# setNested ~!Me,stuff!~,pid,use,1
+	# setNested ["~!Me,stuff!~,algorithm","PID"]
 	
 	setNested ~!Me,stuff!~,input,min,-90
 	setNested ~!Me,stuff!~,input,center,0
@@ -296,3 +294,5 @@ pass
 	get AP,stateRules,~!Tmp,instanceName!~,sustain
 	setNested
 	outNow
+
+unset Tmp,instanceName

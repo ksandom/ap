@@ -55,10 +55,10 @@ loop
 		# AP,state,~!Local,instanceName!~,latitude-deg
 		# AP,previousState,~!Local,instanceName!~,longitude-deg
 		# AP,previousState,~!Local,instanceName!~,latitude-deg
-		if ~!AP,state,~!Navigator,deviance,instanceName!~,course-deviance!~,!=,,
-			setNested AP,state,~!Navigator,deviance,instanceName!~,course-deviance-previous,~!AP,state,~!Navigator,deviance,instanceName!~,course-deviance!~
+		if ~!AP,state,~!Local,instanceName!~,course-deviance!~,!=,,
+			setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!AP,state,~!Local,instanceName!~,course-deviance!~
 		else
-			setNested AP,state,~!Navigator,deviance,instanceName!~,course-deviance-previous,~!Tmp,deviance!~
+			setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!Tmp,deviance!~
 
 
 		set Local,previousLong,~!AP,previousState,~!Local,instanceName!~,longitude-deg!~
