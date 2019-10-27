@@ -8,7 +8,7 @@ if ~!AP,state,~!Local,instanceName!~,heading-tolerance!~,==,,
 	setNested AP,state,~!Local,instanceName!~,heading-method,track
 
 # How far off are the heading and track from each other.
-basicMaths Local,heading-difference,~!AP,state,~!Local,instanceName!~,heading-deg!~,-,~!AP,state,~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,heading-method!~-deg!~
+basicMaths Local,heading-difference,~!AP,state,~!Local,instanceName!~,heading-deg!~,-,~!AP,state,~!Local,instanceName!~,track-deg!~
 absolute Local,absolute-difference,~!Local,heading-difference!~
 
 if ~!Local,absolute-difference!~,>,~!AP,state,~!Local,instanceName!~,heading-tolerance!~,
@@ -53,7 +53,7 @@ if ~!AP,state,~!Local,instanceName!~,track-goal!~,>,360,
 
 basicMaths Local,trackDifference,~!AP,state,~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,heading-method!~-deg!~,-,~!AP,state,~!Local,instanceName!~,track-goal!~
 
-debug 3, trackDifference=~!Local,trackDifference!~ track=~!AP,state,~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,heading-method!~-deg!~ goal=~!AP,state,~!Local,instanceName!~,track-goal!~ instanceName=~!Local,instanceName!~
+debug 1, ~!Color,brightYellow!~trackDifference=~!Local,trackDifference!~~!Color,default!~ track=~!AP,state,~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,heading-method!~-deg!~ goal=~!AP,state,~!Local,instanceName!~,track-goal!~ instanceName=~!Local,instanceName!~
 # Choose the shortest way there.
 if ~!Local,trackDifference!~,<,-180,
 	debug 2,calculateHeadingDeviance: OOR <-180 = "~!Local,trackDifference!~"
