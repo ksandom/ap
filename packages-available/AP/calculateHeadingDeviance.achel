@@ -12,8 +12,10 @@ basicMaths Local,heading-difference,~!AP,state,~!Local,instanceName!~,heading-de
 absolute Local,absolute-difference,~!Local,heading-difference!~
 
 if ~!Local,absolute-difference!~,>,~!AP,state,~!Local,instanceName!~,heading-tolerance!~,
+	debug 0,heading-method=heading ~!Local,absolute-difference!~,>,~!AP,state,~!Local,instanceName!~,heading-tolerance!~,
 	setNested AP,state,~!Local,instanceName!~,heading-method,heading
 elseIf ~!Local,absolute-difference!~,<,~!AP,state,~!Local,instanceName!~,heading-forgiveness!~,
+	debug 0,heading-method=track ~!Local,absolute-difference!~,<,~!AP,state,~!Local,instanceName!~,heading-forgiveness!~
 	setNested AP,state,~!Local,instanceName!~,heading-method,track
 
 # TODO Fix slow speed track

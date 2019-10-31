@@ -11,16 +11,20 @@ set Navigator,getNext,
 	removeLastValues ~!Result,instanceName!~
 	
 	# Get the waypoints back so the first one can be chosen again.
+	# TODO This won't work as expected when I try to run multiple instances because stashResults only takes 2 parameters.
 	retrieveResults Navigator,instances,~!Local,instanceName!~
 	
 	# Do it all again
 	# processWayPoints ~!Result,instanceName!~,noLast
 
 # We just want to work with the waypoints.
+# TODO This won't work as expected when I try to run multiple instances because stashResults only takes 2 parameters.
+# TODO Where is Result,key coming from?
 retrieveResults Navigator,instances,~!Result,key!~
 
 # Calculate the status of each waypoint, and store it.
 getWaypointStatus
+# TODO This won't work as expected when I try to run multiple instances because stashResults only takes 2 parameters.
 stashResults Navigator,instances,~!Local,instanceName!~
 
 first
@@ -109,6 +113,7 @@ loop
 			# debug 1,is if ~!Navigator,sensitiveChange!~,>,~!AP,state,~!Local,instanceName!~,distance!~ ?
 			# if ~!Navigator,sensitiveChange!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
 			debug 4,if ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
+			# TODO The problem is that we need to trigger getNext before we start moving.
 			if ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
 				debug 1,processWayPoints: ~!Result,instanceName!~ reached waypoint ~!Result,longitude!~,~!Result,latitude!~. ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~
 				debug 3,processWayPoints DEBUG01 distanceD=~!AP,state,~!Local,instanceName!~,distanceSinceLastIteration!~/~!Local,distanceSinceLastIteration!~ timeD=~!Local,timeDifference!~ now=~!AP,state,~!Local,instanceName!~,now!~ before=~!AP,previousState,~!Local,instanceName!~,now!~   giveUpThreshold=~!Local,giveUpThreshold!~=(~!Local,speedOfIteration!~ * ~!Navigator,giveUpSeconds!~) ?>? ~!AP,state,~!Local,instanceName!~,distance!~ degreesSinceLastIteration=~!Local,degreesSinceLastIteration!~
