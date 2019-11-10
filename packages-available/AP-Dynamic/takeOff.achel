@@ -20,6 +20,9 @@ runwayTrajectory ~!Local,instanceName!~
 calculateHeadingDeviance ~!Local,instanceName!~
 processWayPoints ~!Local,instanceName!~
 
+# TODO This needs to take the instance into account.
+deliver ["balance","_control", "reset"]
+
 
 # Allow the take off to begin
 deliver clientSocket,~!Local,instanceName!~,set /controls/gear/brake-parking 0

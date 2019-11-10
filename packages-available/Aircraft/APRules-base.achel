@@ -104,6 +104,35 @@ setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "stand", ~!AP,stateRules,
 
 
 
+# Line up and wait
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "lineUpAndWait", ~!AP,stateRules,base,base!~]
+massSet ["AP,stateRules,~!Tmp,instanceName!~,lineUpAndWait,groundspeed"],
+	setNested ~!Me,stuff!~,input,min,-1
+	setNested ~!Me,stuff!~,input,center,0
+	setNested ~!Me,stuff!~,input,max,40
+	setNested ~!Me,stuff!~,input,multiplier,1
+	
+	setNested ~!Me,stuff!~,output,min,1
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,-1
+	setNested ~!Me,stuff!~,output,multiplier,0.5
+
+massSet ["AP,stateRules,~!Tmp,instanceName!~,lineUpAndWait,yaw"],
+	setNested ["~!Me,stuff!~,algorithm","direct"]
+	
+	setNested ~!Me,stuff!~,input,min,-5
+	setNested ~!Me,stuff!~,input,max,5
+	
+	setNested ~!Me,stuff!~,output,min,0.2
+	setNested ~!Me,stuff!~,output,max,-0.2
+	
+	# TODO These need to be abstracted out
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,track-deviance"]
+	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,base,yaw,input,center"]
+	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,rudder-req"]
+	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/rudder ~%value%~"]
+
+
 # Take off - roll forward
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "rollForward", ~!AP,stateRules,base,base!~]
 massSet ["AP,stateRules,~!Tmp,instanceName!~,rollForward,groundspeed"],
