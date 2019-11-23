@@ -4,6 +4,6 @@ set Tmp,instanceName,~!Global,v2-0!~
 if ~!Tmp,instanceName!~,==,,
 	set Tmp,instanceName,default
 
-setNested AP,state,~!Tmp,instanceName!~,pitch-goal,20
+setNested AP,state,~!Tmp,instanceName!~,pitch-goal,15
 setAPState takeOffClimb,~!Tmp,instanceName!~
 
