@@ -6,4 +6,7 @@ if ~!Route,instanceName!~,==,,
 
 whereAmI ~!Route,instanceName!~
 loop
+	debug 1,currentRunwayEnd got here.
 	addWaypoint ~!Route,instanceName!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
+
+listWaypoints ~!Route,instanceName!~

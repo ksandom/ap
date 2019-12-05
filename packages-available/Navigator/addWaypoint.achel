@@ -1,3 +1,6 @@
 # Add a waypoint to the current route. --addWaypoint=instanceName,Lon,Lat[,eventCategory,eventName[,eventValue]] ~ nav,waypoint,user
+parameters instanceName,lon,lat,eventCategory,eventName,eventValue
 
-setNested ["Navigator","instances","~!Global,addWaypoint-0!~","",{"instanceName":"~!Global,addWaypoint-0!~","longitude":"~!Global,addWaypoint-1!~","latitude":"~!Global,addWaypoint-2!~","eventCategory":"~!Global,addWaypoint-3!~","eventName":"~!Global,addWaypoint-4!~","eventValue":"~!Global,addWaypoint-5!~"}]
+debug 1,Navigator: Added waypoint ~!Local,instanceName!~ ~!Local,lon!~,~!Local,lat!~, ~!Local,eventCategory!~ ~!Local,eventName!~ ~!Local,eventValue!~
+
+setNested ["Navigator","instances","~!Local,instanceName!~","",{"instanceName":"~!Local,instanceName!~","longitude":"~!Local,lon!~","latitude":"~!Local,lat!~","eventCategory":"~!Local,eventCategory!~","eventName":"~!Local,eventName!~","eventValue":"~!Local,eventValue!~"}]

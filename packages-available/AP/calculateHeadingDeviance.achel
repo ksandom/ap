@@ -12,11 +12,14 @@ basicMaths Local,heading-difference,~!AP,state,~!Local,instanceName!~,heading-de
 absolute Local,absolute-difference,~!Local,heading-difference!~
 
 if ~!Local,absolute-difference!~,>,~!AP,state,~!Local,instanceName!~,heading-tolerance!~,
-	debug 0,heading-method=heading ~!Local,absolute-difference!~,>,~!AP,state,~!Local,instanceName!~,heading-tolerance!~,
+	debug 2,heading-method=heading ~!Local,absolute-difference!~,>,~!AP,state,~!Local,instanceName!~,heading-tolerance!~,
 	setNested AP,state,~!Local,instanceName!~,heading-method,heading
 elseIf ~!Local,absolute-difference!~,<,~!AP,state,~!Local,instanceName!~,heading-forgiveness!~,
-	debug 0,heading-method=track ~!Local,absolute-difference!~,<,~!AP,state,~!Local,instanceName!~,heading-forgiveness!~
+	debug 2,heading-method=track ~!Local,absolute-difference!~,<,~!AP,state,~!Local,instanceName!~,heading-forgiveness!~
 	setNested AP,state,~!Local,instanceName!~,heading-method,track
+
+# # TODO This is to reduce the scope of what could be causing the problem. Remove this line as soon as it's solved.
+# setNested AP,state,~!Local,instanceName!~,heading-method,heading
 
 # TODO Fix slow speed track
 # 	Why: At slow speeds, the track is as good as error.
@@ -53,9 +56,9 @@ pass
 if ~!AP,state,~!Local,instanceName!~,track-goal!~,>,360,
 	basicMaths ~!AP,state,~!Local,instanceName!~,track-goal!~,-,360
 
-basicMaths Local,trackDifference,~!AP,state,~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,heading-method!~-deg!~,-,~!AP,state,~!Local,instanceName!~,track-goal!~
+basicMaths Local,trackDifference,~!AP,state,~!Local,instanceName!~,track-goal!~,-,~!AP,state,~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,heading-method!~-deg!~
 
-debug 1, ~!Color,brightYellow!~trackDifference=~!Local,trackDifference!~~!Color,default!~ track=~!AP,state,~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,heading-method!~-deg!~ goal=~!AP,state,~!Local,instanceName!~,track-goal!~ instanceName=~!Local,instanceName!~
+# debug 1, ~!Color,brightYellow!~trackDifference=~!Local,trackDifference!~~!Color,default!~ track=~!AP,state,~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,heading-method!~-deg!~ goal=~!AP,state,~!Local,instanceName!~,track-goal!~ instanceName=~!Local,instanceName!~
 # Choose the shortest way there.
 if ~!Local,trackDifference!~,<,-180,
 	debug 2,calculateHeadingDeviance: OOR <-180 = "~!Local,trackDifference!~"

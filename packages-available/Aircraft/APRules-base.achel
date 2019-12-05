@@ -54,7 +54,8 @@ massSet ["AP,stateRules,base,base,pitch"],
 # Yaw
 massSet ["AP,stateRules,base,base,yaw"],
 	setNested ~!Me,stuff!~,pid,use,1
-	setNested ["~!Me,stuff!~,algorithm","PID"]
+	# setNested ["~!Me,stuff!~,algorithm","PID"]
+	setNested ["~!Me,stuff!~,algorithm","direct"]
 	
 	setNested ~!Me,stuff!~,input,min,-45
 	setNested ~!Me,stuff!~,input,center,0
@@ -62,9 +63,9 @@ massSet ["AP,stateRules,base,base,yaw"],
 	setNested ~!Me,stuff!~,input,multiplier,1
 	setNested ~!Me,stuff!~,input,expo,1
 	
-	setNested ~!Me,stuff!~,output,min,0.4
+	setNested ~!Me,stuff!~,output,min,-0.4
 	setNested ~!Me,stuff!~,output,center,0
-	setNested ~!Me,stuff!~,output,max,-0.4
+	setNested ~!Me,stuff!~,output,max,0.4
 	setNested ~!Me,stuff!~,output,multiplier,1
 	
 	# TODO These need to be abstracted out
@@ -163,6 +164,10 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,rollForward,groundspeed"],
 # TODO Check that this is instance aware
 registerForEvent AP,takeOffReady,setAPState,takeOffAccelerate
 
+# TODO interpretation of this structure needs to be fixed. It shouldn't end up in goal!
+# massSet ["AP,stateRules,~!Tmp,instanceName!~,rollForward,yaw"],
+#	# setNested ~!Me,stuff!~,pid,iP,1
+
 
 
 # Take off - accelerate
@@ -202,6 +207,10 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,speedEvents"],
 registerForEvent AP,takeOffV1,v1
 registerForEvent AP,takeOffV2,v2
 
+# TODO interpretation of this structure needs to be fixed. It shouldn't end up in goal!
+# massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,yaw"],
+#	# TODO try creating the full structure
+#	# setNested ~!Me,stuff!~,pid,iP,1
 
 
 # Take off - abort
