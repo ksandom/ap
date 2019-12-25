@@ -11,6 +11,7 @@ set Tmp,instanceName,~!Local,instanceName!~
 # Base settings
 # Roll
 massSet ["AP,stateRules,base,base,roll"],
+	setNested ["~!Me,stuff!~,algorithm","direct"]
 	setNested ~!Me,stuff!~,input,min,-45
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,45
@@ -31,6 +32,7 @@ massSet ["AP,stateRules,base,base,roll"],
 
 # Pitch
 massSet ["AP,stateRules,base,base,pitch"],
+	setNested ["~!Me,stuff!~,algorithm","direct"]
 	# setNested ~!Me,stuff!~,pid,use,1
 	# setNested ["~!Me,stuff!~,algorithm","PID"]
 	
@@ -53,9 +55,9 @@ massSet ["AP,stateRules,base,base,pitch"],
 
 # Yaw
 massSet ["AP,stateRules,base,base,yaw"],
-	setNested ~!Me,stuff!~,pid,use,1
-	# setNested ["~!Me,stuff!~,algorithm","PID"]
 	setNested ["~!Me,stuff!~,algorithm","direct"]
+	# setNested ["~!Me,stuff!~,algorithm","PID"]
+	setNested ~!Me,stuff!~,pid,use,1
 	
 	setNested ~!Me,stuff!~,input,min,-45
 	setNested ~!Me,stuff!~,input,center,0
@@ -78,6 +80,7 @@ massSet ["AP,stateRules,base,base,yaw"],
 # +Altitude
 setNested ["AP","stateRules","base","baseAltitude",~!AP,stateRules,base,base!~]
 massSet ["AP,stateRules,base,baseAltitude,altitude"],
+	setNested ["~!Me,stuff!~,algorithm","direct"]
 	
 	setNested ~!Me,stuff!~,input,min,-1
 	setNested ~!Me,stuff!~,input,center,0
@@ -171,7 +174,16 @@ registerForEvent AP,takeOffReady,setAPState,takeOffAccelerate
 
 
 # Take off - accelerate
-setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "takeOffAccelerate", ~!AP,stateRules,base,base!~]
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "takeOffAccelerate", ~!AP,stateRules,base,baseAltitude!~]
+massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,altitude"],
+	setNested ~!Me,stuff!~,output,min,-1
+	setNested ~!Me,stuff!~,output,center,0
+	# TODO Try this again.
+	# setNested ~!Me,stuff!~,output,max,~!AP,state,~!Tmp,instanceName!~,takeOffThrust!~
+	setNested ~!Me,stuff!~,output,max,1
+	setNested ~!Me,stuff!~,output,multiplier,1
+
+
 massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,speedEvents"],
 
 	# Speed based events
@@ -207,6 +219,17 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,speedEvents"],
 registerForEvent AP,takeOffV1,v1
 registerForEvent AP,takeOffV2,v2
 
+massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,yaw"],
+	setNested ~!Me,stuff!~,input,min,-30
+	setNested ~!Me,stuff!~,input,center,0
+	setNested ~!Me,stuff!~,input,max,30
+	setNested ~!Me,stuff!~,input,multiplier,1
+	
+	setNested ~!Me,stuff!~,output,min,-0.4
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,0.4
+	setNested ~!Me,stuff!~,output,multiplier,1
+
 # TODO interpretation of this structure needs to be fixed. It shouldn't end up in goal!
 # massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,yaw"],
 #	# TODO try creating the full structure
@@ -219,7 +242,7 @@ setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "takeOffAbort", ~!AP,stat
 
 
 # Take off - climb
-setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "takeOffClimb", ~!AP,stateRules,base,base!~]
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "takeOffClimb", ~!AP,stateRules,base,baseAltitude!~]
 
 # Pitch
 massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffClimb,pitch"],
@@ -268,11 +291,11 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffClimb,altitudeEvents"],
 	setNested ["~!Me,stuff!~,input,events,flapsUp,eventName","AP,flapsUp"]
 	setNested ["~!Me,stuff!~,input,events,flapsUp,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,flapsUp,testValue","1000"]
-	setNested ["~!Me,stuff!~,input,events,flapsUp,description","Time to sustain the climb in a less agressive manner."]
-	setNested ["~!Me,stuff!~,input,events,flapsUp,operator",">"]
-	setNested ["~!Me,stuff!~,input,events,flapsUp,eventName","AP,sustain"]
-	setNested ["~!Me,stuff!~,input,events,flapsUp,debugLevel","1"]
+	setNested ["~!Me,stuff!~,input,events,sustain,testValue","1000"]
+	setNested ["~!Me,stuff!~,input,events,sustain,description","Time to sustain the climb in a less agressive manner."]
+	setNested ["~!Me,stuff!~,input,events,sustain,operator",">"]
+	setNested ["~!Me,stuff!~,input,events,sustain,eventName","AP,sustain"]
+	setNested ["~!Me,stuff!~,input,events,sustain,debugLevel","1"]
 
 pass
 	# Altitude offset events
@@ -304,6 +327,13 @@ registerForEvent AP,sustain,levelOut
 
 # Sustain flight - just cruise at what ever speed is natural
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "sustain", ~!AP,stateRules,base,baseAltitude!~]
+massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,altitude"],
+	setNested ~!Me,stuff!~,output,min,-1
+	setNested ~!Me,stuff!~,output,center,0
+	# TODO Try this again.
+	# setNested ~!Me,stuff!~,output,max,~!AP,state,~!Tmp,instanceName!~,takeOffThrust!~
+	setNested ~!Me,stuff!~,output,max,1
+	setNested ~!Me,stuff!~,output,multiplier,1
 
 
 
