@@ -8,5 +8,8 @@ setNested ["AP","state","default","v2","170"]
 setNested ["AP","state","default","vCruise","200"]
 setNested ["AP","state","default","safeAltitude","4000"]
 setNested ["AP","state","default","cruiseAltitude","25000"]
+setNested ["AP","state","default","takeOffThrust",1]
+setNested ["AP","state","default","climbThrust",0.8]
 
-registerForEvent Timer,piggyBack,throttlePiggyBack,1,default
+registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,0,default
+registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,1,default
