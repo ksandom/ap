@@ -1,6 +1,7 @@
 # Load the autopilot rules for a generic plane. ~ AP,rules,plane
 
 debug 0,I don't think this is still used. If this message appears, please report it along with the context of when it happened.
+stackTrace
 
 
 # Stand
