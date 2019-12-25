@@ -1,19 +1,13 @@
 # Piggyback the throttle for any engines above 1 ~ AP,hack
 
-# TODO Refactor this MOFO to make it more readable
+parameters engine,instance
 
-set Tmp,piggyInstance,~!Global,throttlePiggyBack-1!~
-set Tmp,piggyEngine,~!Global,throttlePiggyBack-0!~
-set Tmp,piggyCurrent,~!AP,state,~!Tmp,piggyInstance!~,throttle-req!~
-set Tmp,piggyLast,~!AP,state,~!Tmp,piggyInstance!~,throttle-piggyBack-~!AP,state,~!Tmp,piggyEngine!~!~!~
+set Local,piggyCurrent,~!AP,state,~!Local,instance!~,throttle-req!~
+set Local,piggyLast,~!AP,state,~!Local,instance!~,throttle-piggyBack-~!Local,engine!~!~
 
-debug 3,Instance=~!Tmp,piggyInstance!~ Engine=~!Tmp,piggyEngine!~ Current=~!Tmp,piggyLast!~ Last=~!Tmp,piggyLast!~
+debug 3,Instance=~!Local,instance!~ Engine=~!Local,engine!~ Current=~!Local,piggyLast!~ Last=~!Local,piggyLast!~
 
-if ~!Tmp,piggyCurrent!~,!=,~!Tmp,piggyLast!~,
-	setNested AP,state,~!Tmp,piggyInstance!~,throttle-piggyBack-~!AP,state,~!Tmp,piggyEngine!~!~,~!Tmp,piggyCurrent!~
-	deliver clientSocket,~!Tmp,piggyInstance!~,set /controls/engines/engine[~!Tmp,piggyEngine!~]/throttle ~!AP,state,~!Tmp,piggyInstance!~,throttle-req!~
-
-unset Tmp,piggyInstance
-unset Tmp,piggyEngine
-unset Tmp,piggyCurrent
-unset Tmp,piggyLast
+if ~!Local,piggyCurrent!~,!=,~!Local,piggyLast!~,
+	debug 2,Piggy-backed ~!Local,piggyCurrent!~ for engine ~!Local,engine!~ of instance ~!Local,default!~
+	setNested AP,state,~!Local,instance!~,throttle-piggyBack-~!Local,engine!~,~!Local,piggyCurrent!~
+	deliver clientSocket,~!Local,instance!~,set /controls/engines/engine[~!Local,engine!~]/throttle ~!AP,state,~!Local,instance!~,throttle-req!~
