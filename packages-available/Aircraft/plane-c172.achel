@@ -1,12 +1,13 @@
 # Set settings for a cessana 172 ~ AP,rules,plane,aircraft
 #onDefine aliasFeature plane-c172,172
+parameters {"instanceName":"default"}
 
 # NOTE v1 is currently just a dummy number, but to be correct should be calculated based on aircraft specs, loading, conditions and runway length. v1 is unlikely to be relevant to the cessna in current testing environments since the runways are typically long.
-setNested ["AP","state","default","type","plane"]
-setNested ["AP","state","default","v1","40"]
-setNested ["AP","state","default","v2","65"]
-setNested ["AP","state","default","vCruise","100"]
-setNested ["AP","state","default","safeAltitude","1000"]
-setNested ["AP","state","default","cruiseAltitude","2000"]
-setNested ["AP","state","default","takeOffThrust",1]
-setNested ["AP","state","default","climbThrust",1]
+setNested ["AP","state","~!Local,instanceName!~","type","plane"]
+setNested ["AP","state","~!Local,instanceName!~","v1","40"]
+setNested ["AP","state","~!Local,instanceName!~","v2","65"]
+setNested ["AP","state","~!Local,instanceName!~","vCruise","100"]
+setNested ["AP","state","~!Local,instanceName!~","safeAltitude","1000"]
+setNested ["AP","state","~!Local,instanceName!~","cruiseAltitude","2000"]
+setNested ["AP","state","~!Local,instanceName!~","takeOffThrust",1]
+setNested ["AP","state","~!Local,instanceName!~","climbThrust",1]
