@@ -1,8 +1,7 @@
-# Resume normal flight. ~ ap,dynamic
+# Resume normal flight. --resume=instanceName ~ ap,dynamic
+parameters {"instanceName":"default"}
 
-set Tmp,instanceName,~!Global,resume!~
-setIfNothing Tmp,instanceName,default
-
-setAPState sustain,~!Tmp,instanceName!~
-setNested AP,state,~!Tmp,instanceName!~,altitude-goal,~!AP,state,~!Tmp,flyToInstance!~,cruiseAltitude!~
-
+setAPState sustain,~!Local,instanceName!~
+altitude ~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,cruiseAltitude!~
+track ~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,heading-deg!~
+speed ~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,vCruise!~
