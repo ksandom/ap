@@ -57,7 +57,17 @@ massSet ["AP,stateRules,base,base,pitch"],
 massSet ["AP,stateRules,base,base,yaw"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
 	# setNested ["~!Me,stuff!~,algorithm","PID"]
-	setNested ~!Me,stuff!~,pid,use,1
+	setNested ~!Me,stuff!~,debug,0
+	setNested ~!Me,stuff!~,pid,kP,0.7
+	setNested ~!Me,stuff!~,pid,iP,1
+	setNested ~!Me,stuff!~,pid,kW,0.3
+	setNested ~!Me,stuff!~,pid,iW,1
+	setNested ["~!Me,stuff!~,pid,wanderingTime","5"]
+	setNested ~!Me,stuff!~,pid,kI,0.3
+	setNested ~!Me,stuff!~,pid,iI,1
+	setNested ~!Me,stuff!~,pid,kD,0.5
+	setNested ~!Me,stuff!~,pid,iD,1
+	
 	
 	setNested ~!Me,stuff!~,input,min,-45
 	setNested ~!Me,stuff!~,input,center,0
@@ -179,7 +189,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,altitude"],
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
 	# TODO Try this again.
-	# setNested ~!Me,stuff!~,output,max,~!AP,state,~!Tmp,instanceName!~,takeOffThrust!~
+	setNested ~!Me,stuff!~,output,max,1
 	setNested ~!Me,stuff!~,output,max,1
 	setNested ~!Me,stuff!~,output,multiplier,1
 
@@ -220,20 +230,36 @@ registerForEvent AP,takeOffV1,v1
 registerForEvent AP,takeOffV2,v2
 
 massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,yaw"],
-	setNested ~!Me,stuff!~,input,min,-30
-	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,30
-	setNested ~!Me,stuff!~,input,multiplier,1
+	setNested ["~!Me,stuff!~,algorithm","direct"]
+	# setNested ["~!Me,stuff!~,algorithm","PID"]
+	setNested ~!Me,stuff!~,debug,1
+	setNested ~!Me,stuff!~,pid,kP,0.7
+	setNested ~!Me,stuff!~,pid,iP,1
+	setNested ~!Me,stuff!~,pid,kW,0.3
+	setNested ~!Me,stuff!~,pid,iW,1
+	setNested ["~!Me,stuff!~,pid,wanderingTime","5"]
+	setNested ~!Me,stuff!~,pid,kI,0.3
+	setNested ~!Me,stuff!~,pid,iI,1
+	setNested ~!Me,stuff!~,pid,kD,0.5
+	setNested ~!Me,stuff!~,pid,iD,1
 	
-	setNested ~!Me,stuff!~,output,min,-0.4
+	
+	setNested ~!Me,stuff!~,input,min,-10
+	setNested ~!Me,stuff!~,input,center,0
+	setNested ~!Me,stuff!~,input,max,10
+	setNested ~!Me,stuff!~,input,multiplier,1
+	setNested ~!Me,stuff!~,input,expo,1
+	
+	setNested ~!Me,stuff!~,output,min,0.4
 	setNested ~!Me,stuff!~,output,center,0
-	setNested ~!Me,stuff!~,output,max,0.4
+	setNested ~!Me,stuff!~,output,max,-0.4
 	setNested ~!Me,stuff!~,output,multiplier,1
-
-# TODO interpretation of this structure needs to be fixed. It shouldn't end up in goal!
-# massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,yaw"],
-#	# TODO try creating the full structure
-#	# setNested ~!Me,stuff!~,pid,iP,1
+	
+	# TODO These need to be abstracted out
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,course-devianceInMeters"]
+	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,base,yaw,input,center"]
+	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,rudder-req"]
+	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/rudder ~%value%~"]
 
 
 # Take off - abort
@@ -331,7 +357,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,altitude"],
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
 	# TODO Try this again.
-	# setNested ~!Me,stuff!~,output,max,~!AP,state,~!Tmp,instanceName!~,takeOffThrust!~
+	# setNested ~!Me,stuff!~,output,max,1
 	setNested ~!Me,stuff!~,output,max,1
 	setNested ~!Me,stuff!~,output,multiplier,1
 
