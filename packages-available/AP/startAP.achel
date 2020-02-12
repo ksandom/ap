@@ -13,5 +13,6 @@ registerForEvent Timer,getEngine,deliver,clientSocket,default,ls /engines/engine
 
 registerForEvent Timer,calculateStuff,calculateHeadingDeviance
 registerForEvent Timer,calculateStuff,calculateAltitudeDeviance
+registerForEvent Timer,calculateStuff,calculateSpeedDeviance
 
 triggerEvent AP,started

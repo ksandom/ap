@@ -91,10 +91,20 @@ massSet ["AP,stateRules,base,base,yaw"],
 setNested ["AP","stateRules","base","baseAltitude",~!AP,stateRules,base,base!~]
 massSet ["AP,stateRules,base,baseAltitude,altitude"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
+	setNested ~!Me,stuff!~,debug,0
+	setNested ~!Me,stuff!~,pid,kP,0.7
+	setNested ~!Me,stuff!~,pid,iP,1
+	setNested ~!Me,stuff!~,pid,kW,0.2
+	setNested ~!Me,stuff!~,pid,iW,1
+	setNested ["~!Me,stuff!~,pid,wanderingTime","60"]
+	setNested ~!Me,stuff!~,pid,kI,0
+	setNested ~!Me,stuff!~,pid,iI,1
+	setNested ~!Me,stuff!~,pid,kD,0.5
+	setNested ~!Me,stuff!~,pid,iD,1
 	
-	setNested ~!Me,stuff!~,input,min,-1
+	setNested ~!Me,stuff!~,input,min,-2000
 	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,300
+	setNested ~!Me,stuff!~,input,max,2000
 	setNested ~!Me,stuff!~,input,multiplier,1
 	
 	setNested ~!Me,stuff!~,output,min,-1
@@ -232,7 +242,7 @@ registerForEvent AP,takeOffV2,v2
 massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,yaw"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
 	# setNested ["~!Me,stuff!~,algorithm","PID"]
-	setNested ~!Me,stuff!~,debug,1
+	setNested ~!Me,stuff!~,debug,0
 	setNested ~!Me,stuff!~,pid,kP,0.7
 	setNested ~!Me,stuff!~,pid,iP,1
 	setNested ~!Me,stuff!~,pid,kW,0.3
@@ -361,6 +371,29 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,altitude"],
 	setNested ~!Me,stuff!~,output,max,1
 	setNested ~!Me,stuff!~,output,multiplier,1
 
+# Pitch
+# This is an experiment to keep the speed close to ideal using pitch. I need to lay a few more foundations for this to work well.
+pass massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,pitch"],
+	setNested ["~!Me,stuff!~,algorithm","direct"]
+	setNested ~!Me,stuff!~,debug,1
+	# setNested ~!Me,stuff!~,pid,use,1
+	# setNested ["~!Me,stuff!~,algorithm","PID"]
+	
+	setNested ~!Me,stuff!~,input,min,-60
+	setNested ~!Me,stuff!~,input,center,0
+	setNested ~!Me,stuff!~,input,max,60
+	setNested ~!Me,stuff!~,input,multiplier,1
+	
+	setNested ~!Me,stuff!~,output,min,-1
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,1
+	setNested ~!Me,stuff!~,output,multiplier,0.2
+	
+	# TODO These need to be abstracted out
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,airspeed-deviance"]
+	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,pitch-goal"]
+	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,elevator-req"]
+	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/elevator ~%value%~"]
 
 
 # Speed controlled

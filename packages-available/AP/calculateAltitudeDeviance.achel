@@ -1,5 +1,5 @@
 # Calculate how far (in feet) off the desired altitude we are. ~ AP,correction,deviance,notInstanceSafe
+parameters {"instanceName":"default"}
 
-basicMaths Tmp,altitudeDifference,~!AP,state,default,altitude-goal!~,-,~!AP,state,default,altitude-ft!~
-setNested AP,state,default,altitude-deviance,~!Tmp,altitudeDifference!~
-unset Tmp,altitudeDifference
+basicMaths Local,altitudeDifference,~!AP,state,~!Local,instanceName!~,altitude-goal!~,-,~!AP,state,~!Local,instanceName!~,altitude-ft!~
+setNested AP,state,~!Local,instanceName!~,altitude-deviance,~!Local,altitudeDifference!~
