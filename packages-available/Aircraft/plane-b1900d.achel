@@ -10,9 +10,11 @@ setNested ["AP","state","~!Local,instanceName!~","vCruise","260"]
 setNested ["AP","state","~!Local,instanceName!~","vLand","85"]
 setNested ["AP","state","~!Local,instanceName!~","safeAltitude","2000"]
 setNested ["AP","state","~!Local,instanceName!~","cruiseAltitude","17000"]
+setNested ["AP","state","~!Local,instanceName!~","altitudeOffsetAtSealevel","300"]
 setNested ["AP","state","~!Local,instanceName!~","takeOffThrust",1]
 setNested ["AP","state","~!Local,instanceName!~","climbThrust",0.8]
 
 # TODO Check if this is needed.
 # registerForEvent Timer,piggyBack,throttlePiggyBack,0,~!Local,instanceName!~
-registerForEvent Timer,piggyBack,throttlePiggyBack,1,~!Local,instanceName!~
+registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,0,~!Local,instanceName!~
+registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,1,~!Local,instanceName!~

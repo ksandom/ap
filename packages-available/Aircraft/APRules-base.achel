@@ -91,20 +91,33 @@ massSet ["AP,stateRules,base,base,yaw"],
 setNested ["AP","stateRules","base","baseAltitude",~!AP,stateRules,base,base!~]
 massSet ["AP,stateRules,base,baseAltitude,altitude"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
+	#setNested ["~!Me,stuff!~,algorithm","PID"]
+	
+	# AutoTighten tuning.
+	setNested ~!Me,stuff!~,autoTighten,enabled,0
+	setNested ~!Me,stuff!~,autoTighten,checkInterval,1
+	setNested ~!Me,stuff!~,autoTighten,increment,5
+	setNested ~!Me,stuff!~,autoTighten,debug,1
+	setNested ~!Me,stuff!~,autoTighten,tightenThreshold,0.8
+	setNested ~!Me,stuff!~,autoTighten,loosenThreshold,0.95
+	setNested ~!Me,stuff!~,autoTighten,tightenedMin,-500
+	setNested ~!Me,stuff!~,autoTighten,tightenedMax,500
+	
+	# PID Tuning.
 	setNested ~!Me,stuff!~,debug,0
-	setNested ~!Me,stuff!~,pid,kP,0.7
+	setNested ~!Me,stuff!~,pid,kP,1
 	setNested ~!Me,stuff!~,pid,iP,1
-	setNested ~!Me,stuff!~,pid,kW,0.2
+	setNested ~!Me,stuff!~,pid,kW,0.4
 	setNested ~!Me,stuff!~,pid,iW,1
-	setNested ["~!Me,stuff!~,pid,wanderingTime","60"]
-	setNested ~!Me,stuff!~,pid,kI,0
+	setNested ["~!Me,stuff!~,pid,wanderingTime","240"]
+	setNested ~!Me,stuff!~,pid,kI,0.2
 	setNested ~!Me,stuff!~,pid,iI,1
-	setNested ~!Me,stuff!~,pid,kD,0.5
+	setNested ~!Me,stuff!~,pid,kD,0
 	setNested ~!Me,stuff!~,pid,iD,1
 	
-	setNested ~!Me,stuff!~,input,min,-2000
+	setNested ~!Me,stuff!~,input,min,-3000
 	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,2000
+	setNested ~!Me,stuff!~,input,max,3000
 	setNested ~!Me,stuff!~,input,multiplier,1
 	
 	setNested ~!Me,stuff!~,output,min,-1
@@ -114,7 +127,7 @@ massSet ["AP,stateRules,base,baseAltitude,altitude"],
 	
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,altitude-deviance"]
-	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,baseAltitude,base,altitude,input,center"]
+	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,baseAltitude,altitude,input,center"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,throttle-req"]
 	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/engines/current-engine/throttle ~%value%~"]
 

@@ -2,4 +2,5 @@
 parameters {"instanceName":"default"}
 
 basicMaths Local,altitudeDifference,~!AP,state,~!Local,instanceName!~,altitude-goal!~,-,~!AP,state,~!Local,instanceName!~,altitude-ft!~
+basicMaths Local,altitudeDifference,~!Local,altitudeDifference!~,+,~!AP,state,~!Local,instanceName!~,altitudeOffsetAtSealevel!~
 setNested AP,state,~!Local,instanceName!~,altitude-deviance,~!Local,altitudeDifference!~
