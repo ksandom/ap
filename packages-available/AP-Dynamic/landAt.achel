@@ -1,0 +1,36 @@
+# Last at a specific airport and runway. Find airports and runways with --listRunways. --landAt=instanceName,airport,runway ~ AP,land
+parameters {"instanceName":"default","airport":"KSFO","runway":"10L"}
+
+# Find the runway.
+listRunways ~!Local,airport!~,1
+requireItem airport,^~!Local,airport!~$
+requireItem runway,^~!Local,runway!~$
+
+countToVar Local,numberOfResults
+if ~!Local,numberOfResults!~,==,1,
+	debug 1,Going to ~!Local,instanceName!~ land at:
+	outNow
+	stashResults Tmp,landAt
+	
+	# TODO Calculate distance to begin descent, from 3 degrees and current altitude.
+	#   TODO ALT Control descent.
+	#   TODO ALT Pitch up slightly.
+	#   TODO ALT Introduce flaps notch 1.
+	#   TODO ALT Pitch up slightly.
+	#   TODO ALT Introduce flaps notch 2.
+	#   TODO ALT Pitch up slightly.
+	#   TODO ALT Lower gear.
+	#   TODO ALT Introduce flaps notch 3.
+	#   TODO ALT Pitch up slightly.
+	#   TODO ALT Touch down.
+	#     TODO Engines down.
+	#     TODO speed brakes.
+	#     TODO Thrust reversers.
+	#   TODO SPD 60.
+	#     TODO Put away thrust reversers.
+	#     TODO Put away speed brakes.
+	# TODO Funnel at 4, 3-1km before that.
+	# TODO Add waypoint of descent.
+	
+else
+	debug 1,Could not find this airport/runway. The request was landAt ~!Local,instanceName!~,~!Local,airport!~,~!Local,runway!~.

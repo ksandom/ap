@@ -408,6 +408,12 @@ pass massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,pitch"],
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,elevator-req"]
 	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/elevator ~%value%~"]
 
+massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,yaw"],
+	setNested ~!Me,stuff!~,output,min,-0.3
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,0.3
+	setNested ~!Me,stuff!~,output,multiplier,1
+
 
 # Speed controlled
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "speedControlled", ~!AP,stateRules,base,baseAltitude!~]
