@@ -1,6 +1,8 @@
+*status:* Active.
+
 # ap - Autopilot
 
-ap is the first program/project to really push the boundaries of the new functionality coming to Achel aimed at robotics. It's a product of my sabbatical and forms the foundations of projects I have planned for the next several years.
+ap is the first program/project to really push the boundaries of the new functionality in Achel aimed at robotics. It's a product of [my sabbatical](http://funnyhacks.com/sabbatical) and forms the foundations of projects I have planned for the next several years.
 
 *This is pre-alpha software. And not yet intented for mainstream use. But you should be able to have some fun with it :)*
 
@@ -16,11 +18,11 @@ For now the autopilot is fairly tightly linked to real world runways. Therefore,
 
 You will want flight gear to be running with the --telnet option opening port 12345. You can do this with
 
-    manageAchel startFG
+    achelctl startFG
 
 Then start the auto pilot
 
-    manageAchel startAP
+    achelctl startAP
 
 This will start a *very* basic text interface. Type a command, press enter and more useful output will happen.
 
@@ -29,6 +31,6 @@ This will start a *very* basic text interface. Type a command, press enter and m
 Here are some useful things you can do by typing
 
 * takeOff - An automated take off
-* lmap - If you have a leap motion and the achelLMTracker installed, you can control the plane using a leap motion.
+* lmap - If you have a leap motion and the achelLMTracker installed, you can control the plane using a leap motion. \[edit: This has not been tested in several years. I will come back to this :) \]
 
 
