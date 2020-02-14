@@ -1,7 +1,5 @@
 # Plot the approach to an airport. --plotApproach=[instanceName] . This expects a single runway to be in the resultSet. If there is more than one, it will take the first one. ~ ap,navigator
-parameters instanceName
-
-setIfNothing Me,instanceName,default
+parameters {"instanceName":"default"}
 
 #  KSFO-01L-le: 
 #    airport: KSFO
@@ -74,7 +72,7 @@ loop
 	setNested AP,events,beginDecent,
 		debug 1,plotApproach: Begining decent for instance ~!Global,~!AP,events,beginDecent!~!~
 		# TODO the problem is that the instance name is not getting throuigh. take parm.
-		altitude ~!Me,instanceName!~,~!AP,state,~!Global,~!AP,events,beginDecent!~!~,safeAltitude!~
+		altitude ~!Local,instanceName!~,~!AP,state,~!Global,~!AP,events,beginDecent!~!~,safeAltitude!~
 		# TODO set speedGoal
 		# TODO set to speedControlled
 	
@@ -97,7 +95,7 @@ loop
 	setNested AP,events,beginTouchDown,
 		debug 1,plotApproach: Begining touchdown for instance ~!Global,~!AP,events,beginTouchDown!~!~
 		# TODO set speedGoal
-		altitude ~!Me,instanceName!~,0
+		altitude ~!Local,instanceName!~,0
 	
 	registerForEvent Flight,beginTouchDown,~!AP,events,beginTouchDown!~
 	debug 1,plotApproach: Registered ~!Global,~!AP,events,beginTouchDown!~!~ to Flight,beginTouchDown

@@ -1,16 +1,39 @@
-# Last at a specific airport and runway. Find airports and runways with --listRunways. --landAt=instanceName,airport,runway ~ AP,land
-parameters {"instanceName":"default","airport":"KSFO","runway":"10L"}
+# Last at a specific airport and runway. Find airports and runways with --listRunways. --landAt=[instanceName=default],[airport=KSFO],[runway=10L],[approachAngleInDegrees=3] ~ AP,land
+parameters {"instanceName":"default","airport":"KSFO","runway":"10L","approachAngleInDegrees":"3"}
 
 # Find the runway.
 listRunways ~!Local,airport!~,1
 requireItem airport,^~!Local,airport!~$
 requireItem runway,^~!Local,runway!~$
 
+# Create the event for descending.
+set AP-Dynamic,beginDescent,
+	parameters instanceName
+	
+	# TODO Write this.
+registerOnceForEvent AP-Dynamic,beginDescent,~!AP-Dynamic,beginDescent!~
+
 countToVar Local,numberOfResults
 if ~!Local,numberOfResults!~,==,1,
+	# We've got a runway. Let's save it and get on with it.
 	debug 1,Going to ~!Local,instanceName!~ land at:
 	outNow
 	stashResults Tmp,landAt
+	
+	# Calculate where to begin the descent.
+	feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,altitude-ft!~
+	degreesToRadians Tmp,approachAngleInRadians,~!Local,approachAngleInDegrees!~
+	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,beginDescentDistance,~!Tmp,approachAngleInRadians!~,~!Tmp,altitudeInMeters!~
+	basicMaths Tmp,beginDescentDistance,~!Tmp,beginDescentDistance!~,/,1000
+	basicMaths Tmp,funnelDistance,~!Tmp,beginDescentDistance!~,+,2
+	
+	# Calculate direction to plot the approach.
+	first
+	loop
+		2CoordsToAngle Tmp,ReverseAngle,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,beginDescentDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,AP-Dynamic,beginDescent,~!Local,instanceName!~
+		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,funnelDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+	
 	
 	# TODO Calculate distance to begin descent, from 3 degrees and current altitude.
 	#   TODO ALT Control descent.
@@ -34,3 +57,10 @@ if ~!Local,numberOfResults!~,==,1,
 	
 else
 	debug 1,Could not find this airport/runway. The request was landAt ~!Local,instanceName!~,~!Local,airport!~,~!Local,runway!~.
+
+unset Tmp,landAt
+unset Tmp,altitudeInMeters
+unset Tmp,approachAngleInRadians
+unset Tmp,beginDescentDistance
+unset Tmp,funnelDistance
+unset Tmp,ReverseAngle
