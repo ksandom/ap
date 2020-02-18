@@ -25,14 +25,16 @@ if ~!Local,numberOfResults!~,==,1,
 	degreesToRadians Tmp,approachAngleInRadians,~!Local,approachAngleInDegrees!~
 	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,beginDescentDistance,~!Tmp,approachAngleInRadians!~,~!Tmp,altitudeInMeters!~
 	basicMaths Tmp,beginDescentDistance,~!Tmp,beginDescentDistance!~,/,1000
-	basicMaths Tmp,funnelDistance,~!Tmp,beginDescentDistance!~,+,2
+	basicMaths Tmp,funnelEndDistance,~!Tmp,beginDescentDistance!~,+,1
+	basicMaths Tmp,funnelBeginDistance,~!Tmp,beginDescentDistance!~,+,2
 	
 	# Calculate direction to plot the approach.
 	first
 	loop
 		2CoordsToAngle Tmp,ReverseAngle,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,beginDescentDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,AP-Dynamic,beginDescent,~!Local,instanceName!~
-		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,funnelDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,funnelEndDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,funnelBeginDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 	
 	
 	# TODO Calculate distance to begin descent, from 3 degrees and current altitude.
