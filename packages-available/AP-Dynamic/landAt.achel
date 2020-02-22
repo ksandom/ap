@@ -16,17 +16,23 @@ registerOnceForEvent AP-Dynamic,beginDescent,~!AP-Dynamic,beginDescent!~
 countToVar Local,numberOfResults
 if ~!Local,numberOfResults!~,==,1,
 	# We've got a runway. Let's save it and get on with it.
-	debug 1,Going to ~!Local,instanceName!~ land at:
+	debug 1,Going to land ~!Local,instanceName!~ at:
 	outNow
 	stashResults Tmp,landAt
 	
 	# Calculate where to begin the descent.
 	feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,altitude-ft!~
+	debug 1,altitudeInMeters: ~!Tmp,altitudeInMeters!~
 	degreesToRadians Tmp,approachAngleInRadians,~!Local,approachAngleInDegrees!~
+	debug 1,approachAngleInRadians: ~!Tmp,approachAngleInRadians!~
 	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,beginDescentDistance,~!Tmp,approachAngleInRadians!~,~!Tmp,altitudeInMeters!~
+	debug 1,beginDescentDistance-preKM: ~!tmp,beginDescentDistance!~
+	
 	basicMaths Tmp,beginDescentDistance,~!Tmp,beginDescentDistance!~,/,1000
 	basicMaths Tmp,funnelEndDistance,~!Tmp,beginDescentDistance!~,+,1
 	basicMaths Tmp,funnelBeginDistance,~!Tmp,beginDescentDistance!~,+,2
+	
+	debug 1,beginDescentDistance: ~!Tmp,beginDescentDistance!~ funnelEndDistance: ~!Tmp,funnelEndDistance!~ funnelBeginDistance: ~!Tmp,funnelBeginDistance!~
 	
 	# Calculate direction to plot the approach.
 	first
@@ -35,6 +41,9 @@ if ~!Local,numberOfResults!~,==,1,
 		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,beginDescentDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,AP-Dynamic,beginDescent,~!Local,instanceName!~
 		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,funnelEndDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,funnelBeginDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		
+		addWaypoint ~!Local,instanceName!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		addWaypoint ~!Local,instanceName!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
 	
 	
 	# TODO Calculate distance to begin descent, from 3 degrees and current altitude.
