@@ -29,8 +29,8 @@ if ~!Local,numberOfResults!~,==,1,
 	debug 1,beginDescentDistance-preKM: ~!tmp,beginDescentDistance!~
 	
 	basicMaths Tmp,beginDescentDistance,~!Tmp,beginDescentDistance!~,/,1000
-	basicMaths Tmp,funnelEndDistance,~!Tmp,beginDescentDistance!~,+,1
-	basicMaths Tmp,funnelBeginDistance,~!Tmp,beginDescentDistance!~,+,2
+	basicMaths Tmp,funnelEndDistance,~!Tmp,beginDescentDistance!~,+,2
+	basicMaths Tmp,funnelBeginDistance,~!Tmp,beginDescentDistance!~,+,4
 	
 	debug 1,beginDescentDistance: ~!Tmp,beginDescentDistance!~ funnelEndDistance: ~!Tmp,funnelEndDistance!~ funnelBeginDistance: ~!Tmp,funnelBeginDistance!~
 	
