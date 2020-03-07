@@ -12,15 +12,15 @@ set Tmp,instanceName,~!Local,instanceName!~
 # Roll
 massSet ["AP,stateRules,base,base,roll"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
-	setNested ~!Me,stuff!~,input,min,-45
+	setNested ~!Me,stuff!~,input,min,-80
 	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,45
+	setNested ~!Me,stuff!~,input,max,80
 	setNested ~!Me,stuff!~,input,multiplier,1
 	setNested ~!Me,stuff!~,input,expo,1
 	
-	setNested ~!Me,stuff!~,output,min,0.5
+	setNested ~!Me,stuff!~,output,min,0.8
 	setNested ~!Me,stuff!~,output,center,0
-	setNested ~!Me,stuff!~,output,max,-0.5
+	setNested ~!Me,stuff!~,output,max,-0.8
 	setNested ~!Me,stuff!~,output,multiplier,1
 	
 	# TODO These need to be abstracted out
@@ -384,6 +384,12 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,altitude"],
 	setNested ~!Me,stuff!~,output,max,1
 	setNested ~!Me,stuff!~,output,multiplier,1
 
+massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,yaw"],
+	setNested ~!Me,stuff!~,output,min,-0.3
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,0.3
+	setNested ~!Me,stuff!~,output,multiplier,1
+
 # Pitch
 # This is an experiment to keep the speed close to ideal using pitch. I need to lay a few more foundations for this to work well.
 pass massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,pitch"],
@@ -407,13 +413,6 @@ pass massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,pitch"],
 	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,pitch-goal"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,elevator-req"]
 	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/elevator ~%value%~"]
-
-massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,yaw"],
-	setNested ~!Me,stuff!~,output,min,-0.4
-	setNested ~!Me,stuff!~,output,center,0
-	setNested ~!Me,stuff!~,output,max,0.4
-	setNested ~!Me,stuff!~,output,multiplier,1
-
 
 # Speed controlled
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "speedControlled", ~!AP,stateRules,base,baseAltitude!~]
@@ -440,5 +439,18 @@ pass
 	get AP,stateRules,~!Tmp,instanceName!~,sustain
 	setNested
 	outNow
+
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "chill", ~!AP,stateRules,~!Tmp,instanceName!~,sustain!~]
+massSet ["AP,stateRules,~!Tmp,instanceName!~,chill,roll"],
+	setNested ~!Me,stuff!~,output,min,-0.3
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,0.3
+	setNested ~!Me,stuff!~,output,multiplier,1
+
+massSet ["AP,stateRules,~!Tmp,instanceName!~,chill,yaw"],
+	setNested ~!Me,stuff!~,output,min,-0.1
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,0.1
+	setNested ~!Me,stuff!~,output,multiplier,1
 
 unset Tmp,instanceName

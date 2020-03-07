@@ -22,11 +22,12 @@ if ~!Local,numberOfResults!~,==,1,
 	
 	# Calculate where to begin the descent.
 	feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,altitude-ft!~
-	debug 1,altitudeInMeters: ~!Tmp,altitudeInMeters!~
 	degreesToRadians Tmp,approachAngleInRadians,~!Local,approachAngleInDegrees!~
-	debug 1,approachAngleInRadians: ~!Tmp,approachAngleInRadians!~
 	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,beginDescentDistance,~!Tmp,approachAngleInRadians!~,~!Tmp,altitudeInMeters!~
-	debug 1,beginDescentDistance-preKM: ~!tmp,beginDescentDistance!~
+	
+	debug 1,altitude Feet: ~!AP,state,~!Local,instanceName!~,altitude-ft!~ Meters: ~!Tmp,altitudeInMeters!~
+	debug 1,approachAngleInRadians: ~!Tmp,approachAngleInRadians!~
+	debug 1,beginDescentDistance-preKM: ~!Tmp,beginDescentDistance!~
 	
 	basicMaths Tmp,beginDescentDistance,~!Tmp,beginDescentDistance!~,/,1000
 	basicMaths Tmp,funnelEndDistance,~!Tmp,beginDescentDistance!~,+,2
@@ -37,10 +38,10 @@ if ~!Local,numberOfResults!~,==,1,
 	# Calculate direction to plot the approach.
 	first
 	loop
-		2CoordsToAngle Tmp,ReverseAngle,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
-		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,beginDescentDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,AP-Dynamic,beginDescent,~!Local,instanceName!~
-		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,funnelEndDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
-		goDirection ~!Local,instanceName!~,~!Tmp,ReverseAngle!~,~!Tmp,funnelBeginDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		2CoordsToAngle Tmp,reverseAngle,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,beginDescentDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,AP-Dynamic,beginDescent,~!Local,instanceName!~
+		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,funnelEndDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,funnelBeginDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 		
 		addWaypoint ~!Local,instanceName!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 		addWaypoint ~!Local,instanceName!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
@@ -74,4 +75,4 @@ unset Tmp,altitudeInMeters
 unset Tmp,approachAngleInRadians
 unset Tmp,beginDescentDistance
 unset Tmp,funnelDistance
-unset Tmp,ReverseAngle
+unset Tmp,reverseAngle

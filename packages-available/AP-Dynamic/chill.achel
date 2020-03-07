@@ -1,0 +1,4 @@
+# Relax the AP controls to stablise the aircraft ~ AP
+parameters instanceName
+
+setAPState chill,~!Local,instanceName!~
