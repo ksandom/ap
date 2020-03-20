@@ -1,0 +1,29 @@
+# Unit tests for route. ~ route,unitTest,hidden
+
+set Tmp,wrapCalculateNewPositionTest,
+	parameters angle,longitude,latitude
+	
+	calculateNewPosition Tmp,result,~!Local,angle!~,1,0,0
+	degreesToKM Tmp,longitudeKM,~!Tmp,result,longitude!~
+	degreesToKM Tmp,latitudeKM,~!Tmp,result,latitude!~
+	
+	expect ~!Local,longitude!~,~!Tmp,longitudeKM!~,longitude
+	expect ~!Local,latitude!~,~!Tmp,latitudeKM!~,latitude
+	
+	unset Tmp,result
+	unset Tmp,longitude
+	unset Tmp,latitude
+	unset Tmp,longitudeKM
+	unset Tmp,latitudeKM
+
+defineTest calculateNewPosition - 0,
+	callFeatureNoReturn ~!Tmp,wrapCalculateNewPositionTest!~,0,0,1
+
+defineTest calculateNewPosition - 90,
+	callFeatureNoReturn ~!Tmp,wrapCalculateNewPositionTest!~,90,1,0
+
+defineTest calculateNewPosition - 180,
+	callFeatureNoReturn ~!Tmp,wrapCalculateNewPositionTest!~,180,0,-1
+
+defineTest calculateNewPosition - 270,
+	callFeatureNoReturn ~!Tmp,wrapCalculateNewPositionTest!~,270,-1,0
