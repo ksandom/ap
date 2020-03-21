@@ -1,0 +1,15 @@
+# Calculate arc entry point. (currentPosition, pivotPosition, radius) ~ route,hidden
+parameters Category,value,radius,currentLongitude,currentLatitude,pivotLongitude,pivotLatitude
+
+2CoordsToDistance Local,approachHypotenuse,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
+degreesToKM Local,approachHypotenuse,~!Local,approachHypotenuse!~
+rightTriangleGetAngleFromOppositeAndHypotenuse Local,arcEntryRawAngle,~!Local,radius!~,~!Local,approachHypotenuse!~
+radiansToDegrees Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngle!~
+basicMaths Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngleInDegrees!~,*,-1
+2CoordsToAngle Local,approachPivotAngle,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
+radiansToDegrees Local,approachPivotAngleInDegrees,~!Local,approachPivotAngle!~
+basicMaths Local,approachAngle,~!Local,approachPivotAngleInDegrees!~,-,~!Local,arcEntryRawAngleInDegrees!~
+# TODO Sanity check this -^ number.
+calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,approachAngle!~,~!Local,approachHypotenuse!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~
+
+makeLocalAvailable ~!Local,value!~

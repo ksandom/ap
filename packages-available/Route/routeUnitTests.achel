@@ -30,4 +30,32 @@ defineTest calculateNewPosition - 270,
 
 
 
+#
+#
+#                    X pivot(4,4)
+#               r=3 / \
+#                 /
+# (?,?)arcEntry X      \
+#   ^            \         h=6.5574385243
+#   |              \     \
+#  This?             \
+#              a=5     \  \
+#                        \ \
+#                          X currentPosition(9,1)
 
+defineTest calculateArcEntryPoint,
+	# Calculate expected results.
+	2CoordsToDistance Local,hypotenuse,9,1,4,4
+	2CoordsToAngle Tmp,hypotenuseAngle,9,1,4,4
+	
+	rightTriangleGetAngleFromOppositeAndHypotenuse Local,triangleAngle,3,~!Local,hypotenuse!~
+	basicMaths Local,negativeAngle,~!Local,triangleAngle!~,*,-1
+	rotateAngleInRadians Local,bearing,~!Tmp,hypotenuseAngle!~,~!Local,negativeAngle!~
+	calculateNewPosition Local,expectedResult,~!Local,bearing!~,3,9,1
+	
+	# Do it for real.
+	calculateArcEntryPoint Local,arcEntryPoint,3,9,1,4,4
+	
+	# Test it.
+	expect ~!Local,expectedResult,longitude!~,~!Local,arcEntryPoint,longitude!~
+	expect ~!Local,expectedResult,latitude!~,~!Local,arcEntryPoint,latitude!~

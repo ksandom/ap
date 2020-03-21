@@ -12,20 +12,11 @@ else
 	setNested Tmp,originPosition,latitude,~!Local,lineEntryLatitude!~
 
 # Calculate pivot point.
-rotateAngleInDegrees Tmp,pivotAngle,~!Tmp,reverseAngleInDegrees!~,270
-calculateNewPosition Tmp,pivot,~!Tmp,pivotAngle!~,~!Tmp,pivotAngle!~,~!Local,radius!~,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~
+rotateAngleInDegrees Local,pivotAngle,~!Tmp,reverseAngleInDegrees!~,270
+calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~
 
 # Calculate arc entry point. (currentPosition, pivotPosition, radius)
-# TODO Convert this to a testable feature.
-2CoordsToDistance Local,approachHypotenuse,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Tmp,pivot,longitude!~,~!Tmp,pivot,latitude!~
-degreesToKM Local,approachHypotenuse,~!Local,approachHypotenuse!~
-rightTriangleGetAngleFromOppositeAndHypotenuse Local,arcEntryRawAngle,~!Local,radius!~,~!Local,approachHypotenuse!~
-radiansToDegrees Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngle!~
-basicMaths Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngleInDegrees!~,*,-1
-2CoordsToAngle Local,approachPivotAngle,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Tmp,pivot,longitude!~,~!Tmp,pivot,latitude!~
-radiansToDegrees Local,approachPivotAngleInDegrees,~!Local,approachPivotAngle!~
-basicMaths Local,approachAngle,~!Local,approachPivotAngleInDegrees!~,-,~!Local,arcEntryRawAngleInDegrees!~
-calculateNewPosition Local,arcEntryPoint,~!Local,approachAngle!~,~!Local,approachHypotenuse!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~
+calculateArcEntryPoint Local,arcEntryPoint,~!Local,radius!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
 
 # TODO Calculate number of waypoints.
 # TODO   Calculate total angle difference between arcEntry to lineEntry.
