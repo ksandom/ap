@@ -30,18 +30,22 @@ if ~!Local,numberOfResults!~,==,1,
 	debug 1,beginDescentDistance-preKM: ~!Tmp,beginDescentDistance!~
 	
 	basicMaths Tmp,beginDescentDistance,~!Tmp,beginDescentDistance!~,/,1000
-	basicMaths Tmp,funnelEndDistance,~!Tmp,beginDescentDistance!~,+,2
-	basicMaths Tmp,funnelBeginDistance,~!Tmp,beginDescentDistance!~,+,4
 	
-	debug 1,beginDescentDistance: ~!Tmp,beginDescentDistance!~ funnelEndDistance: ~!Tmp,funnelEndDistance!~ funnelBeginDistance: ~!Tmp,funnelBeginDistance!~
+	# TODO These numbers need to be derived to sensible values for the type of plane.
+	basicMaths Tmp,funnelPrep,~!Tmp,beginDescentDistance!~,+,20
+	basicMaths Tmp,funnelBeginDistance,~!Tmp,beginDescentDistance!~,+,10
+	basicMaths Tmp,funnelEndDistance,~!Tmp,beginDescentDistance!~,+,5
+	
+	debug 1,beginDescentDistance: ~!Tmp,beginDescentDistance!~ funnelEndDistance: ~!Tmp,funnelEndDistance!~ funnelBeginDistance: ~!Tmp,funnelBeginDistance!~ funnelPrep: ~!Tmp,funnelPrep!~
 	
 	# Calculate direction to plot the approach.
 	first
 	loop
 		2CoordsToAngle Tmp,reverseAngle,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
-		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,beginDescentDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,AP-Dynamic,beginDescent,~!Local,instanceName!~
-		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,funnelEndDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,funnelPrep!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,funnelBeginDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,funnelEndDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,beginDescentDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,AP-Dynamic,beginDescent,~!Local,instanceName!~
 		
 		addWaypoint ~!Local,instanceName!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 		addWaypoint ~!Local,instanceName!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
