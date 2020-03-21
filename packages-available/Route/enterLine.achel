@@ -1,0 +1,50 @@
+# Enter into a line in a controlled way. This is useful to enter into a precise approach. --enterLine=instanceName=default,radius,angleInDegrees,lineEntryLongitude,lineEntryLatitude,extendKM=0 "entry" is the line entry. "current" is the aircraft position. ~ route,approach,enter,line
+parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntryLongitude":"0","lineEntryLatitude":"0","currentLongitude":"0","currentLatitude":"0","extendKM":"0"}
+
+# Calculate reverseAngle.
+rotateAngleInDegrees Tmp,reverseAngleInDegrees,~!Local,angleInDegrees!~,180
+
+# TODO Potentially later, we may want to put an extra way point a short time before entry into the line to get the plane going on a straight couse in a stable way. We'll need to calculate it here to offset everything, but add it last, so it's in the right order.
+if ~!Local,extendKM!~,!=,0,
+	calculateNewPosition Tmp,originPosition,~!Tmp,reverseAngleInDegrees!~,~!Local,radius!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
+else
+	setNested Tmp,originPosition,longitude,~!Local,lineEntryLongitude!~
+	setNested Tmp,originPosition,latitude,~!Local,lineEntryLatitude!~
+
+# Calculate pivot point.
+rotateAngleInDegrees Tmp,pivotAngle,~!Tmp,reverseAngleInDegrees!~,270
+calculateNewPosition Tmp,pivot,~!Tmp,pivotAngle!~,~!Tmp,pivotAngle!~,~!Local,radius!~,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~
+
+# Calculate arc entry point. (currentPosition, pivotPosition, radius)
+# TODO Convert this to a testable feature.
+2CoordsToDistance Local,approachHypotenuse,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Tmp,pivot,longitude!~,~!Tmp,pivot,latitude!~
+degreesToKM Local,approachHypotenuse,~!Local,approachHypotenuse!~
+rightTriangleGetAngleFromOppositeAndHypotenuse Local,arcEntryRawAngle,~!Local,radius!~,~!Local,approachHypotenuse!~
+radiansToDegrees Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngle!~
+basicMaths Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngleInDegrees!~,*,-1
+2CoordsToAngle Local,approachPivotAngle,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Tmp,pivot,longitude!~,~!Tmp,pivot,latitude!~
+radiansToDegrees Local,approachPivotAngleInDegrees,~!Local,approachPivotAngle!~
+basicMaths Local,approachAngle,~!Local,approachPivotAngleInDegrees!~,-,~!Local,arcEntryRawAngleInDegrees!~
+calculateNewPosition Local,arcEntryPoint,~!Local,approachAngle!~,~!Local,approachHypotenuse!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~
+
+# TODO Calculate number of waypoints.
+# TODO   Calculate total angle difference between arcEntry to lineEntry.
+# TODO   Divide totalAngle by the approximate maximum angle difference.
+# TODO   Round.
+
+# TODO Calculate angleInterval.
+# TODO   Divide totalAngle by numberOfWaypoints
+
+# TODO Calculate each waypoint.
+# TODO   Take totalAngle and radius. Create intial waypoint.
+# TODO   Loop remaining number of wayponts.
+# TODO     Add angleInterval to totalAngle (this will spin it left.)
+# TODO     Modulus by 360.
+# TODO     Create waypoint.
+
+# Add extended waypoint.
+if ~!Local,extendKM!~,!=,0,
+	addWaypoint ~!Local,instanceName!~,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~
+
+# Cleanup
+unset Tmp,reverseAngleInDegrees
