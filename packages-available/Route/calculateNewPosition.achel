@@ -22,4 +22,4 @@ unset Route,newPosition-latitude
 unset Tmp,angle
 unset Tmp,distance
 
-
+makeLocalAvailable ~!Local,value!~
