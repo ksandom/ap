@@ -1,0 +1,6 @@
+# Clean up an AP instance after following an arc. --arcExit=instanceName ~ arc,route
+#onDefine registerOnceForEvent Arc,exit,arcExit
+parameters {"instanceName":"default"}
+
+unregisterForEvent Timer,arc,calculateArc,~!Local,instanceName!~
+setAPState sustain,~!Local,instanceName!~

@@ -1,10 +1,10 @@
 # Enter into a line in a controlled way. This is useful to enter into a precise approach. --enterLine=instanceName=default,radius,angleInDegrees,lineEntryLongitude,lineEntryLatitude,extendKM=0 "entry" is the line entry. "current" is the aircraft position. ~ route,approach,enter,line
-parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntryLongitude":"0","lineEntryLatitude":"0","currentLongitude":"0","currentLatitude":"0","extendKM":"0"}
+parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntryLongitude":"0","lineEntryLatitude":"0","currentLongitude":"0","currentLatitude":"0","extendKM":"1"}
 
 # Calculate reverseAngle.
 rotateAngleInDegrees Tmp,reverseAngleInDegrees,~!Local,angleInDegrees!~,180
 
-# TODO Potentially later, we may want to put an extra way point a short time before entry into the line to get the plane going on a straight couse in a stable way. We'll need to calculate it here to offset everything, but add it last, so it's in the right order.
+# We may want to put an extra way point a short time before entry into the line to get the plane going on a straight couse in a stable way. We'll need to calculate it here to offset everything, but add it last, so it's in the right order.
 if ~!Local,extendKM!~,!=,0,
 	calculateNewPosition Tmp,originPosition,~!Tmp,reverseAngleInDegrees!~,~!Local,radius!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
 else
@@ -18,24 +18,17 @@ calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Tmp,ori
 # Calculate arc entry point. (currentPosition, pivotPosition, radius)
 calculateArcEntryPoint Local,arcEntryPoint,~!Local,radius!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
 
-# TODO Calculate number of waypoints.
-# TODO   Calculate total angle difference between arcEntry to lineEntry.
-# TODO   Divide totalAngle by the approximate maximum angle difference.
-# TODO   Round.
+# Add the entry waypoint and trigger the arc turn.
+addWaypoint ~!Local,instanceName!~,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,Arc,entry,~!Local,instanceName!~
 
-# TODO Calculate angleInterval.
-# TODO   Divide totalAngle by numberOfWaypoints
-
-# TODO Calculate each waypoint.
-# TODO   Take totalAngle and radius. Create intial waypoint.
-# TODO   Loop remaining number of wayponts.
-# TODO     Add angleInterval to totalAngle (this will spin it left.)
-# TODO     Modulus by 360.
-# TODO     Create waypoint.
+# TODO Test: Calculate live radius.
+# TODO Create state for an arc turn.
 
 # Add extended waypoint.
 if ~!Local,extendKM!~,!=,0,
-	addWaypoint ~!Local,instanceName!~,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~
+	addWaypoint ~!Local,instanceName!~,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~,Arc,exit,~!Local,instanceName!~
+else
+	addWaypoint ~!Local,instanceName!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~,Arc,exit,~!Local,instanceName!~
 
 # Cleanup
 unset Tmp,reverseAngleInDegrees

@@ -48,6 +48,7 @@ defineTest calculateArcEntryPoint,
 	2CoordsToDistance Local,hypotenuse,9,1,4,4
 	2CoordsToAngle Tmp,hypotenuseAngle,9,1,4,4
 	
+	
 	rightTriangleGetAngleFromOppositeAndHypotenuse Local,triangleAngle,3,~!Local,hypotenuse!~
 	basicMaths Local,negativeAngle,~!Local,triangleAngle!~,*,-1
 	rotateAngleInRadians Local,bearing,~!Tmp,hypotenuseAngle!~,~!Local,negativeAngle!~
@@ -57,5 +58,5 @@ defineTest calculateArcEntryPoint,
 	calculateArcEntryPoint Local,arcEntryPoint,3,9,1,4,4
 	
 	# Test it.
-	expect ~!Local,expectedResult,longitude!~,~!Local,arcEntryPoint,longitude!~
-	expect ~!Local,expectedResult,latitude!~,~!Local,arcEntryPoint,latitude!~
+	roundExpect 4,~!Local,expectedResult,longitude!~,~!Local,arcEntryPoint,longitude!~,longitude
+	roundExpect 4,~!Local,expectedResult,latitude!~,~!Local,arcEntryPoint,latitude!~,latitude

@@ -1,0 +1,12 @@
+# Calculate the live radius of an AP instance following an arc. --calculateRadius=instanceName ~ arc,route
+parameters {"instanceName":"default"}
+
+# Take current location, and pivot to calculate the difference in KM.
+getCurrentPosition Route,currentPosition,~!Local,instanceName!~
+
+2CoordsToDistance Local,rawDistance,~!Route,currentPosition,longitude!~,~!Route,currentPosition,latitude!~,~!AP,state,~!Local,instanceName!~,pivot,longitude!~,~!AP,state,~!Local,instanceName!~,pivot,latitude!~
+
+degreesToKM Local,distance,~!Local,rawDistance!~
+
+# Save it to AP state.
+setNested AP,state,~!Local,instanceName!~,arc,currentRadius,~!Local,distance!~

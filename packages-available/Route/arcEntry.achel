@@ -1,0 +1,8 @@
+# Set up an AP instance to follow an arc. --arcEntry=instanceName ~ arc,route
+#onDefine registerOnceForEvent Arc,entry,arcEntry
+parameters {"instanceName":"default"}
+
+# TODO Move the timer creation to a more sensible location. Or optimise it so an empty timer doesn't use CPU.
+createTimer arc,500
+registerOnceForEvent Timer,arc,calculateArc,~!Local,instanceName!~
+setAPState followArc,~!Local,instanceName!~
