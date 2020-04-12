@@ -414,6 +414,13 @@ pass massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,pitch"],
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,elevator-req"]
 	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/elevator ~%value%~"]
 
+# Follow an arc to turn
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "followArcSustain", ~!AP,stateRules,~!Tmp,instanceName!~,sustain!~]
+massSet ["AP,stateRules,~!Tmp,instanceName!~,followArcSustain,yaw"],
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,arc,arc,radius-goal"]
+	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,arc,zero"]
+
+
 # Speed controlled
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "speedControlled", ~!AP,stateRules,base,baseAltitude!~]
 

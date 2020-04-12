@@ -1,0 +1,8 @@
+# Dump waypoints to KML. --wpToKML=instanceName,/path/to/file.kml ~ navigator,waypoints,kml
+#onDefine aliasFeature wpToKML,kml
+parameters instanceName,fileName
+
+listWaypoints ~!Local,instanceName!~
+resultSetIfNotSet altitude,0
+
+templateToFile kml,~!Local,fileName!~

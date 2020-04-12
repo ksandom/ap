@@ -1,0 +1,8 @@
+# Dump the flying history to KML. --historyToKML=instanceName,/path/to/file.kml ~ navigator,kml,route,history
+#onDefine aliasFeature historyToKML,history
+parameters {"instanceName":"default","fileName":"/tmp/history.kml"}
+
+retrieveResults AP,history
+takeSubResult ~!Local,instanceName!~
+
+templateToFile kml,~!Local,fileName!~

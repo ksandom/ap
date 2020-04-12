@@ -1,0 +1,10 @@
+# Calculate how far off track we are on the X axis with respect to the first person view. ~ AP,navigator,offset,track
+parameters instanceName
+
+# TODO Calculate distance from origin to current position.
+# TODO Get Angle (Deviance).
+# TODO Sin(angle)*Distance.
+# TODO Save raw result.
+# TODO Convert result to meters, and save that.
+
+# TODO Update template to display meters offset.

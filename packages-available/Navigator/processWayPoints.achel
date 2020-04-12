@@ -64,6 +64,11 @@ loop
 		else
 			setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!Tmp,deviance!~
 
+		# Save our history.
+		# TODO We'll have to do GC on this pretty soon. Otherwise, this is a memory leak!
+		# TODO This should go on it's own timer at a lower frequency. We don't need to collect data this often.
+		now Local,now
+		setNested ["AP","history","~!Local,instanceName!~","~!Local,now!~",{"longitude":"~!AP,state,~!Local,instanceName!~,longitude-deg!~","latitude":"~!AP,state,~!Local,instanceName!~,latitude-deg!~","altitude":"~!AP,state,~!Local,instanceName!~,altitude-ft!~"}]
 
 		set Local,previousLong,~!AP,previousState,~!Local,instanceName!~,longitude-deg!~
 		set Local,previousLat,~!AP,previousState,~!Local,instanceName!~,latitude-deg!~

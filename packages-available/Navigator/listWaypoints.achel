@@ -1,5 +1,5 @@
 # List waypoints for a specific instance. --listWaypoints=instanceName ~ nav,waypoints
-#onDefine aliasFeature listWaypoints,waypoints
+#onDefine aliasFeature listWaypoints,waypoints,wp
 
 set Tmp,instanceName,~!Global,listWaypoints-0!~
 if ~!Tmp,instanceName!~,==,,

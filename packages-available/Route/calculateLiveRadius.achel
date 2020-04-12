@@ -8,5 +8,9 @@ getCurrentPosition Route,currentPosition,~!Local,instanceName!~
 
 degreesToKM Local,distance,~!Local,rawDistance!~
 
+# Take the current radius, and subtract the goal from it.
+basicMaths Local,radiusGoal,~!Local,distance!~,-,~!AP,state,~!Local,instanceName!~,arc,radius-desired!~
+
 # Save it to AP state.
-setNested AP,state,~!Local,instanceName!~,arc,currentRadius,~!Local,distance!~
+setNested AP,state,~!Local,instanceName!~,arc,radius-current,~!Local,distance!~
+setNested AP,state,~!Local,instanceName!~,arc,radius-goal,~!Local,radiusGoal!~

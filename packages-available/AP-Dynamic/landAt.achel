@@ -31,21 +31,19 @@ if ~!Local,numberOfResults!~,==,1,
 	
 	basicMaths Tmp,beginDescentDistance,~!Tmp,beginDescentDistance!~,/,1000
 	
-	# TODO These numbers need to be derived to sensible values for the type of plane.
-	basicMaths Tmp,funnelPrep,~!Tmp,beginDescentDistance!~,+,20
-	basicMaths Tmp,funnelBeginDistance,~!Tmp,beginDescentDistance!~,+,10
-	basicMaths Tmp,funnelEndDistance,~!Tmp,beginDescentDistance!~,+,5
-	
-	debug 1,beginDescentDistance: ~!Tmp,beginDescentDistance!~ funnelEndDistance: ~!Tmp,funnelEndDistance!~ funnelBeginDistance: ~!Tmp,funnelBeginDistance!~ funnelPrep: ~!Tmp,funnelPrep!~
-	
 	# Calculate direction to plot the approach.
 	first
 	loop
-		2CoordsToAngle Tmp,reverseAngle,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
-		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,funnelPrep!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
-		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,funnelBeginDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
-		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,funnelEndDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
-		goDirection ~!Local,instanceName!~,~!Tmp,reverseAngle!~,~!Tmp,beginDescentDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,AP-Dynamic,beginDescent,~!Local,instanceName!~
+		2CoordsToAngle Tmp,angle,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
+		radiansToDegrees Tmp,angleDegrees,~!Tmp,angle!~
+		rotateAngleInDegrees Local,rotatedAngleDegrees,~!Tmp,angleDegrees!~,180
+		
+		calculateNewPosition Route,newPosition,~!Local,rotatedAngleDegrees!~,~!Tmp,beginDescentDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		
+		# TODO Make it possible to use the last waypoint instead of the current position.
+		getCurrentPosition Local,currentPosition,~!Local,instanceName!~
+		
+		enterLine ~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~,~!Tmp,angleDegrees!~,~!Route,newPosition,longitude!~,~!Route,newPosition,latitude!~,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~
 		
 		addWaypoint ~!Local,instanceName!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 		addWaypoint ~!Local,instanceName!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
@@ -79,4 +77,6 @@ unset Tmp,altitudeInMeters
 unset Tmp,approachAngleInRadians
 unset Tmp,beginDescentDistance
 unset Tmp,funnelDistance
-unset Tmp,reverseAngle
+unset Tmp,angle
+
+wpToKML ~!Local,instanceName!~,/tmp/landingRoute.kml

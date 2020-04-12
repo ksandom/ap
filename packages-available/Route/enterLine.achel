@@ -4,6 +4,8 @@ parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntr
 # Calculate reverseAngle.
 rotateAngleInDegrees Tmp,reverseAngleInDegrees,~!Local,angleInDegrees!~,180
 
+# TODO Take into account that when we enter into this, we might not be facing the right way. We will therefore need to turn, and this will have an impact on entering into the arc .
+
 # We may want to put an extra way point a short time before entry into the line to get the plane going on a straight couse in a stable way. We'll need to calculate it here to offset everything, but add it last, so it's in the right order.
 if ~!Local,extendKM!~,!=,0,
 	calculateNewPosition Tmp,originPosition,~!Tmp,reverseAngleInDegrees!~,~!Local,radius!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
@@ -11,12 +13,14 @@ else
 	setNested Tmp,originPosition,longitude,~!Local,lineEntryLongitude!~
 	setNested Tmp,originPosition,latitude,~!Local,lineEntryLatitude!~
 
+# TODO This appears to be incorrect.
 # Calculate pivot point.
 rotateAngleInDegrees Local,pivotAngle,~!Tmp,reverseAngleInDegrees!~,270
 calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~
 
 # Calculate arc entry point. (currentPosition, pivotPosition, radius)
 calculateArcEntryPoint Local,arcEntryPoint,~!Local,radius!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
+debug 0,pivot=~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
 
 # Add the entry waypoint and trigger the arc turn.
 addWaypoint ~!Local,instanceName!~,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,Arc,entry,~!Local,instanceName!~
