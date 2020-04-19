@@ -4,3 +4,5 @@ parameters instanceName,lon,lat,eventCategory,eventName,eventValue
 debug 1,Navigator: Added waypoint ~!Local,instanceName!~ ~!Local,lon!~,~!Local,lat!~, ~!Local,eventCategory!~ ~!Local,eventName!~ ~!Local,eventValue!~
 
 setNested ["Navigator","instances","~!Local,instanceName!~","",{"instanceName":"~!Local,instanceName!~","longitude":"~!Local,lon!~","latitude":"~!Local,lat!~","eventCategory":"~!Local,eventCategory!~","eventName":"~!Local,eventName!~","eventValue":"~!Local,eventValue!~"}]
+
+keepPoint ~!Local,instanceName!~,originalWaypoints,~!Local,lon!~,~!Local,lat!~,100,~!Local,eventCategory!~-~!Local,eventName!~-~!Local,eventValue!~

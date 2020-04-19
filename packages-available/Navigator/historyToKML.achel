@@ -2,7 +2,7 @@
 #onDefine aliasFeature historyToKML,history
 parameters {"instanceName":"default","fileName":"/tmp/history.kml"}
 
-retrieveResults AP,history
-takeSubResult ~!Local,instanceName!~
+# retrieveResults Navigator,history,~!Local,instanceName!~
 
-templateToFile kml,~!Local,fileName!~
+# templateToFile kml,~!Local,fileName!~
+templateToFile kmlCombined,~!Local,fileName!~

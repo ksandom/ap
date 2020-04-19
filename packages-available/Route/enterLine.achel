@@ -1,6 +1,9 @@
 # Enter into a line in a controlled way. This is useful to enter into a precise approach. --enterLine=instanceName=default,radius,angleInDegrees,lineEntryLongitude,lineEntryLatitude,extendKM=0 "entry" is the line entry. "current" is the aircraft position. ~ route,approach,enter,line
 parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntryLongitude":"0","lineEntryLatitude":"0","currentLongitude":"0","currentLatitude":"0","extendKM":"1"}
 
+keepPoint ~!Local,instanceName!~,interestPoints,~!Local,currentLongitude!~,~!Local,currentLatitude!~,500,originAtTimeOfCalculation
+keepPoint ~!Local,instanceName!~,interestPoints,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~,500,lineEntry
+
 # Calculate reverseAngle.
 rotateAngleInDegrees Tmp,reverseAngleInDegrees,~!Local,angleInDegrees!~,180
 
@@ -21,9 +24,11 @@ calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Tmp,ori
 # Calculate arc entry point. (currentPosition, pivotPosition, radius)
 calculateArcEntryPoint Local,arcEntryPoint,~!Local,radius!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
 debug 0,pivot=~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
+keepPoint ~!Local,instanceName!~,interestPoints,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~,500,pivot
 
 # Add the entry waypoint and trigger the arc turn.
 addWaypoint ~!Local,instanceName!~,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,Arc,entry,~!Local,instanceName!~
+keepPoint ~!Local,instanceName!~,interestPoints,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,500,Arc-entry-~!Local,instanceName!~
 
 # TODO Test: Calculate live radius.
 # TODO Create state for an arc turn.
@@ -31,8 +36,11 @@ addWaypoint ~!Local,instanceName!~,~!Local,arcEntryPoint,longitude!~,~!Local,arc
 # Add extended waypoint.
 if ~!Local,extendKM!~,!=,0,
 	addWaypoint ~!Local,instanceName!~,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~,Arc,exit,~!Local,instanceName!~
+	keepPoint ~!Local,instanceName!~,interestPoints,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~,500,Arc-exit-~!Local,instanceName!~
+	keepPoint ~!Local,instanceName!~,interestPoints,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~,500,lineEntry
 else
 	addWaypoint ~!Local,instanceName!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~,Arc,exit,~!Local,instanceName!~
+	keepPoint ~!Local,instanceName!~,interestPoints,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~,500,Arc-exit-~!Local,instanceName!~
 
 # Cleanup
 unset Tmp,reverseAngleInDegrees
