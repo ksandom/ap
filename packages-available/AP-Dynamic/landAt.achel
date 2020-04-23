@@ -21,7 +21,8 @@ if ~!Local,numberOfResults!~,==,1,
 	stashResults Tmp,landAt
 	
 	# Calculate where to begin the descent.
-	feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,altitude-ft!~
+	# feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,altitude-ft!~
+	feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,cruiseAltitude!~
 	degreesToRadians Tmp,approachAngleInRadians,~!Local,approachAngleInDegrees!~
 	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,beginDescentDistance,~!Tmp,approachAngleInRadians!~,~!Tmp,altitudeInMeters!~
 	
@@ -40,10 +41,21 @@ if ~!Local,numberOfResults!~,==,1,
 		
 		calculateNewPosition Route,newPosition,~!Local,rotatedAngleDegrees!~,~!Tmp,beginDescentDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 		
-		# TODO Make it possible to use the last waypoint instead of the current position.
-		getCurrentPosition Local,currentPosition,~!Local,instanceName!~
+		# If we have waypoints, use the last one as the starting point. Otherwise take the current location.
+		listWaypoints ~!Local,instanceName!~
+		countToVar Local,waypointCount
+		if ~!Local,waypoint!~,==,0,
+			debug 0,Using current location for ~!Local,instanceName!~ to plan the landing.
+			getCurrentPosition Local,startPosition,~!Local,instanceName!~
+		else
+			last
+			loop
+				debug 0,Using last waypoint for ~!Local,instanceName!~ to plan the landing.
+				setNested Local,startPosition,longitude,~!Result,longitude!~
+				setNested Local,startPosition,latitude,~!Result,latitude!~
+		debug 0,Using location: ~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
 		
-		enterLine ~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~,~!Tmp,angleDegrees!~,~!Route,newPosition,longitude!~,~!Route,newPosition,latitude!~,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~
+		enterLine ~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~,~!Tmp,angleDegrees!~,~!Route,newPosition,longitude!~,~!Route,newPosition,latitude!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
 		
 		addWaypoint ~!Local,instanceName!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 		addWaypoint ~!Local,instanceName!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
