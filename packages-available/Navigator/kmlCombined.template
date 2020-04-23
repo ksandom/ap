@@ -81,7 +81,7 @@ retrieveResults Navigator,passedWaypoints,~!Local,instanceName!~
 <~ macro originalWaypoints:
 retrieveResults Navigator,interestPoints,~!Local,instanceName!~
 ~~    <Placemark>
-      <name>interest/~%description%~</name>
+      <name>~%description%~</name>
       <Point>
         <coordinates>~%longitude%~,~%latitude%~,0</coordinates>
       </Point>
