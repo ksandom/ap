@@ -2,6 +2,7 @@
 #onDefine registerOnceForEvent Arc,entry,arcEntry
 parameters {"instanceName":"default"}
 
+debug 0,Entering arc turn for ~!Local,instanceName!~.
 # TODO Move the timer creation to a more sensible location. Or optimise it so an empty timer doesn't use CPU.
 createTimer arc,500
 registerOnceForEvent Timer,arc,calculateLiveRadius,~!Local,instanceName!~

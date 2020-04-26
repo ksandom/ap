@@ -23,7 +23,7 @@ calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Tmp,ori
 
 # Calculate arc entry point. (currentPosition, pivotPosition, radius)
 calculateArcEntryPoint Local,arcEntryPoint,~!Local,radius!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
-debug 0,pivot=~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
+debug 0,pivot=~!Local,pivot,longitude!~,~!Local,pivot,latitude!~ r=~!Local,radius!~
 keepPoint ~!Local,instanceName!~,interestPoints,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~,500,pivot
 
 # Add the entry waypoint and trigger the arc turn.
