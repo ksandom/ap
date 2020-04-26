@@ -7,8 +7,10 @@ degreesToKM Local,approachHypotenuse,~!Local,approachHypotenuse!~
 
 # Calculate the angle between the vector to the pivot, and the vector to meet with the arc.
 rightTriangleGetAngleFromOppositeAndHypotenuse Local,arcEntryRawAngle,~!Local,radius!~,~!Local,approachHypotenuse!~
+debug 0,rightTriangleGetAngleFromOppositeAndHypotenuse =,~!Local,arcEntryRawAngle!~,~!Local,radius!~,~!Local,approachHypotenuse!~
+
+debug 0,radiansToDegrees ~!Local,arcEntryRawAngleInDegrees!~,~!Local,arcEntryRawAngle!~
 radiansToDegrees Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngle!~
-basicMaths Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngleInDegrees!~,*,-1
 
 # Calculate our angle from north to the pivot.
 2CoordsToAngle Local,approachPivotAngle,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
@@ -16,10 +18,12 @@ radiansToDegrees Local,approachPivotAngleInDegrees,~!Local,approachPivotAngle!~
 
 # Calculate our angle from north to meet with the arc.
 basicMaths Local,approachAngle,~!Local,approachPivotAngleInDegrees!~,-,~!Local,arcEntryRawAngleInDegrees!~
-# TODO Sanity check this -^ number.
+
+# Calcuate how far away the arc entry point is from the current position.
+abcSquared Local,approachDistance,~!Local,approachHypotenuse!~,~!Local,radius!~
 
 # Calculate final position.
-# TODO Need to calculate approachDistance rather than use approachHypotenuse.
-calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,approachAngle!~,~!Local,approachHypotenuse!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~
+calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,approachAngle!~,~!Local,approachDistance!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~
+debug 0,calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,approachAngle!~,~!Local,approachDistance!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~
 
 makeLocalAvailable ~!Local,value!~
