@@ -9,6 +9,6 @@ if ~!Local,longitude!~,!=,,
 
 		keepPoint ~!Local,instanceName!~,originalWaypoints,~!Local,longitude!~,~!Local,latitude!~,100,~!Local,eventCategory!~-~!Local,eventName!~-~!Local,eventValue!~
 	else
-		debug 0,Something tried to add an empty (no latitude) waypoint to --addWaypoint.
+		debug 0,Something tried to add an empty (no latitude) waypoint to --addWaypoint. Event=~!Local,eventCategory!~,~!Local,eventName!~,~!Local,eventValue!~
 else
-	debug 0,Something tried to add an empty (no longitude) waypoint to --addWaypoint.
+	debug 0,Something tried to add an empty (no longitude) waypoint to --addWaypoint. Event=~!Local,eventCategory!~,~!Local,eventName!~,~!Local,eventValue!~
