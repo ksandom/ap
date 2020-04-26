@@ -30,9 +30,6 @@ keepPoint ~!Local,instanceName!~,interestPoints,~!Local,pivot,longitude!~,~!Loca
 addWaypoint ~!Local,instanceName!~,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,Arc,entry,~!Local,instanceName!~
 keepPoint ~!Local,instanceName!~,interestPoints,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,500,Arc-entry-~!Local,instanceName!~
 
-# TODO Test: Calculate live radius.
-# TODO Create state for an arc turn.
-
 # Add extended waypoint.
 if ~!Local,extendKM!~,!=,0,
 	addWaypoint ~!Local,instanceName!~,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~,Arc,exit,~!Local,instanceName!~
