@@ -57,8 +57,8 @@ if ~!Local,numberOfResults!~,==,1,
 		
 		enterLine ~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~,~!Tmp,angleDegrees!~,~!Route,newPosition,longitude!~,~!Route,newPosition,latitude!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
 		
-		addWaypoint ~!Local,instanceName!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,Landing,runwayBegin
-		addWaypoint ~!Local,instanceName!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~,Landing,runwayEnd
+		addWaypoint ~!Local,instanceName!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,Landing,runwayBegin,~!Local,instanceName!~
+		addWaypoint ~!Local,instanceName!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~,Landing,runwayEnd,~!Local,instanceName!~
 	
 	
 	# TODO Calculate distance to begin descent, from 3 degrees and current altitude.
