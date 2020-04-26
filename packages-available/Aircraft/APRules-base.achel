@@ -419,6 +419,9 @@ setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "followArcSustain", ~!AP,
 massSet ["AP,stateRules,~!Tmp,instanceName!~,followArcSustain,yaw"],
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,arc,arc,radius-goal"]
 	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,arc,zero"]
+	setNested ~!Me,stuff!~,output,min,1
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,-1
 
 
 # Speed controlled
