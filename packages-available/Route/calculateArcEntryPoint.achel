@@ -1,15 +1,25 @@
 # Calculate arc entry point. (currentPosition, pivotPosition, radius) ~ route,hidden
 parameters Category,value,radius,currentLongitude,currentLatitude,pivotLongitude,pivotLatitude
 
+# Figure out the hypotenuse of the triangle of us, pivot, and intended arc meeting point.
 2CoordsToDistance Local,approachHypotenuse,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
 degreesToKM Local,approachHypotenuse,~!Local,approachHypotenuse!~
+
+# Calculate the angle between the vector to the pivot, and the vector to meet with the arc.
 rightTriangleGetAngleFromOppositeAndHypotenuse Local,arcEntryRawAngle,~!Local,radius!~,~!Local,approachHypotenuse!~
 radiansToDegrees Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngle!~
 basicMaths Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngleInDegrees!~,*,-1
+
+# Calculate our angle from north to the pivot.
 2CoordsToAngle Local,approachPivotAngle,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
 radiansToDegrees Local,approachPivotAngleInDegrees,~!Local,approachPivotAngle!~
+
+# Calculate our angle from north to meet with the arc.
 basicMaths Local,approachAngle,~!Local,approachPivotAngleInDegrees!~,-,~!Local,arcEntryRawAngleInDegrees!~
 # TODO Sanity check this -^ number.
+
+# Calculate final position.
+# TODO Need to calculate approachDistance rather than use approachHypotenuse.
 calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,approachAngle!~,~!Local,approachHypotenuse!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~
 
 makeLocalAvailable ~!Local,value!~
