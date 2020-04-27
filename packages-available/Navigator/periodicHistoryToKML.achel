@@ -1,0 +1,11 @@
+# Run --historyToKML every so often. Recommended to be several seconds a part. --periodicHistoryToKML=instanceName,intervalInMilliseconds,fileName
+#onDefine aliasFeature historyToKML,history
+parameters {"instanceName":"default","intervalInMilliseconds":"10000","fileName":"/tmp/history.kml"}
+
+# TODO make this instance aware
+set Navigator,historyHandeler,
+	parameters instanceName
+	historyToKML ~!Local,instanceName!~
+
+createTimer history,~!Local,intervalInMilliseconds!~
+registerOnceForEvent Timer,history,~!Navigator,historyHandeler!~,~!Local,instanceName!~
