@@ -35,11 +35,13 @@ if ~!Local,numberOfResults!~,==,1,
 	# Calculate direction to plot the approach.
 	first
 	loop
-		2CoordsToAngle Tmp,angle,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
+		setNested ["Local","runway",{"longitudeBegin":"~!Result,longitudeBegin!~","latitudeBegin":"~!Result,latitudeBegin!~","longitudeEnd":"~!Result,longitudeEnd!~","latitudeEnd":"~!Result,latitudeEnd!~"}]
+		
+		2CoordsToAngle Tmp,angle,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~,~!Local,runway,longitudeEnd!~,~!Local,runway,latitudeEnd!~
 		radiansToDegrees Tmp,angleDegrees,~!Tmp,angle!~
 		rotateAngleInDegrees Local,rotatedAngleDegrees,~!Tmp,angleDegrees!~,180
 		
-		calculateNewPosition Route,newPosition,~!Local,rotatedAngleDegrees!~,~!Tmp,beginDescentDistance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		calculateNewPosition Route,newPosition,~!Local,rotatedAngleDegrees!~,~!Tmp,beginDescentDistance!~,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~
 		
 		# If we have waypoints, use the last one as the starting point. Otherwise take the current location.
 		listWaypoints ~!Local,instanceName!~
@@ -55,10 +57,11 @@ if ~!Local,numberOfResults!~,==,1,
 				setNested Local,startPosition,latitude,~!Result,latitude!~
 		debug 0,Using location: ~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
 		
+		
 		enterLine ~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~,~!Tmp,angleDegrees!~,~!Route,newPosition,longitude!~,~!Route,newPosition,latitude!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
 		
-		addWaypoint ~!Local,instanceName!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,Landing,runwayBegin,~!Local,instanceName!~
-		addWaypoint ~!Local,instanceName!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~,Landing,runwayEnd,~!Local,instanceName!~
+		addWaypoint ~!Local,instanceName!~,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~,Landing,runwayBegin,~!Local,instanceName!~
+		addWaypoint ~!Local,instanceName!~,~!Local,runway,longitudeEnd!~,~!Local,runway,latitudeEnd!~,Landing,runwayEnd,~!Local,instanceName!~
 	
 	
 	# TODO Calculate distance to begin descent, from 3 degrees and current altitude.

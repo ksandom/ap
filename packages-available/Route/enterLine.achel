@@ -27,7 +27,7 @@ debug 0,pivot=~!Local,pivot,longitude!~,~!Local,pivot,latitude!~ r=~!Local,radiu
 keepPoint ~!Local,instanceName!~,interestPoints,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~,500,pivot
 
 # Add the entry waypoint and trigger the arc turn.
-addWaypoint ~!Local,instanceName!~,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,Arc,entry,~!Local,instanceName!~
+addWaypoint ~!Local,instanceName!~,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,Arc,entry,~!Local,instanceName!~,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
 keepPoint ~!Local,instanceName!~,interestPoints,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,500,Arc-entry-~!Local,instanceName!~
 
 # Add extended waypoint.

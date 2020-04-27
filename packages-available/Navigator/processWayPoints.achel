@@ -64,10 +64,6 @@ loop
 		else
 			setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!Tmp,deviance!~
 
-		# Save our history.
-		# TODO This should go on it's own timer at a lower frequency. We don't need to collect data this often.
-		keepPoint ~!Local,instanceName!~,history,~!AP,state,~!Local,instanceName!~,longitude-deg!~,~!AP,state,~!Local,instanceName!~,latitude-deg!~,~!AP,state,~!Local,instanceName!~,altitude-ft!~
-
 		set Local,previousLong,~!AP,previousState,~!Local,instanceName!~,longitude-deg!~
 		set Local,previousLat,~!AP,previousState,~!Local,instanceName!~,latitude-deg!~
 		set Local,currentLong,~!AP,state,~!Local,instanceName!~,longitude-deg!~
@@ -122,6 +118,13 @@ loop
 				debug 3,processWayPoints DEBUG01 distanceD=~!AP,state,~!Local,instanceName!~,distanceSinceLastIteration!~/~!Local,distanceSinceLastIteration!~ timeD=~!Local,timeDifference!~ now=~!AP,state,~!Local,instanceName!~,now!~ before=~!AP,previousState,~!Local,instanceName!~,now!~   giveUpThreshold=~!Local,giveUpThreshold!~=(~!Local,speedOfIteration!~ * ~!Navigator,giveUpSeconds!~) ?>? ~!AP,state,~!Local,instanceName!~,distance!~ degreesSinceLastIteration=~!Local,degreesSinceLastIteration!~
 				
 				keepPoint ~!Local,instanceName!~,passedWaypoints,~!Result,longitude!~,~!Result,latitude!~,~!AP,state,~!Local,instanceName!~,altitude-ft!~,~!Result,eventCategory!~-~!Result,eventName!~-~!Result,eventValue!~
+				
+				if ~!Result,pivotLongitude!~,!=,,
+					debug 1,Got a pivot for ~!Local,instanceName!~. Setting that to ~!Result,pivotLongitude!~,~!Result,pivotLatitude!~.
+					setNested AP,state,~!Local,instanceName!~,pivot,longitude,~!Result,pivotLongitude!~
+					setNested AP,state,~!Local,instanceName!~,pivot,latitude,~!Result,pivotLatitude!~
+				else
+					unset AP,state,~!Local,instanceName!~,pivot
 				
 				if ~!Result,eventCategory!~,!=,,
 					if ~!Result,eventName!~,!=,,
