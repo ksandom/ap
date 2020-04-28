@@ -40,7 +40,7 @@
         <altitudeMode>absolute</altitudeMode>
         <coordinates>
 <~ macro history:
-retrieveResults Navigator,history,~!Local,instanceName!~
+getHistory ~!Local,instanceName!~,history
 ~~          ~%longitude%~,~%latitude%~,~%altitude%~
 
 ~>        </coordinates>
@@ -56,7 +56,7 @@ retrieveResults Navigator,history,~!Local,instanceName!~
         <altitudeMode>absolute</altitudeMode>
         <coordinates>
 <~ macro originalWaypoints:
-retrieveResults Navigator,originalWaypoints,~!Local,instanceName!~
+getHistory ~!Local,instanceName!~,originalWaypoints
 ~~          ~%longitude%~,~%latitude%~,~%altitude%~
 
 ~>        </coordinates>
@@ -72,14 +72,14 @@ retrieveResults Navigator,originalWaypoints,~!Local,instanceName!~
         <altitudeMode>absolute</altitudeMode>
         <coordinates>
 <~ macro passedWaypoints:
-retrieveResults Navigator,passedWaypoints,~!Local,instanceName!~
+getHistory ~!Local,instanceName!~,passedWaypoints
 ~~          ~%longitude%~,~%latitude%~,~%altitude%~
 
 ~>        </coordinates>
       </LineString>
     </Placemark>
 <~ macro originalWaypoints:
-retrieveResults Navigator,interestPoints,~!Local,instanceName!~
+getHistory ~!Local,instanceName!~,interestPoints
 ~~    <Placemark>
       <name>~%description%~</name>
       <Point>

@@ -1,0 +1,9 @@
+# Get a history to use with something like --historyToKML. --getHistory=instanceName ~ navigator
+parameters instanceName,type
+
+# This is to limit the results if there are none to give. Ie we don't want the results of something else here.
+first
+clear
+
+# Do it.
+retrieveResults Navigator,~!Local,type!~,~!Local,instanceName!~
