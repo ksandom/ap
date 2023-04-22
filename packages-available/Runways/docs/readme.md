@@ -16,3 +16,8 @@ If you want to debug the update process, I suggest downloading the data once, an
 ap --downloadRunways
 ap -v --updateRunways=runways.csv
 ```
+
+## Data source
+
+* https://davidmegginson.github.io/ourairports-data/
+* https://ourairports.com/

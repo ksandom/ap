@@ -6,14 +6,15 @@ else
 	set Tmp,waiInstanceName,~!Global,whereAmI-0!~
 
 
+debug 1,whichRunwayIsClosest ~!AP,state,~!Tmp,waiInstanceName!~,longitude-deg!~,~!AP,state,~!Tmp,waiInstanceName!~,latitude-deg!~,1
 whichRunwayIsClosest ~!AP,state,~!Tmp,waiInstanceName!~,longitude-deg!~,~!AP,state,~!Tmp,waiInstanceName!~,latitude-deg!~,1
 
 loop
 	debug 1,2CoordsToDistance Tmp,distanceDegrees,~!AP,state,~!Tmp,waiInstanceName!~,longitude-deg!~,~!AP,state,~!Tmp,waiInstanceName!~,latitude-deg!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
-	
+
 	2CoordsToDistance Tmp,distanceDegrees,~!AP,state,~!Tmp,waiInstanceName!~,longitude-deg!~,~!AP,state,~!Tmp,waiInstanceName!~,latitude-deg!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 	degreesToDistance Tmp,distance,~!Tmp,distanceDegrees!~
-	
+
 	debug 1,Distance from marked runway: ~!Tmp,distance!~km key=~!Result,retrieveKey!~
 
 unset Tmp,waiInstanceName
