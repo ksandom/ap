@@ -1,28 +1,31 @@
 # Fly to and land at a specific runway. --flyTo=[instanceName],runwaySearchRegex . If multiple runways are matched, the first one will be chosen. ~ runways,user
-parameters instanceName,runwaySearchRegex
-setIfNothing Me,instanceName,default
+parameters {"instanceName":"default", "runwaySearchRegex":""}
 
-if ~!Global,flyTo-1!~,!=,,
-	debug 1,flyTo: instance=~!Me,instanceName!~ request=~!Global,flyTo-1!~
-	listRunways ~!Global,flyTo-1!~
-	
-	
+# setIfNothing Local,instanceName,default
+
+if ~!Local,runwaySearchRegex!~,!=,,
+	debug 1,flyTo: instance=~!Local,instanceName!~ request=~!Local,runwaySearchRegex!~
+	listRunways ~!Local,runwaySearchRegex!~
+
+
 	countToVar Tmp,runways
 	if ~!Tmp,runways!~,>,1,
 		first
 		debug 1,flyTo: More than one runway matched. The first one was chosen.
 		outNow
-	
+
 	if ~!Tmp,runways!~,>,0,
 		debug 1,flyTo: We're ready. Let's do it.
-		if ~!AP,state,~!Me,instanceName!~,airspeed-kt!~,<,~!AP,state,~!Me,instanceName!~,v1!~,
+		if ~!AP,state,~!Local,instanceName!~,airspeed-kt!~,<,~!AP,state,~!Local,instanceName!~,v1!~,
 			debug 1,flyTo: We aren't flying. Let's fix that.
 			takeOff
 		plotApproach
+
+		debug 0,Waypoints:
+		listWaypoints
 	else
 		debug 1,flyTo: No runways matched. Let's not fly.
-	
-	unset Me,instanceName
+
+	unset Local,instanceName
 else
-	debug 1,flyTo: instance=~!Me,instanceName!~ request=~!Global,flyTo-1!~ (bad request. Perhaps there is a missing comma?)
-	
+	debug 1,flyTo: instance=~!Local,instanceName!~ request=~!Local,runwaySearchRegex!~ (bad request. Perhaps there is a missing comma?)
