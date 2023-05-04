@@ -1,7 +1,7 @@
 # Plot the approach to an airport. --plotApproach=[instanceName] . This expects a single runway to be in the resultSet. If there is more than one, it will take the first one. ~ ap,navigator
 parameters {"instanceName":"default"}
 
-#  KSFO-01L-le: 
+#  KSFO-01L-le:
 #    airport: KSFO
 #    runway: 01L
 #    surface: ASP
@@ -19,54 +19,54 @@ parameters {"instanceName":"default"}
 first
 loop
 	debug 1, plotDecent: Will fly to co-ordinates ~!Result,latitudeBegin!~,~!Result,longitudeBegin!~
-	
+
 	# * prep for plot calculations
 	# invert orientation as inverseRunwayAngle of the runway.
 	basicMaths Tmp,inverseRunwayAngle,~!Result,heading!~,+,180
 	basicMaths Tmp,inverseRunwayAngle,~!Tmp,inverseRunwayAngle!~,%,360
 	degreesToRadians Tmp,inverseRunwayAngle,~!Tmp,inverseRunwayAngle!~
-	
+
 	# * plot final approach
 	# Take safeAltitude as opposite. Project adjacent as finalApproachDistance using 2.5 degrees.
 	degreesToRadians Tmp,finalApproachAngle,2.5
-	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,finalApproachDistance,~!Tmp,finalApproachAngle!~,~!AP,state,~!Tmp,flyToInstance!~,safeAltitude!~
-	
+	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,finalApproachDistance,~!Tmp,finalApproachAngle!~,~!AP,state,~!Local,instanceName!~,safeAltitude!~
+
 	# TODO This is a hack. Add handeling of feet
 	basicMaths Tmp,finalApproachDistanceMeters,~!Tmp,finalApproachDistance!~,/,3
 	metersToDegrees Tmp,finalApproachDistanceDegrees,~!Tmp,finalApproachDistanceMeters!~
 	angleAndDistanceToCoord Tmp,finalApproachOffset,~!Tmp,inverseRunwayAngle!~,~!Tmp,finalApproachDistanceDegrees!~
 	basicMaths Tmp,finalApproachLat,~!Tmp,finalApproachOffset,x!~,+,~!Result,latitudeBegin!~
 	basicMaths Tmp,finalApproachLon,~!Tmp,finalApproachOffset,y!~,+,~!Result,longitudeBegin!~
-	
-	
+
+
 	# Take runway coords and inverseRunwayAngle to give approachEntry coords
 	# waypoint event: finalApproach
-	
+
 	# TODO plot approach entry.
 	# Take cruiseAltitude-safeAltitude as opposite. Project adjacent as approachDistance using 3 degrees.
-	basicMaths Tmp,approachEntryVirtualAltitude,~!AP,state,~!Tmp,flyToInstance!~,cruiseAltitude!~,-,~!AP,state,~!Tmp,flyToInstance!~,safeAltitude!~
+	basicMaths Tmp,approachEntryVirtualAltitude,~!AP,state,~!Local,instanceName!~,cruiseAltitude!~,-,~!AP,state,~!Local,instanceName!~,safeAltitude!~
 	degreesToRadians Tmp,approachEntryAngle,3
-	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,approachEntryDistance,~!Tmp,approachEntryAngle!~,~!AP,state,~!Tmp,flyToInstance!~,cruiseAltitude!~
-	
+	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,approachEntryDistance,~!Tmp,approachEntryAngle!~,~!AP,state,~!Local,instanceName!~,cruiseAltitude!~
+
 	# TODO This is a hack. Add handeling of feet
 	basicMaths Tmp,approachEntryDistanceMeters,~!Tmp,approachEntryDistance!~,/,3
 	metersToDegrees Tmp,approachEntryDistanceMeters,~!Tmp,approachEntryDistanceMeters!~
 	angleAndDistanceToCoord Tmp,approachEntryOffset,~!Tmp,inverseRunwayAngle!~,~!Tmp,finalApproachDistanceDegrees!~
-	
+
 	# Take finalApproach coords and inverseRunwayAngle to give approachEntry coords
 	basicMaths Tmp,approachEntryLat,~!Tmp,approachEntryOffset,x!~,+,~!Tmp,finalApproachLat!~
 	basicMaths Tmp,approachEntryLon,~!Tmp,approachEntryOffset,y!~,+,~!Tmp,finalApproachLon!~
-	
+
 	# waypoint event: beginDecent
-	
-	
+
+
 	# TODO approach seems off. Have switched xy back. Test.
 	# TODO slow down
 	# TODO flare
 	# TODO stop
 	# TODO more accurate WP for landing
 	# TODO more accurate altitude control
-	
+
 	# TODO write beginDecent
 	# set altitudeGoal to safeAltitude
 	setNested AP,events,beginDecent,
@@ -75,10 +75,10 @@ loop
 		altitude ~!Local,instanceName!~,~!AP,state,~!Global,~!AP,events,beginDecent!~!~,safeAltitude!~
 		# TODO set speedGoal
 		# TODO set to speedControlled
-	
+
 	registerForEvent Flight,beginDecent,~!AP,events,beginDecent!~
 	debug 1,plotApproach: Registered ~!AP,events,beginDecent!~ to Flight,beginDecent
-	
+
 	# TODO write finalApproach
 	# set altitudeGoal to 100 # TODO this will eventually need to take the actual runway altitude into account.
 	# slow down the plane
@@ -87,46 +87,46 @@ loop
 		debug 1,plotApproach: Final approach for instance ~!Global,~!AP,events,finalApproach!~!~
 		# TODO set speedGoal
 		altitude ~!Global,~!AP,events,finalApproach!~!~,500
-	
+
 	registerForEvent Flight,finalApproach,~!AP,events,finalApproach!~
 	debug 1,plotApproach: Registered ~!AP,events,finalApproach!~ to Flight,finalApproach
-	
+
 	# TODO write beginTouchDown
 	setNested AP,events,beginTouchDown,
 		debug 1,plotApproach: Begining touchdown for instance ~!Global,~!AP,events,beginTouchDown!~!~
 		# TODO set speedGoal
 		altitude ~!Local,instanceName!~,0
-	
+
 	registerForEvent Flight,beginTouchDown,~!AP,events,beginTouchDown!~
 	debug 1,plotApproach: Registered ~!Global,~!AP,events,beginTouchDown!~!~ to Flight,beginTouchDown
-	
-	
-	
-	
+
+
+
+
 	# add waypoints
-	addWaypoint ~!Tmp,flyToInstance!~,~!Tmp,approachEntryLon!~,~!Tmp,approachEntryLat!~,Flight,beginDecent,~!Tmp,flyToInstance!~
-	addWaypoint ~!Tmp,flyToInstance!~,~!Tmp,finalApproachLon!~,~!Tmp,finalApproachLat!~,Flight,finalApproach,~!Tmp,flyToInstance!~
-	addWaypoint ~!Tmp,flyToInstance!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,Flight,beginTouchDown,~!Tmp,flyToInstance!~
-	
+	addWaypoint ~!Local,instanceName!~,~!Tmp,approachEntryLon!~,~!Tmp,approachEntryLat!~,Flight,beginDecent,~!Local,instanceName!~
+	addWaypoint ~!Local,instanceName!~,~!Tmp,finalApproachLon!~,~!Tmp,finalApproachLat!~,Flight,finalApproach,~!Local,instanceName!~
+	addWaypoint ~!Local,instanceName!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~,Flight,beginTouchDown,~!Local,instanceName!~
+
 	# TODO Add the point to abort the landing.
-	
+
 	# Add the end of the runway to keep the plane straight.
-	addWaypoint ~!Tmp,flyToInstance!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~,Flight,runwayEnd,~!Tmp,flyToInstance!~
-	
-	
+	addWaypoint ~!Local,instanceName!~,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~,Flight,runwayEnd,~!Local,instanceName!~
+
+
 	# * Clean up
 	unset Tmp,inverseRunwayAngle
 	unset Tmp,finalApproachDistance
 	unset Tmp,finalApproachAngle
 	unset Tmp,approachEntryAngle
-	
+
 	unset Tmp,finalApproachDistanceMeters
 	unset Tmp,finalApproachDistanceDegrees
 	unset Tmp,finalApproachOffset
 	unset Tmp,approachEntryVirtualAltitude
 	unset Tmp,approachEntryDistance
 	unset Tmp,approachEntryAngle
-	
+
 	unset Tmp,finalApproachLat
 	unset Tmp,finalApproachLon
-	
+
