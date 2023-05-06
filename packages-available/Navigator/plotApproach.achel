@@ -18,13 +18,11 @@ parameters {"instanceName":"default"}
 
 first
 loop
-	debug 1, plotDecent: Will fly to co-ordinates ~!Result,latitudeBegin!~,~!Result,longitudeBegin!~
+	debug 1, plotDecent: Runway begins at ~!Result,latitudeBegin!~,~!Result,longitudeBegin!~
 
 	# * prep for plot calculations
-	# invert orientation as inverseRunwayAngle of the runway.
-	basicMaths Tmp,inverseRunwayAngle,~!Result,heading!~,+,180
-	basicMaths Tmp,inverseRunwayAngle,~!Tmp,inverseRunwayAngle!~,%,360
-	degreesToRadians Tmp,inverseRunwayAngle,~!Tmp,inverseRunwayAngle!~
+	2CoordsToAngle Tmp,inverseRunwayAngle,~!Result,latitudeEnd!~,~!Result,longitudeEnd!~,~!Result,latitudeBegin!~,~!Result,longitudeBegin!~
+	debug 1,Calculated inverseRunwayAngle from coordinates: ~!Tmp,inverseRunwayAngle!~
 
 	# * plot final approach
 	# Take safeAltitude as opposite. Project adjacent as finalApproachDistance using 2.5 degrees.
