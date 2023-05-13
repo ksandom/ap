@@ -1,0 +1,10 @@
+# Determine whether we have waypoints for a given instance. --haveWaypoints=Category,variable[,instanceName] ~ navigator
+parameters {"Category":"Local","variable":"behinPosition","instanceName":"default"}
+
+listWaypoints
+if ~!Navigator,numberOfWayPoints!~,>,0,
+    set ~!Local,Category!~,~!Local,variable!~,waypoints
+else
+    set ~!Local,Category!~,~!Local,variable!~,no waypoints
+
+makeLocalAvailable ~!Local,variable!~

@@ -7,5 +7,12 @@ retrieveResults Navigator,instances,~!Local,instanceName!~
 getWaypointStatus
 countToVar Navigator,numberOfWayPoints
 
+loop
+	isolate
+		getCategory Result
+		stashResults AP,state,~!Local,instanceName!~,lastWaypoint
+		unset AP,state,~!Local,instanceName!~,closestRunway,key
+
+
 templateOut waypoints
 outNow

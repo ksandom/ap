@@ -1,0 +1,11 @@
+# Figure out whether the plane in the air or on the ground. --isFlying=Category,variable[,instanceName] . instanceName defaults to "default"
+parameters {"Category":"Local","variable":"currentPosition","instanceName":"default"}
+
+# TODO Check assumption that v2 is the best unit to compare to. The logic is that if we are faster than this speed, then we must be flying.
+
+if ~!AP,state,~!Local,instanceName!~,airspeed-kt!~,>,~!AP,state,~!Local,instanceName!~,v2!~,
+    set ~!Local,Category!~,~!Local,variable!~,air
+else
+    set ~!Local,Category!~,~!Local,variable!~,ground
+
+makeLocalAvailable ~!Local,variable!~

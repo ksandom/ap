@@ -20,6 +20,14 @@ first
 loop
 	debug 1, plotDecent: Runway begins at ~!Result,latitudeBegin!~,~!Result,longitudeBegin!~
 
+	# TODO In --flyTo, add plotDeparture.
+
+	getNavBeginLocation Local,navBeginLocation
+
+	# TODO Why are waypoints going erratic when on the ground.
+	# TODO Calculate radius.
+	# TODO Entry into radius from navBeginLocation.
+
 	# * prep for plot calculations
 	2CoordsToAngle Tmp,inverseRunwayAngle,~!Result,latitudeEnd!~,~!Result,longitudeEnd!~,~!Result,latitudeBegin!~,~!Result,longitudeBegin!~
 	debug 1,Calculated inverseRunwayAngle from coordinates: ~!Tmp,inverseRunwayAngle!~

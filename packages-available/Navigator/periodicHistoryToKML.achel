@@ -1,6 +1,8 @@
 # Run --historyToKML every so often. Recommended to be several seconds a part. --periodicHistoryToKML=instanceName,intervalInMilliseconds,fileName
-#onDefine aliasFeature historyToKML,history
+#onDefine aliasFeature periodicHistoryToKML,liveKML
 parameters {"instanceName":"default","intervalInMilliseconds":"10000","fileName":"/tmp/history.kml"}
+
+debug 1,periodicHistoryToKML: instanceName: ~!Local,instanceName!~ intervalInMilliseconds: ~!Local,intervalInMilliseconds!~ fileName: ~!Local,fileName!~
 
 # TODO make this instance aware
 set Navigator,historyHandeler,
