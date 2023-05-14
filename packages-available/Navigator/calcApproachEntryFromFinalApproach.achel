@@ -1,0 +1,13 @@
+# Calculate the approach entry point from the final approach entry. ~ navegator,abstracted
+# Abstracted from plotApproach.
+
+parameters {"instanceName":"default","Category":"Local","variable":"approachEntry"}
+
+# Take finalApproach coords and inverseRunwayAngle to give approachEntry coords
+basicMaths Local,approachEntryLat,~!Tmp,approachEntryOffset,x!~,+,~!Tmp,finalApproachLat!~
+basicMaths Local,approachEntryLon,~!Tmp,approachEntryOffset,y!~,+,~!Tmp,finalApproachLon!~
+
+setNested ~!Local,Category!~,~!Local,variable!~,lat,~!Local,approachEntryLat!~
+setNested ~!Local,Category!~,~!Local,variable!~,lon,~!Local,approachEntryLon!~
+
+makeLocalAvailable ~!Local,variable!~

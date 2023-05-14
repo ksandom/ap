@@ -1,5 +1,5 @@
 # Calculate the progress between two points. ~ AP,navigator,progress
-parameters instanceName
+parameters {"instanceName":"default"}
 
 # TODO Get distance from origin.
 # setNested AP,state,~!Local,instanceName!~,course-deviance,~!Tmp,deviance!~

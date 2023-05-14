@@ -1,0 +1,38 @@
+# Set up the landing events. ~ navigator,abstracted
+
+parameters {"instanceName":"default"}
+
+# TODO write beginDecent
+# set altitudeGoal to safeAltitude
+setNested AP,events,beginDecent,
+    debug 1,plotApproach: Begining decent for instance ~!Global,~!AP,events,beginDecent!~!~
+    # TODO the problem is that the instance name is not getting throuigh. take parm.
+    altitude ~!Local,instanceName!~,~!AP,state,~!Global,~!AP,events,beginDecent!~!~,safeAltitude!~
+    # TODO set speedGoal
+    # TODO set to speedControlled
+
+registerForEvent Flight,beginDecent,~!AP,events,beginDecent!~
+debug 1,plotApproach: Registered ~!AP,events,beginDecent!~ to Flight,beginDecent
+
+
+# TODO write finalApproach
+# set altitudeGoal to 100 # TODO this will eventually need to take the actual runway altitude into account.
+# slow down the plane
+# put down the gear
+setNested AP,events,finalApproach,
+    debug 1,plotApproach: Final approach for instance ~!Global,~!AP,events,finalApproach!~!~
+    # TODO set speedGoal
+    altitude ~!Global,~!AP,events,finalApproach!~!~,500
+
+registerForEvent Flight,finalApproach,~!AP,events,finalApproach!~
+debug 1,plotApproach: Registered ~!AP,events,finalApproach!~ to Flight,finalApproach
+
+
+# TODO write beginTouchDown
+setNested AP,events,beginTouchDown,
+    debug 1,plotApproach: Begining touchdown for instance ~!Global,~!AP,events,beginTouchDown!~!~
+    # TODO set speedGoal
+    altitude ~!Local,instanceName!~,0
+
+registerForEvent Flight,beginTouchDown,~!AP,events,beginTouchDown!~
+debug 1,plotApproach: Registered ~!Global,~!AP,events,beginTouchDown!~!~ to Flight,beginTouchDown

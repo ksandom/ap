@@ -1,0 +1,13 @@
+# Calculate the approach distance. ~ navidator,abstracted
+
+parameters {"instanceName":"default"}
+
+# Take cruiseAltitude-safeAltitude as opposite. Project adjacent as approachDistance using 3 degrees.
+basicMaths Tmp,approachEntryVirtualAltitude,~!AP,state,~!Local,instanceName!~,cruiseAltitude!~,-,~!AP,state,~!Local,instanceName!~,safeAltitude!~
+degreesToRadians Tmp,approachEntryAngle,3
+rightTriangleGetAdjacentFromAngleAndOpposite Tmp,approachEntryDistance,~!Tmp,approachEntryAngle!~,~!AP,state,~!Local,instanceName!~,cruiseAltitude!~
+
+# TODO This is a hack. Add handeling of feet
+basicMaths Tmp,approachEntryDistanceMeters,~!Tmp,approachEntryDistance!~,/,3
+metersToDegrees Tmp,approachEntryDistanceMeters,~!Tmp,approachEntryDistanceMeters!~
+angleAndDistanceToCoord Tmp,approachEntryOffset,~!Tmp,inverseRunwayAngle!~,~!Tmp,finalApproachDistanceDegrees!~

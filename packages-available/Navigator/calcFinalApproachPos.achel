@@ -1,0 +1,12 @@
+# Calculate the final approach position. ~ navigator,abstracted
+# Abstracted from plotApproach.
+
+parameters {"instanceName":"default","longitudeBegin":"0","latitudeBegin":"0"}
+
+# TODO Migrate to using the APState
+# TODO This is a hack. Add handeling of feet
+basicMaths Tmp,finalApproachDistanceMeters,~!Tmp,finalApproachDistance!~,/,3
+metersToDegrees Tmp,finalApproachDistanceDegrees,~!Tmp,finalApproachDistanceMeters!~
+angleAndDistanceToCoord Tmp,finalApproachOffset,~!Tmp,inverseRunwayAngle!~,~!Tmp,finalApproachDistanceDegrees!~
+basicMaths Tmp,finalApproachLat,~!Tmp,finalApproachOffset,x!~,+,~!Local,latitudeBegin!~
+basicMaths Tmp,finalApproachLon,~!Tmp,finalApproachOffset,y!~,+,~!Local,longitudeBegin!~

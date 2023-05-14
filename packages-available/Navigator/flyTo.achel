@@ -16,9 +16,14 @@ if ~!Local,runwaySearchRegex!~,!=,,
 
 	if ~!Tmp,runways!~,>,0,
 		debug 1,flyTo: We're ready. Let's do it.
-		if ~!AP,state,~!Local,instanceName!~,airspeed-kt!~,<,~!AP,state,~!Local,instanceName!~,v1!~,
+		isFlying Local,isFlying,~!Local,instanceName!~
+
+		if ~!Local,isFlying!~,==,ground,
 			debug 1,flyTo: We aren't flying. Let's fix that.
+			stashResults Tmp,chosenRunway
 			takeOff
+			retrieveResults Tmp,chosenRunway
+
 		plotApproach
 
 		debug 0,Waypoints:
