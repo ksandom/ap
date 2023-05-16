@@ -1,21 +1,19 @@
 # Calculate how far off we are from the requested course. This is really useful when a precise, straight path is required. For a more relaxed path, the heading is more likely to be useful. --calculateDeviance=instanceName ~ nav,waypoints,calculation
-
-setNested Navigator,deviance,instanceName,~!Global,calculateDeviance-0!~
-
+parameters instanceName
 
 # get origin
-setNested ["Navigator","deviance","origin",~!Navigator,origins,~!Navigator,deviance,instanceName!~!~]
+setNested ["Navigator","deviance","origin",~!Navigator,origins,~!Local,instanceName!~!~]
 
 
 
 # get actual position
-setNested ["Navigator","deviance","position","longitude",~!AP,state,~!Navigator,deviance,instanceName!~,longitude-deg!~]
-setNested ["Navigator","deviance","position","latitude",~!AP,state,~!Navigator,deviance,instanceName!~,latitude-deg!~]
+setNested ["Navigator","deviance","position","longitude",~!AP,state,~!Local,instanceName!~,longitude-deg!~]
+setNested ["Navigator","deviance","position","latitude",~!AP,state,~!Local,instanceName!~,latitude-deg!~]
 
 
 
 # get destination
-setNested ["Navigator","deviance","destination",~!AP,state,~!Navigator,deviance,instanceName!~,destination!~]
+setNested ["Navigator","deviance","destination",~!AP,state,~!Local,instanceName!~,destination!~]
 
 
 
@@ -29,7 +27,7 @@ setNested Navigator,deviance,position,distance,~!Local,distance!~
 
 
 # get angle to requested course from origin.
-degreesToRadians Local,destinationAngle,~!AP,state,~!Navigator,deviance,instanceName!~,track-goal!~
+degreesToRadians Local,destinationAngle,~!AP,state,~!Local,instanceName!~,track-goal!~
 setNested ["Navigator","deviance","destination","angle","~!Local,destinationAngle!~"]
 
 
@@ -65,16 +63,16 @@ degreesToMeters Local,devianceInMeters,~!Local,deviance!~
 
 
 # Keep track of the previous and current deviance.
-if ~!AP,state,~!Navigator,deviance,instanceName!~,course-deviance!~,!=,,
-	setNested AP,state,~!Navigator,deviance,instanceName!~,course-deviance-previous,~!AP,state,~!Navigator,deviance,instanceName!~,course-deviance!~
+if ~!AP,state,~!Local,instanceName!~,course-deviance!~,!=,,
+	setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!AP,state,~!Local,instanceName!~,course-deviance!~
 else
-	setNested AP,state,~!Navigator,deviance,instanceName!~,course-deviance-previous,~!Local,deviance!~
+	setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!Local,deviance!~
 
 # Send it where needed.
-setNested AP,state,~!Navigator,deviance,instanceName!~,course-deviance,~!Local,deviance!~
-setNested AP,state,~!Navigator,deviance,instanceName!~,course-devianceInMeters,~!Local,devianceInMeters!~
-setNested Navigator,deviance,~!Navigator,deviance,instanceName!~,course-deviance,~!Local,deviance!~
-setNested Navigator,deviance,~!Navigator,deviance,instanceName!~,cource-devianceInMeters,~!Local,devianceInMeters!~
+setNested AP,state,~!Local,instanceName!~,course-deviance,~!Local,deviance!~
+setNested AP,state,~!Local,instanceName!~,course-devianceInMeters,~!Local,devianceInMeters!~
+setNested Navigator,deviance,~!Local,instanceName!~,course-deviance,~!Local,deviance!~
+setNested Navigator,deviance,~!Local,instanceName!~,cource-devianceInMeters,~!Local,devianceInMeters!~
 
 speedBasedDeviance
 
@@ -87,7 +85,3 @@ pass
 	nested
 	outNow
 
-
-
-# Clean up
-unset Navigator,deviance

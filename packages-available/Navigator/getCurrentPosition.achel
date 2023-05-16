@@ -4,7 +4,7 @@ parameters {"Category":"Local","variable":"currentPosition","instanceName":"defa
 apToMe ~!Local,instanceName!~,longitude-deg
 apToMe ~!Local,instanceName!~,latitude-deg
 
-setNested ~!Local,Category!~,~!Local,variable!~,longitude,~!Local,longitude-deg!~
-setNested ~!Local,Category!~,~!Local,variable!~,latitude,~!Local,latitude-deg!~
+setNested ~!Local,Category!~,~!Local,variable!~,longitude,~!Me,longitude-deg!~
+setNested ~!Local,Category!~,~!Local,variable!~,latitude,~!Me,latitude-deg!~
 
 makeAvailable ~!Local,Category!~,~!Local,variable!~
