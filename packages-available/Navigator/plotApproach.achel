@@ -78,3 +78,6 @@ loop
 	# Add the end of the runway to keep the plane straight.
 	getNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,Local,runwayEnd
 	addWaypoint ~!Local,instanceName!~,~!Local,runwayEnd,lon!~,~!Local,runwayEnd,lat!~,Flight,runwayEnd,~!Local,instanceName!~
+
+
+	triggerEvent Navigator,plottedRoute,~!Local,instanceName!~

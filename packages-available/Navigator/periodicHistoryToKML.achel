@@ -11,3 +11,4 @@ set Navigator,historyHandeler,
 
 createTimer history,~!Local,intervalInMilliseconds!~
 registerOnceForEvent Timer,history,~!Navigator,historyHandeler!~,~!Local,instanceName!~
+registerOnceForEvent Navigator,plottedRoute,~!Navigator,historyHandeler!~,~!Local,instanceName!~
