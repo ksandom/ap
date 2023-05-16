@@ -6,4 +6,4 @@ basicMaths Local,userDistance,~!Local,inputDegrees!~,*,~!Navigator,unitBaseMeasu
 basicMaths Local,userDistance,~!Local,userDistance!~,/,360
 round ~!Local,Category!~,~!Local,variable!~,~!Local,userDistance!~,2
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

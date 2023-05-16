@@ -1,0 +1,6 @@
+# Use --getAPVar to get a variable to Local using the same variable name. --apToLocal=instanceName,varName ~ ap,convenience
+parameters instanceName,varName
+
+getAPVar ~!Local,instanceName!~,~!Local,varName!~,Me,~!Local,varName!~
+
+makeMeAvailable ~!Local,varName!~

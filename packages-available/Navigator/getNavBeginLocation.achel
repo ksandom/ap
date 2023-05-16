@@ -20,4 +20,4 @@ else
         setNested ~!Local,Category!~,~!Local,variable!~,longitude,~!AP,state,~!Local,instanceName!~,closestRunway,longitudeEnd!~
         setNested ~!Local,Category!~,~!Local,variable!~,latitude,~!AP,state,~!Local,instanceName!~,closestRunway,latitudeEnd!~
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

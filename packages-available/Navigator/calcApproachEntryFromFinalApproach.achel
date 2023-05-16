@@ -3,11 +3,17 @@
 
 parameters {"instanceName":"default","Category":"Local","variable":"approachEntry"}
 
+getNamedPosition ~!Local,instanceName!~,routePlanning,finalApproach,Local,finalApproach
+apToMeWithContext ~!Local,instanceName!~,routePlanning,approachEntryOffsetX
+apToMeWithContext ~!Local,instanceName!~,routePlanning,approachEntryOffsetY
+
 # Take finalApproach coords and inverseRunwayAngle to give approachEntry coords
-basicMaths Local,approachEntryLat,~!Tmp,approachEntryOffset,x!~,+,~!Tmp,finalApproachLat!~
-basicMaths Local,approachEntryLon,~!Tmp,approachEntryOffset,y!~,+,~!Tmp,finalApproachLon!~
+basicMaths Local,approachEntryLat,~!Local,approachEntryOffsetX!~,+,~!Local,finalApproach,lat!~
+basicMaths Local,approachEntryLon,~!Local,approachEntryOffsetY!~,+,~!Local,finalApproach,lon!~
+
+setNamedPosition ~!Local,instanceName!~,routePlanning,approachEntry,~!Local,approachEntryLon!~,~!Local,approachEntryLat!~
 
 setNested ~!Local,Category!~,~!Local,variable!~,lat,~!Local,approachEntryLat!~
 setNested ~!Local,Category!~,~!Local,variable!~,lon,~!Local,approachEntryLon!~
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

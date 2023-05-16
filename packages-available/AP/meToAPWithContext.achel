@@ -1,0 +1,13 @@
+# Use --setAPVarWithContext to set a an AP variable from Local using the same variable name. --localToAPWithContext=instanceName,context,varName ~ ap,convenience
+parameters instanceName,context,varName
+
+debug 3,setAPVarWithContext ~!Local,instanceName!~,~!Local,context!~,~!Local,varName!~,~!Me,~!Local,varName!~!~    (~!Local,varName!~)
+
+setAPVarWithContext ~!Local,instanceName!~,~!Local,context!~,~!Local,varName!~,~!Me,~!Local,varName!~!~
+
+# setNested AP,state,~!Local,instanceName!~,~!Local,context!~,~!Local,varName!~,~!Local,value!~
+set Local,origin,Me,~!Local,varName!~
+set Local,destination,AP,state,~!Local,instanceName!~,~!Local,context!~,~!Local,varName!~
+
+# TODO Make this work. It will be much cleaner.
+# copy ["~!Local,origin!~","~!Local,destination!~"]

@@ -1,0 +1,4 @@
+# Use --setAPVar to set a an AP variable from Local using the same variable name. --localToAP=instanceName,varName ~ ap,convenience
+parameters instanceName,varName
+
+setAPVar ~!Local,instanceName!~~!Local,varName!~,~!Local,~!Me,varName!~!~

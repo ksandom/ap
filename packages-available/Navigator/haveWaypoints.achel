@@ -7,4 +7,4 @@ if ~!Navigator,numberOfWayPoints!~,>,0,
 else
     set ~!Local,Category!~,~!Local,variable!~,no waypoints
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

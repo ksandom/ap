@@ -8,21 +8,21 @@ if ~!Local,runwaySearchRegex!~,!=,,
 	listRunways ~!Local,runwaySearchRegex!~
 
 
-	countToVar Tmp,runways
-	if ~!Tmp,runways!~,>,1,
+	countToVar Local,runways
+	if ~!Local,runways!~,>,1,
 		first
 		debug 1,flyTo: More than one runway matched. The first one was chosen.
 		outNow
 
-	if ~!Tmp,runways!~,>,0,
+	if ~!Local,runways!~,>,0,
 		debug 1,flyTo: We're ready. Let's do it.
 		isFlying Local,isFlying,~!Local,instanceName!~
 
 		if ~!Local,isFlying!~,==,ground,
 			debug 1,flyTo: We aren't flying. Let's fix that.
-			stashResults Tmp,chosenRunway
+			stashResults Local,chosenRunway
 			takeOff
-			retrieveResults Tmp,chosenRunway
+			retrieveResults Local,chosenRunway
 
 		plotApproach
 

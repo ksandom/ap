@@ -20,32 +20,23 @@ first
 
 loop
 	# Save for later.
-	setNested Tmp,touchDown,lon,~!Result,longitudeBegin!~
-	setNested Tmp,touchDown,lat,~!Result,latitudeBegin!~
-	setNested Tmp,runwayEnd,lon,~!Result,longitudeEnd!~
-	setNested Tmp,runwayEnd,lat,~!Result,latitudeEnd!~
-
-	debug 1, plotDecent: Runway begins at ~!Tmp,touchDown,lat!~,~!Tmp,touchDown,lon!~
-
+	setNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+	setNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
 
 	# TODO In --flyTo, add plotDeparture.
 
 	getNavBeginLocation Local,navBeginLocation
 
-	# TODO Why are waypoints going erratic when on the ground.
 	# TODO Calculate radius.
 	# TODO Entry into radius from navBeginLocation.
 
 	# * Calculate inverse runway angle.
-	2CoordsToAngle Tmp,inverseRunwayAngle,~!Tmp,runwayEnd,lat!~,~!Tmp,runwayEnd,lon!~,~!Tmp,touchDown,lat!~,~!Tmp,touchDown,lon!~
-	debug 1,Calculated inverseRunwayAngle from coordinates: ~!Tmp,inverseRunwayAngle!~
+	calculateInverseRunwayAngle ~!Local,instanceName!~
 
 	# * plot final approach
-	# Take safeAltitude as opposite. Project adjacent as finalApproachDistance using 2.5 degrees.
-	degreesToRadians Tmp,finalApproachAngle,2.5
-	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,finalApproachDistance,~!Tmp,finalApproachAngle!~,~!AP,state,~!Local,instanceName!~,safeAltitude!~
+	calcFinalApproachDistance
 
-	calcFinalApproachPos ~!Local,instanceName!~,~!Tmp,touchDown,lon!~,~!Tmp,touchDown,lat!~
+	calcFinalApproachPos ~!Local,instanceName!~
 
 	# Take runway coords and inverseRunwayAngle to give approachEntry coords
 	# waypoint event: finalApproach
@@ -67,34 +58,23 @@ loop
 
 	setUpLandingEvents ~!Local,instanceName!~
 
+	debug 1,Dump Tmp - Begin
 	getCategory Tmp
 	nested
 	outNow
+	debug 1,Dump Tmp - End
 
 	# add waypoints
-	addWaypoint ~!Local,instanceName!~,~!Tmp,approachEntry,lon!~,~!Tmp,approachEntry,lat!~,Flight,beginDecent,~!Local,instanceName!~
-	addWaypoint ~!Local,instanceName!~,~!Tmp,finalApproachLon!~,~!Tmp,finalApproachLat!~,Flight,finalApproach,~!Local,instanceName!~
+	getNamedPosition ~!Local,instanceName!~,routePlanning,approachEntry,Local,approachEntry
+	addWaypoint ~!Local,instanceName!~,~!Local,approachEntry,lon!~,~!Local,approachEntry,lat!~,Flight,beginDecent,~!Local,instanceName!~
+	getNamedPosition ~!Local,instanceName!~,routePlanning,finalApproach,Local,finalApproach
+	addWaypoint ~!Local,instanceName!~,~!Local,finalApproach,lon!~,~!Local,finalApproach,lat!~,Flight,finalApproach,~!Local,instanceName!~
 
-	# TODO Is this not being added?
-	addWaypoint ~!Local,instanceName!~,~!Tmp,touchDown,lon!~,~!Tmp,touchDown,lat!~,Flight,beginTouchDown,~!Local,instanceName!~
+	getNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,Local,touchDown
+	addWaypoint ~!Local,instanceName!~,~!Local,touchDown,lon!~,~!Local,touchDown,lat!~,Flight,beginTouchDown,~!Local,instanceName!~
 
 	# TODO Add the point to abort the landing.
 
 	# Add the end of the runway to keep the plane straight.
-	addWaypoint ~!Local,instanceName!~,~!Tmp,runwayEnd,lon!~,~!Tmp,runwayEnd,lat!~,Flight,runwayEnd,~!Local,instanceName!~
-
-
-	# * Clean up
-	unset Tmp,inverseRunwayAngle
-	unset Tmp,finalApproachDistance
-	unset Tmp,finalApproachAngle
-	unset Tmp,approachEntryAngle
-
-	unset Tmp,finalApproachDistanceMeters
-	unset Tmp,finalApproachDistanceDegrees
-	unset Tmp,finalApproachOffset
-	unset Tmp,approachEntryVirtualAltitude
-	unset Tmp,approachEntryDistance
-	unset Tmp,approachEntryAngle
-
-	unset Tmp,finalApproach
+	getNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,Local,runwayEnd
+	addWaypoint ~!Local,instanceName!~,~!Local,runwayEnd,lon!~,~!Local,runwayEnd,lat!~,Flight,runwayEnd,~!Local,instanceName!~

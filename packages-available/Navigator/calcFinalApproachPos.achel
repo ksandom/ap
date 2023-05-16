@@ -1,12 +1,27 @@
 # Calculate the final approach position. ~ navigator,abstracted
 # Abstracted from plotApproach.
+parameters {"instanceName":"default"}
 
-parameters {"instanceName":"default","longitudeBegin":"0","latitudeBegin":"0"}
+getNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,Local,touchDown
 
-# TODO Migrate to using the APState
+apToMeWithContext ~!Local,instanceName!~,routePlanning,finalApproachDistance
+apToMeWithContext ~!Local,instanceName!~,routePlanning,inverseRunwayAngle
+
 # TODO This is a hack. Add handeling of feet
-basicMaths Tmp,finalApproachDistanceMeters,~!Tmp,finalApproachDistance!~,/,3
-metersToDegrees Tmp,finalApproachDistanceDegrees,~!Tmp,finalApproachDistanceMeters!~
-angleAndDistanceToCoord Tmp,finalApproachOffset,~!Tmp,inverseRunwayAngle!~,~!Tmp,finalApproachDistanceDegrees!~
-basicMaths Tmp,finalApproachLat,~!Tmp,finalApproachOffset,x!~,+,~!Local,latitudeBegin!~
-basicMaths Tmp,finalApproachLon,~!Tmp,finalApproachOffset,y!~,+,~!Local,longitudeBegin!~
+basicMaths Me,finalApproachDistanceMeters,~!Me,finalApproachDistance!~,/,3
+metersToDegrees Me,finalApproachDistanceDegrees,~!Me,finalApproachDistanceMeters!~
+angleAndDistanceToCoord Me,finalApproachOffset,~!Me,inverseRunwayAngle!~,~!Me,finalApproachDistanceDegrees!~
+
+set Me,finalApproachOffsetX,~!Me,finalApproachOffset,x!~
+set Me,finalApproachOffsetY,~!Me,finalApproachOffset,y!~
+
+# TODO Do these need to be made available?
+meToAPWithContext ~!Local,instanceName!~,routePlanning,finalApproachDistanceMeters
+meToAPWithContext ~!Local,instanceName!~,routePlanning,finalApproachDistanceDegrees
+meToAPWithContext ~!Local,instanceName!~,routePlanning,finalApproachOffsetX
+meToAPWithContext ~!Local,instanceName!~,routePlanning,finalApproachOffsetY
+
+basicMaths Local,finalApproachLat,~!Me,finalApproachOffset,x!~,+,~!Local,touchDown,lat!~
+basicMaths Local,finalApproachLon,~!Me,finalApproachOffset,y!~,+,~!Local,touchDown,lon!~
+
+setNamedPosition ~!Local,instanceName!~,routePlanning,finalApproach,~!Local,finalApproachLon!~,~!Local,finalApproachLat!~
