@@ -16,7 +16,7 @@ else
         getCurrentPosition ~!Local,Category!~,~!Local,variable!~
     else
         debug 1,We are on the ground. Using the end of the current runway.
-        whereAmI
+        whereAmI ~!Local,instanceName!~
         setNested ~!Local,Category!~,~!Local,variable!~,longitude,~!AP,state,~!Local,instanceName!~,closestRunway,longitudeEnd!~
         setNested ~!Local,Category!~,~!Local,variable!~,latitude,~!AP,state,~!Local,instanceName!~,closestRunway,latitudeEnd!~
 

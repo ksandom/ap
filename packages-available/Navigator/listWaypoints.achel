@@ -2,6 +2,7 @@
 #onDefine aliasFeature listWaypoints,waypoints,wp
 parameters {"instanceName":"default"}
 
+clearResultset
 retrieveResults Navigator,instances,~!Local,instanceName!~
 
 getWaypointStatus
@@ -13,6 +14,8 @@ loop
 		stashResults AP,state,~!Local,instanceName!~,lastWaypoint
 		unset AP,state,~!Local,instanceName!~,closestRunway,key
 
-
-templateOut waypoints
-outNow
+if ~!Navigator,numberOfWayPoints!~,>,0,
+	templateOut waypoints
+	outNow
+else
+	debug 1,No waypoints.

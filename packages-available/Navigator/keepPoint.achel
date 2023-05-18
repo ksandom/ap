@@ -12,7 +12,7 @@ if ~!Local,longitude!~,!=,,
 
 		retrieveResults Navigator,~!Local,classification!~,~!Local,instanceName!~
 		countToVar Local,count
-		# debug 0,Added point in Navigator,~!Local,classification!~,~!Local,instanceName!~: ~!Local,count!~
+		debug 2,Added point in Navigator,~!Local,classification!~,~!Local,instanceName!~: ~!Local,count!~ - ~!Local,description!~
 	else
 		debug 0,Something sent an empty latitude to --keepPoint. ~!Local,classification!~: ~!Local,description!~
 else

@@ -1,0 +1,19 @@
+# Calculate the runway angles. ~ navigator,runway,plotApproach,abstracted
+parameters instanceName
+
+getNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,Local,runwayEnd
+getNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,Local,touchDown
+
+2CoordsToAngle Me,runwayAngle,~!Local,touchDown,lat!~,~!Local,touchDown,lon!~,~!Local,runwayEnd,lat!~,~!Local,runwayEnd,lon!~
+2CoordsToAngle Me,inverseRunwayAngle,~!Local,runwayEnd,lat!~,~!Local,runwayEnd,lon!~,~!Local,touchDown,lat!~,~!Local,touchDown,lon!~
+
+
+radiansToDegrees Local,runwayAngleDegrees,~!Me,runwayAngle!~
+radiansToDegrees Local,inverseRunwayAngleDegrees,~!Me,inverseRunwayAngle!~
+
+debug 1,calculateRunwayAngles: ~!Local,touchDown,lat!~,~!Local,touchDown,lon!~  to ~!Local,runwayEnd,lat!~,~!Local,runwayEnd,lon!~
+debug 1,Calculated runwayAngle from coordinates: ~!Me,runwayAngle!~ (~!Local,runwayAngleDegrees!~)
+debug 1,Calculated inverseRunwayAngle from coordinates: ~!Me,inverseRunwayAngle!~ (~!Local,inverseRunwayAngleDegrees!~)
+
+meToAPWithContext ~!Local,instanceName!~,routePlanning,runwayAngle
+meToAPWithContext ~!Local,instanceName!~,routePlanning,inverseRunwayAngle

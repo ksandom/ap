@@ -32,7 +32,7 @@ loop
 	# TODO Entry into radius from navBeginLocation.
 
 	# * Calculate inverse runway angle.
-	calculateInverseRunwayAngle ~!Local,instanceName!~
+	calculateRunwayAngles ~!Local,instanceName!~
 
 	# * plot final approach
 	calcFinalApproachDistance

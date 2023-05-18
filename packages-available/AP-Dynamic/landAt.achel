@@ -18,59 +18,46 @@ if ~!Local,numberOfResults!~,==,1,
 	# We've got a runway. Let's save it and get on with it.
 	debug 1,Going to land ~!Local,instanceName!~ at:
 	outNow
-	stashResults Tmp,landAt
+
+	# stashResults Tmp,landAt
 
 	loop
 		setNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 		setNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
 
-	calculateInverseRunwayAngle ~!Local,instanceName!~
+	calculateRunwayAngles ~!Local,instanceName!~
 
-	# * plot final approach
 	calcFinalApproachDistance ~!Local,instanceName!~
 	calcFinalApproachPos ~!Local,instanceName!~
 	calcApproachDistance ~!Local,instanceName!~
 	calcApproachEntryFromFinalApproach ~!Local,instanceName!~,Tmp,approachEntry
-	apToMeWithContext ~!Local,instanceName!~,routePlanning,inverseRunwayAngle
 
 
 
 	# Calculate where to begin the descent.
 	# feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,altitude-ft!~
-	feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,cruiseAltitude!~
-	degreesToRadians Tmp,approachAngleInRadians,~!Local,approachAngleInDegrees!~
-	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,beginDescentDistance,~!Tmp,approachAngleInRadians!~,~!Tmp,altitudeInMeters!~
+	# feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,cruiseAltitude!~
+	# degreesToRadians Tmp,approachAngleInRadians,~!Local,approachAngleInDegrees!~
+	# rightTriangleGetAdjacentFromAngleAndOpposite Tmp,beginDescentDistance,~!Tmp,approachAngleInRadians!~,~!Tmp,altitudeInMeters!~
 
-	debug 1,altitude Feet: ~!AP,state,~!Local,instanceName!~,altitude-ft!~ Meters: ~!Tmp,altitudeInMeters!~
-	debug 1,approachAngleInRadians: ~!Tmp,approachAngleInRadians!~
-	debug 1,beginDescentDistance-preKM: ~!Tmp,beginDescentDistance!~
+	# debug 1,altitude Feet: ~!AP,state,~!Local,instanceName!~,altitude-ft!~ Meters: ~!Tmp,altitudeInMeters!~
+	# debug 1,approachAngleInRadians: ~!Tmp,approachAngleInRadians!~
+	# debug 1,beginDescentDistance-preKM: ~!Tmp,beginDescentDistance!~
 
 	basicMaths Tmp,beginDescentDistance,~!Tmp,beginDescentDistance!~,/,1000
 
 	# Calculate direction to plot the approach.
 	first
 	loop
-		setNested ["Local","runway",{"longitudeBegin":"~!Result,longitudeBegin!~","latitudeBegin":"~!Result,latitudeBegin!~","longitudeEnd":"~!Result,longitudeEnd!~","latitudeEnd":"~!Result,latitudeEnd!~"}]
+		# setNested ["Local","runway",{"longitudeBegin":"~!Result,longitudeBegin!~","latitudeBegin":"~!Result,latitudeBegin!~","longitudeEnd":"~!Result,longitudeEnd!~","latitudeEnd":"~!Result,latitudeEnd!~"}]
 
-		2CoordsToAngle Tmp,angle,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~,~!Local,runway,longitudeEnd!~,~!Local,runway,latitudeEnd!~
-		radiansToDegrees Tmp,angleDegrees,~!Tmp,angle!~
-		rotateAngleInDegrees Local,rotatedAngleDegrees,~!Tmp,angleDegrees!~,180
+		# 2CoordsToAngle Tmp,angle,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~,~!Local,runway,longitudeEnd!~,~!Local,runway,latitudeEnd!~
+		# radiansToDegrees Tmp,angleDegrees,~!Tmp,angle!~
+		# rotateAngleInDegrees Local,rotatedAngleDegrees,~!Tmp,angleDegrees!~,180
 
-		calculateNewPosition Route,newPosition,~!Local,rotatedAngleDegrees!~,~!Tmp,beginDescentDistance!~,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~
+		# calculateNewPosition Route,newPosition,~!Local,rotatedAngleDegrees!~,~!Tmp,beginDescentDistance!~,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~
 
-		# If we have waypoints, use the last one as the starting point. Otherwise take the current location.
-		clear
-		listWaypoints ~!Local,instanceName!~
-		set Local,startPosition,preset
-		if ~!Navigator,numberOfWayPoints!~,==,0,
-			debug 0,Using current location for ~!Local,instanceName!~ to plan the landing.
-			getCurrentPosition Local,startPosition,~!Local,instanceName!~
-		else
-			last
-			loop
-				debug 0,Using last waypoint for ~!Local,instanceName!~ to plan the landing.
-				setNested Local,startPosition,longitude,~!Result,longitude!~
-				setNested Local,startPosition,latitude,~!Result,latitude!~
+		getNavBeginLocation Local,startPosition,~!Local,instanceName!~
 
 		debug 0,Using location: ~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
 
@@ -78,12 +65,18 @@ if ~!Local,numberOfResults!~,==,1,
 		getNamedPosition ~!Local,instanceName!~,routePlanning,approachEntry,Local,approachEntry
 		# parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntryLongitude":"0","lineEntryLatitude":"0","currentLongitude":"0","currentLatitude":"0","extendKM":"1"}
 		set Local,cruiseTurningRadiusKM,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~
-		radiansToDegrees Local,angleDegrees,~!Me,inverseRunwayAngle!~
+
+		apToMeWithContext ~!Local,instanceName!~,routePlanning,runwayAngle
+		radiansToDegrees Local,angleDegrees,~!Me,runwayAngle!~
+		debug 1,About to enterLine ~!Local,angleDegrees!~,~!Me,runwayAngle!~
 
 		enterLine ~!Local,instanceName!~,~!Local,cruiseTurningRadiusKM!~,~!Local,angleDegrees!~,~!Local,approachEntry,lon!~,~!Local,approachEntry,lat!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
 
-		addWaypoint ~!Local,instanceName!~,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~,Landing,runwayBegin,~!Local,instanceName!~
-		addWaypoint ~!Local,instanceName!~,~!Local,runway,longitudeEnd!~,~!Local,runway,latitudeEnd!~,Landing,runwayEnd,~!Local,instanceName!~
+		# getNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,Local,runwayBegin
+		# addWaypoint ~!Local,instanceName!~,~!Local,runwayBegin,lon!~,~!Local,runwayBegin,lat!~,Landing,runwayBegin,~!Local,instanceName!~
+
+		# getNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,Local,runwayEnd
+		# addWaypoint ~!Local,instanceName!~,~!Local,runwayEnd,lon!~,~!Local,runwayEnd,lat!~,Landing,runwayEnd,~!Local,instanceName!~
 
 
 	# add waypoints
@@ -133,4 +126,4 @@ unset Tmp,beginDescentDistance
 unset Tmp,funnelDistance
 unset Tmp,angle
 
-wpToKML ~!Local,instanceName!~,/tmp/landingRoute.kml
+historyToKML ~!Local,instanceName!~
