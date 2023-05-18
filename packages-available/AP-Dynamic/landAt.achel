@@ -9,7 +9,7 @@ requireItem runway,^~!Local,runway!~$
 # Create the event for descending.
 set AP-Dynamic,beginDescent,
 	parameters instanceName
-	
+
 	# TODO Write this.
 registerOnceForEvent AP-Dynamic,beginDescent,~!AP-Dynamic,beginDescent!~
 
@@ -19,34 +19,50 @@ if ~!Local,numberOfResults!~,==,1,
 	debug 1,Going to land ~!Local,instanceName!~ at:
 	outNow
 	stashResults Tmp,landAt
-	
+
+	loop
+		setNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		setNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
+
+	calculateInverseRunwayAngle ~!Local,instanceName!~
+
+	# * plot final approach
+	calcFinalApproachDistance ~!Local,instanceName!~
+	calcFinalApproachPos ~!Local,instanceName!~
+	calcApproachDistance ~!Local,instanceName!~
+	calcApproachEntryFromFinalApproach ~!Local,instanceName!~,Tmp,approachEntry
+	apToMeWithContext ~!Local,instanceName!~,routePlanning,inverseRunwayAngle
+
+
+
 	# Calculate where to begin the descent.
 	# feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,altitude-ft!~
 	feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,cruiseAltitude!~
 	degreesToRadians Tmp,approachAngleInRadians,~!Local,approachAngleInDegrees!~
 	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,beginDescentDistance,~!Tmp,approachAngleInRadians!~,~!Tmp,altitudeInMeters!~
-	
+
 	debug 1,altitude Feet: ~!AP,state,~!Local,instanceName!~,altitude-ft!~ Meters: ~!Tmp,altitudeInMeters!~
 	debug 1,approachAngleInRadians: ~!Tmp,approachAngleInRadians!~
 	debug 1,beginDescentDistance-preKM: ~!Tmp,beginDescentDistance!~
-	
+
 	basicMaths Tmp,beginDescentDistance,~!Tmp,beginDescentDistance!~,/,1000
-	
+
 	# Calculate direction to plot the approach.
 	first
 	loop
 		setNested ["Local","runway",{"longitudeBegin":"~!Result,longitudeBegin!~","latitudeBegin":"~!Result,latitudeBegin!~","longitudeEnd":"~!Result,longitudeEnd!~","latitudeEnd":"~!Result,latitudeEnd!~"}]
-		
+
 		2CoordsToAngle Tmp,angle,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~,~!Local,runway,longitudeEnd!~,~!Local,runway,latitudeEnd!~
 		radiansToDegrees Tmp,angleDegrees,~!Tmp,angle!~
 		rotateAngleInDegrees Local,rotatedAngleDegrees,~!Tmp,angleDegrees!~,180
-		
+
 		calculateNewPosition Route,newPosition,~!Local,rotatedAngleDegrees!~,~!Tmp,beginDescentDistance!~,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~
-		
+
 		# If we have waypoints, use the last one as the starting point. Otherwise take the current location.
+		clear
 		listWaypoints ~!Local,instanceName!~
-		countToVar Local,waypointCount
-		if ~!Local,waypoint!~,==,0,
+		set Local,startPosition,preset
+		if ~!Navigator,numberOfWayPoints!~,==,0,
 			debug 0,Using current location for ~!Local,instanceName!~ to plan the landing.
 			getCurrentPosition Local,startPosition,~!Local,instanceName!~
 		else
@@ -55,15 +71,38 @@ if ~!Local,numberOfResults!~,==,1,
 				debug 0,Using last waypoint for ~!Local,instanceName!~ to plan the landing.
 				setNested Local,startPosition,longitude,~!Result,longitude!~
 				setNested Local,startPosition,latitude,~!Result,latitude!~
+
 		debug 0,Using location: ~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
-		
-		
-		enterLine ~!Local,instanceName!~,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~,~!Tmp,angleDegrees!~,~!Route,newPosition,longitude!~,~!Route,newPosition,latitude!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
-		
+
+
+		getNamedPosition ~!Local,instanceName!~,routePlanning,approachEntry,Local,approachEntry
+		# parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntryLongitude":"0","lineEntryLatitude":"0","currentLongitude":"0","currentLatitude":"0","extendKM":"1"}
+		set Local,cruiseTurningRadiusKM,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~
+		radiansToDegrees Local,angleDegrees,~!Me,inverseRunwayAngle!~
+
+		enterLine ~!Local,instanceName!~,~!Local,cruiseTurningRadiusKM!~,~!Local,angleDegrees!~,~!Local,approachEntry,lon!~,~!Local,approachEntry,lat!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
+
 		addWaypoint ~!Local,instanceName!~,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~,Landing,runwayBegin,~!Local,instanceName!~
 		addWaypoint ~!Local,instanceName!~,~!Local,runway,longitudeEnd!~,~!Local,runway,latitudeEnd!~,Landing,runwayEnd,~!Local,instanceName!~
-	
-	
+
+
+	# add waypoints
+	getNamedPosition ~!Local,instanceName!~,routePlanning,approachEntry,Local,approachEntry
+	addWaypoint ~!Local,instanceName!~,~!Local,approachEntry,lon!~,~!Local,approachEntry,lat!~,Flight,beginDecent,~!Local,instanceName!~
+	getNamedPosition ~!Local,instanceName!~,routePlanning,finalApproach,Local,finalApproach
+	addWaypoint ~!Local,instanceName!~,~!Local,finalApproach,lon!~,~!Local,finalApproach,lat!~,Flight,finalApproach,~!Local,instanceName!~
+
+	getNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,Local,touchDown
+	addWaypoint ~!Local,instanceName!~,~!Local,touchDown,lon!~,~!Local,touchDown,lat!~,Flight,beginTouchDown,~!Local,instanceName!~
+
+	# TODO Add the point to abort the landing.
+
+	# Add the end of the runway to keep the plane straight.
+	getNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,Local,runwayEnd
+	addWaypoint ~!Local,instanceName!~,~!Local,runwayEnd,lon!~,~!Local,runwayEnd,lat!~,Flight,runwayEnd,~!Local,instanceName!~
+
+
+
 	# TODO Calculate distance to begin descent, from 3 degrees and current altitude.
 	#   TODO ALT Control descent.
 	#   TODO ALT Pitch up slightly.
@@ -83,7 +122,7 @@ if ~!Local,numberOfResults!~,==,1,
 	#     TODO Put away speed brakes.
 	# TODO Funnel at 4, 3-1km before that.
 	# TODO Add waypoint of descent.
-	
+
 else
 	debug 1,Could not find this airport/runway. The request was landAt ~!Local,instanceName!~,~!Local,airport!~,~!Local,runway!~.
 

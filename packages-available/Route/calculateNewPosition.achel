@@ -2,6 +2,11 @@
 
 parameters {"Category":"Tmp", "value":"newPosition", "angle":"90", "distance":"10" ,"fromLongitude":"", "fromLatitude":""}
 
+pass isolate
+    getCategory Local
+    setNested
+    outNow
+
 # Calculate the offset for the waypoint.
 degreesToRadians Tmp,angle,~!Local,angle!~
 KMToDegrees Tmp,distance,~!Local,distance!~

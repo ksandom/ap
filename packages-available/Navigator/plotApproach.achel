@@ -25,7 +25,8 @@ loop
 
 	# TODO In --flyTo, add plotDeparture.
 
-	getNavBeginLocation Local,navBeginLocation
+	# TODO Is getNavBeginLocation needed?
+	getNavBeginLocation Local,navBeginLocation,~!Local,instanceName!~
 
 	# TODO Calculate radius.
 	# TODO Entry into radius from navBeginLocation.
@@ -45,7 +46,7 @@ loop
 	calcApproachDistance ~!Local,instanceName!~
 
 	# Take finalApproach coords and inverseRunwayAngle to give approachEntry coords
-	calcApproachEntryFromFinalApproach ~!Local,instanceName!~,Tmp,approachEntry
+	calcApproachEntryFromFinalApproach ~!Local,instanceName!~,Local,approachEntry
 
 	# waypoint event: beginDecent
 
