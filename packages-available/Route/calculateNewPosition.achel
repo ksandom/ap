@@ -21,7 +21,7 @@ basicMaths Route,newPosition-latitude,~!Local,fromLatitude!~,+,~!Route,offsets,y
 setNested ~!Local,Category!~,~!Local,value!~,longitude,~!Route,newPosition-longitude!~
 setNested ~!Local,Category!~,~!Local,value!~,latitude,~!Route,newPosition-latitude!~
 
-debug 1,newPositon: angle=~!Local,angle!~ (~!Local,angleInDegrees!~) distance=~!Local,distanceInDegrees!~ (~!Local,distanceInKM!~) from=~!Local,fromLongitude!~,~!Local,fromLatitude!~ offsets=~!Route,offsets!~ newPosition=~!~!Local,Category!~,~!Local,value!~!~
+debug 1,newPositon: ~!Local,Category!~,~!Local,value!~: angle=~!Local,angle!~ (~!Local,angleInDegrees!~) distance=~!Local,distanceInDegrees!~ (~!Local,distanceInKM!~) from=~!Local,fromLongitude!~,~!Local,fromLatitude!~ offsets=~!Route,offsets!~ newPosition=~!~!Local,Category!~,~!Local,value!~!~
 
 # Clean up
 unset Route,offsets

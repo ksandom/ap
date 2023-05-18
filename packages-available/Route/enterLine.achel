@@ -30,7 +30,7 @@ pass
 
 # TODO This appears to be incorrect.
 # Calculate pivot point.
-rotateAngleInDegrees Local,pivotAngle,~!Local,inverseRunwayAngleDegrees!~,270
+rotateAngleInDegrees Local,pivotAngle,~!Local,inverseRunwayAngleDegrees!~,90
 calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
 
 

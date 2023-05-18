@@ -9,7 +9,7 @@ degreesToKM Local,approachHypotenuse,~!Local,approachHypotenuse!~
 
 # Calculate the angle between the vector to the pivot, and the vector to meet with the arc.
 rightTriangleGetAngleFromOppositeAndHypotenuse Local,arcEntryRawAngle,~!Local,radius!~,~!Local,approachHypotenuse!~
-debug 0,rightTriangleGetAngleFromOppositeAndHypotenuse = ~!Local,arcEntryRawAngle!~,~!Local,radius!~,~!Local,approachHypotenuse!~
+debug 0,rightTriangleGetAngleFromOppositeAndHypotenuse: ~!Local,arcEntryRawAngle!~=~!Local,radius!~,~!Local,approachHypotenuse!~
 
 radiansToDegrees Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngle!~
 debug 0,radiansToDegrees ~!Local,arcEntryRawAngleInDegrees!~,~!Local,arcEntryRawAngle!~
@@ -28,4 +28,4 @@ abcSquared Local,approachDistance,~!Local,approachHypotenuse!~,~!Local,radius!~
 calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,approachAngle!~,~!Local,approachDistance!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~
 debug 0,calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,approachAngle!~,~!Local,approachDistance!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~
 
-makeAvailable ~!Local,Category!~,~!Local,variable!~
+makeAvailable ~!Local,Category!~,~!Local,value!~
