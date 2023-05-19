@@ -19,13 +19,17 @@ debug 0,radiansToDegrees ~!Local,arcEntryRawAngleInDegrees!~,~!Local,arcEntryRaw
 radiansToDegrees Local,approachPivotAngleInDegrees,~!Local,approachPivotAngle!~
 
 # Calculate our angle from north to meet with the arc.
-basicMaths Local,approachAngle,~!Local,approachPivotAngleInDegrees!~,-,~!Local,arcEntryRawAngleInDegrees!~
+# basicMaths Local,approachAngle,~!Local,approachPivotAngleInDegrees!~,-,~!Local,arcEntryRawAngleInDegrees!~
+rotateAngleInDegrees Local,entryAngleInDegrees,~!Local,approachPivotAngleInDegrees!~,270
+degreesToRadians Local,entryAngle,~!Local,entryAngleInDegrees!~
+debug 1,a=~!Local,approachPivotAngle!~ ad=~!Local,approachPivotAngleInDegrees!~ rotated=~!Local,entryAngle!~
 
 # Calcuate how far away the arc entry point is from the current position.
+# TODO Is this needed?
 abcSquared Local,approachDistance,~!Local,approachHypotenuse!~,~!Local,radius!~
 
 # Calculate final position.
-calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,approachAngle!~,~!Local,approachDistance!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~
-debug 0,calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,approachAngle!~,~!Local,approachDistance!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~
+calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,entryAngleInDegrees!~,~!Local,radius!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
+debug 0,calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,entryAngleInDegrees!~,~!Local,radius!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
 
 makeAvailable ~!Local,Category!~,~!Local,value!~

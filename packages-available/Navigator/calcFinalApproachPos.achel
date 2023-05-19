@@ -21,7 +21,7 @@ meToAPWithContext ~!Local,instanceName!~,routePlanning,finalApproachDistanceDegr
 meToAPWithContext ~!Local,instanceName!~,routePlanning,finalApproachOffsetX
 meToAPWithContext ~!Local,instanceName!~,routePlanning,finalApproachOffsetY
 
-basicMaths Local,finalApproachLat,~!Me,finalApproachOffset,x!~,+,~!Local,touchDown,lat!~
-basicMaths Local,finalApproachLon,~!Me,finalApproachOffset,y!~,+,~!Local,touchDown,lon!~
+basicMaths Local,finalApproachLon,~!Me,finalApproachOffset,x!~,+,~!Local,touchDown,lon!~
+basicMaths Local,finalApproachLat,~!Me,finalApproachOffset,y!~,+,~!Local,touchDown,lat!~
 
 setNamedPosition ~!Local,instanceName!~,routePlanning,finalApproach,~!Local,finalApproachLon!~,~!Local,finalApproachLat!~

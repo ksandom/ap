@@ -4,8 +4,8 @@ parameters instanceName
 getNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,Local,runwayEnd
 getNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,Local,touchDown
 
-2CoordsToAngle Me,runwayAngle,~!Local,touchDown,lat!~,~!Local,touchDown,lon!~,~!Local,runwayEnd,lat!~,~!Local,runwayEnd,lon!~
-2CoordsToAngle Me,inverseRunwayAngle,~!Local,runwayEnd,lat!~,~!Local,runwayEnd,lon!~,~!Local,touchDown,lat!~,~!Local,touchDown,lon!~
+2CoordsToAngle Me,runwayAngle,~!Local,touchDown,lon!~,~!Local,touchDown,lat!~,~!Local,runwayEnd,lon!~,~!Local,runwayEnd,lat!~
+2CoordsToAngle Me,inverseRunwayAngle,~!Local,runwayEnd,lon!~,~!Local,runwayEnd,lat!~,~!Local,touchDown,lon!~,~!Local,touchDown,lat!~
 
 
 radiansToDegrees Local,runwayAngleDegrees,~!Me,runwayAngle!~
