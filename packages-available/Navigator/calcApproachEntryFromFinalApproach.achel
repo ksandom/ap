@@ -8,8 +8,8 @@ apToMeWithContext ~!Local,instanceName!~,routePlanning,approachEntryOffsetX
 apToMeWithContext ~!Local,instanceName!~,routePlanning,approachEntryOffsetY
 
 # Take finalApproach coords and inverseRunwayAngle to give approachEntry coords
-basicMaths Local,approachEntryLat,~!Local,approachEntryOffsetX!~,+,~!Local,finalApproach,lat!~
-basicMaths Local,approachEntryLon,~!Local,approachEntryOffsetY!~,+,~!Local,finalApproach,lon!~
+basicMaths Local,approachEntryLon,~!Me,approachEntryOffsetX!~,+,~!Local,finalApproach,lon!~
+basicMaths Local,approachEntryLat,~!Me,approachEntryOffsetY!~,+,~!Local,finalApproach,lat!~
 
 setNamedPosition ~!Local,instanceName!~,routePlanning,approachEntry,~!Local,approachEntryLon!~,~!Local,approachEntryLat!~
 
