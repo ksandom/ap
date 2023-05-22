@@ -1,5 +1,7 @@
 # Remove waypoint. --removeWaypoint=instanceName,waypointKey ~ nav,waypoint
+parameters instanceName,waypointKey
 
-setOrigin ~!Global,removeWaypoint-0!~,~!Navigator,instances,~!Global,removeWaypoint-0!~,~!Global,removeWaypoint-1!~,longitude!~,~!Navigator,instances,~!Global,removeWaypoint-0!~,~!Global,removeWaypoint-1!~,latitude!~
+setOrigin ~!Local,instanceName!~,~!Navigator,instances,~!Local,instanceName!~,~!Local,waypointKey!~,longitude!~,~!Navigator,instances,~!Local,instanceName!~,~!Local,waypointKey!~,latitude!~
 
-unset Navigator,instances,~!Global,removeWaypoint-0!~,~!Global,removeWaypoint-1!~
+debug 1,Removing waypoint ~!Local,waypointKey!~ from ~!Local,instanceName!~.
+unset Navigator,instances,~!Local,instanceName!~,~!Local,waypointKey!~

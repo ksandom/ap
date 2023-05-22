@@ -4,18 +4,19 @@ parameters instanceName,noLast
 # TODO instanceName could probably be taken from the first waypoint. That way we wouldn't have to require it in the parameters for this macro.
 
 set Navigator,getNext,
+
 	# Remove the first waypoint
-	removeWaypoint ~!Result,instanceName!~,~!Result,key!~
+	removeWaypoint ~!Me,instanceName!~,~!Me,key!~
 
 	# Clear out our last values since they are not relevant for the new way point.
-	removeLastValues ~!Result,instanceName!~
+	removeLastValues ~!Me,instanceName!~
 
 	# Get the waypoints back so the first one can be chosen again.
 	# TODO This won't work as expected when I try to run multiple instances because stashResults only takes 2 parameters.
 	retrieveResults Navigator,instances,~!Local,instanceName!~
 
 	# Do it all again
-	# processWayPoints ~!Result,instanceName!~,noLast
+	# processWayPoints ~!Me,instanceName!~,noLast
 
 	# Reset our progress state.
 	setAPVar ~!Local,instanceName!~,wpProgress,beginning
@@ -23,18 +24,14 @@ set Navigator,getNext,
 	unset AP,state,~!Local,instanceName!~,distance
 
 # We just want to work with the waypoints.
-# TODO This won't work as expected when I try to run multiple instances because stashResults only takes 2 parameters.
-# TODO Where is Result,key coming from?
-retrieveResults Navigator,instances,~!Result,key!~
+retrieveResults Navigator,instances,~!Local,instanceName!~
 
 # Calculate the status of each waypoint, and store it.
 getWaypointStatus
-# TODO This won't work as expected when I try to run multiple instances because stashResults only takes 2 parameters.
 stashResults Navigator,instances,~!Local,instanceName!~
 
-first
 
-
+firstResult
 loop
 	getAPVar ~!Local,instanceName!~,wpProgress,Local,wpProgress
 	if ~!Local,wpProgress!~,==,,
@@ -120,15 +117,15 @@ loop
 
 			set Local,shouldDoNext,0
 			# Are we still making progress?
-			if ~!AP,state,~!Local,instanceName!~,lastDistance!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
+			if ~!AP,state,~!Local,instanceName!~,lastDistance!~,<=,~!AP,state,~!Local,instanceName!~,distance!~,
 				setAPVar ~!Local,instanceName!~,wpProgress,progressing
-				debug 1,~!Local,instanceName!~: Progressing: ~!AP,state,~!Local,instanceName!~,lastDistance!~,>,~!AP,state,~!Local,instanceName!~,distance!~
+				# debug 1,~!Local,instanceName!~: Progressing: ~!AP,state,~!Local,instanceName!~,lastDistance!~,>,~!AP,state,~!Local,instanceName!~,distance!~
 			else
 				if ~!Local,wpProgress!~,!=,beginning,
 					setAPVar ~!Local,instanceName!~,wpProgress,backwards
-					set Local,shouldDoNext,1
-					debug 1,~!Local,instanceName!~: This is not true anymore: ~!AP,state,~!Local,instanceName!~,lastDistance!~,>,~!AP,state,~!Local,instanceName!~,distance!~
-					debug 1,~!Result,instanceName!~: We seem to have gone past the waypoint after making progress. Let's process the next one. Previous state: ~!Local,wpProgress!~
+					# set Local,shouldDoNext,1
+					# debug 1,~!Local,instanceName!~: This is not true anymore: ~!AP,state,~!Local,instanceName!~,lastDistance!~,<=,~!AP,state,~!Local,instanceName!~,distance!~
+					# debug 1,~!Result,instanceName!~: We seem to have gone past the waypoint after making progress. Let's process the next one. Previous state: ~!Local,wpProgress!~
 				else
 					debug 1,~!Local,instanceName!~: ~!Local,wpProgress!~: ~!AP,state,~!Local,instanceName!~,lastDistance!~,>,~!AP,state,~!Local,instanceName!~,distance!~
 
@@ -137,17 +134,21 @@ loop
 			# if ~!Navigator,sensitiveChange!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
 			debug 4,if ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
 			# TODO The problem is that we need to trigger getNext before we start moving.
-			if ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
+			pass if ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
 				set Local,shouldDoNext,1
 				debug 1,~!Result,instanceName!~: Our distance (~!AP,state,~!Local,instanceName!~,distance!~) to the next waypoint is less than our giveUpThreshold (~!Local,giveUpThreshold!~). Let's move on to the next one.
+
+			# Are we close in time to the waypoint?
+			set Local,timeDistanceThreshold,3
+			if ~!Result,timeToWaypoint!~,<,~!Local,timeDistanceThreshold!~,
+				set Local,shouldDoNext,1
+				debug 1,~!Result,instanceName!~: Our time (~!AP,state,~!Local,instanceName!~,distance!~) to the next waypoint is less than our giveUpThreshold (~!Local,timeDistanceThreshold!~). Let's move on to the next one.
 
 
 
 			if ~!Local,shouldDoNext!~,==,1,
 				debug 1,processWayPoints: ~!Result,instanceName!~ reached waypoint ~!Result,longitude!~,~!Result,latitude!~. ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~
 				debug 3,processWayPoints DEBUG01 distanceD=~!AP,state,~!Local,instanceName!~,distanceSinceLastIteration!~/~!Local,distanceSinceLastIteration!~ timeD=~!Local,timeDifference!~ now=~!AP,state,~!Local,instanceName!~,now!~ before=~!AP,previousState,~!Local,instanceName!~,now!~   giveUpThreshold=~!Local,giveUpThreshold!~=(~!Local,speedOfIteration!~ * ~!Navigator,giveUpSeconds!~) ?>? ~!AP,state,~!Local,instanceName!~,distance!~ degreesSinceLastIteration=~!Local,degreesSinceLastIteration!~
-
-				wp
 
 				keepPoint ~!Local,instanceName!~,passedWaypoints,~!Result,longitude!~,~!Result,latitude!~,~!AP,state,~!Local,instanceName!~,altitude-ft!~,~!Result,eventCategory!~-~!Result,eventName!~-~!Result,eventValue!~
 
@@ -163,6 +164,8 @@ loop
 						debug 1,processWayPoints: Triggering requested event ~!Result,eventCategory!~,~!Result,eventName!~ with value "~!Result,eventValue!~".
 						triggerEvent ~!Result,eventCategory!~,~!Result,eventName!~,~!Result,eventValue!~
 
+				set Me,key,~!Result,key!~
+				set Me,instanceName,~!Local,instanceName!~
 				callFeature ~!Navigator,getNext!~
 
 			# Set up some previous values

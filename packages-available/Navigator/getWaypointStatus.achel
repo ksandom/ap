@@ -6,12 +6,16 @@ positiveCRC latitude,latitudeID
 chooseBasedOn longitudeID,longitudeColor,Color
 chooseBasedOn latitudeID,latitudeColor,Color
 
+pass isolate
+	nested
+	outNow
+
 loop
 	# Figure out where we are and where we need to go.
 	getCurrentPosition Navigator,currentPosition,~!Result,instanceName!~
 
 	# Calculate the distance and direction
-	2CoordsToDistance Result,distance,~!Navigator,currentPosition,longitude!~,~!Navigator,currentPosition,latitude!~,~!Result,longitude!~,~!Result,latitude!~
+	2CoordsToDistance Local,distance,~!Navigator,currentPosition,longitude!~,~!Navigator,currentPosition,latitude!~,~!Result,longitude!~,~!Result,latitude!~
 	2CoordsToAngle Result,heading,~!Navigator,currentPosition,longitude!~,~!Navigator,currentPosition,latitude!~,~!Result,longitude!~,~!Result,latitude!~
 
 	if ~!Result,heading!~,!=,undefined,
@@ -24,3 +28,30 @@ loop
 		set Navigator,instanceName,~!Result,instanceName!~
 	else
 		debug 3,We have no previous location to calculate a track heading.
+
+	microNow Local,now
+	if ~!Result,hadFirstProcess!~,==,,
+		# We haven't done anything with this point before. Let's just set defaults to make processing easier next time around.
+		set Result,timeToWaypoint,unknown
+		set Result,lastProcessTime,~!Local,now!~
+		set Result,distance,~!Local,distance!~
+	else
+		# We have looked at this point before. Let's figure out how quickly we are getting closer.
+		basicMaths Local,distanceDifference,~!Result,distance!~,-,~!Local,distance!~
+		if ~!Local,distanceDifference!~,!=,0,
+			set Result,distanceDifference,~!Local,distanceDifference!~
+			basicMaths Result,timeDifference,~!Local,now!~,-,~!Result,lastProcessTime!~
+			basicMaths Result,speed,~!Result,distanceDifference!~,/,~!Result,timeDifference!~
+			if ~!Result,speed!~,>,0.000001,
+				basicMaths Result,timeToWaypoint,~!Local,distance!~,/,~!Result,speed!~
+			else
+				set Result,timeToWaypoint,inf
+			set Result,lastProcessTime,~!Local,now!~
+			set Result,distance,~!Local,distance!~
+
+	# debug 1,Waypoint: ~!Result,eventCategory!~,~!Result,eventName!~  oN=~!Result,lastProcessTime!~ nN=~!Local,now!~ tD=~!Result,timeDifference!~  d=~!Local,distance!~ (~!Result,distance!~)  dD=~!Result,distanceDifference!~  s=~!Result,speed!~  hfp=~!Result,hadFirstProcess!~  ttwp=~!Result,timeToWaypoint!~
+
+
+	set Result,hadFirstProcess,true
+
+

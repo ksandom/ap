@@ -4,6 +4,6 @@
 debug:
 
 <~~
-~!Color,green!~~%instanceName%~ ~!Color,default!~~%longitude%~,~%latitude%~  ~!Color,brightBlack!~(~!Color,~%longitudeColor%~!~long~!Color,default!~~!Color,brightBlack!~,~!Color,~%latitudeColor%~!~lat~!Color,default!~~!Color,brightBlack!~) ~!Color,yellow!~~%userDistance%~ ~!Color,brightBlack!~(~!Navigator,unit!~) ~!Color,brightBlue!~~%heading%~~!Color,default!~ ~!Color,brightBlack!~(degrees) ~!Color,default!~Event: ~%eventCategory%~,~%eventName%~  ~!Color,brightBlack!~Google maps format~!Color,brightBlack!~(~!Color,~%latitudeColor%~!~lat~!Color,default!~~!Color,brightBlack!~,~!Color,~%longitudeColor%~!~long~!Color,default!~~!Color,brightBlack!~): ~%latitude%~,~%longitude%~~!Color,default!~
+~!Color,green!~~%instanceName%~ ~!Color,default!~~%longitude%~,~%latitude%~  ~!Color,brightBlack!~(~!Color,~%longitudeColor%~!~long~!Color,default!~~!Color,brightBlack!~,~!Color,~%latitudeColor%~!~lat~!Color,default!~~!Color,brightBlack!~) ~!Color,darkPurple!~~%timeToWaypoint%~ ~!Color,brightBlack!~(seconds) ~!Color,yellow!~~%userDistance%~ ~!Color,brightBlack!~(~!Navigator,unit!~) ~!Color,brightBlue!~~%heading%~~!Color,default!~ ~!Color,brightBlack!~(degrees) ~!Color,default!~Event: ~%eventCategory%~,~%eventName%~  ~!Color,brightBlack!~Google maps format~!Color,brightBlack!~(~!Color,~%latitudeColor%~!~lat~!Color,default!~~!Color,brightBlack!~,~!Color,~%longitudeColor%~!~long~!Color,default!~~!Color,brightBlack!~): ~%latitude%~,~%longitude%~~!Color,default!~  ~%key%~
 
 ~>~!Color,brightWhite!~Waypoints ~!Color,default!~~!Navigator,numberOfWayPoints!~
