@@ -6,16 +6,21 @@ parameters instanceName,noLast
 set Navigator,getNext,
 	# Remove the first waypoint
 	removeWaypoint ~!Result,instanceName!~,~!Result,key!~
-	
+
 	# Clear out our last values since they are not relevant for the new way point.
 	removeLastValues ~!Result,instanceName!~
-	
+
 	# Get the waypoints back so the first one can be chosen again.
 	# TODO This won't work as expected when I try to run multiple instances because stashResults only takes 2 parameters.
 	retrieveResults Navigator,instances,~!Local,instanceName!~
-	
+
 	# Do it all again
 	# processWayPoints ~!Result,instanceName!~,noLast
+
+	# Reset our progress state.
+	setAPVar ~!Local,instanceName!~,wpProgress,beginning
+	unset AP,state,~!Local,instanceName!~,lastDistance
+	unset AP,state,~!Local,instanceName!~,distance
 
 # We just want to work with the waypoints.
 # TODO This won't work as expected when I try to run multiple instances because stashResults only takes 2 parameters.
@@ -31,28 +36,32 @@ first
 
 
 loop
+	getAPVar ~!Local,instanceName!~,wpProgress,Local,wpProgress
+	if ~!Local,wpProgress!~,==,,
+		setAPVar ~!Local,instanceName!~,wpProgress,beginning
+
 	# Save our last values unless noLast has been set.
 	if ~!Local,noLast!~,==,,
 		setNested AP,state,~!Local,instanceName!~,lastDistance,~!AP,state,~!Local,instanceName!~,distance!~
 		setNested AP,state,~!Local,instanceName!~,lastTrack-goal,~!AP,state,~!Local,instanceName!~,track-goal!~
-	
+
 	# Put the calculated values from getWaypointStatus into the current state.
 	setNested AP,state,~!Local,instanceName!~,distance,~!Result,distance!~
 	setNested AP,state,~!Local,instanceName!~,track-goal,~!Result,heading!~
-	
+
 	setNested AP,state,~!Local,instanceName!~,destination,longitude,~!Result,longitude!~
 	setNested AP,state,~!Local,instanceName!~,destination,latitude,~!Result,latitude!~
-	
+
 	# If we don't have a begining distance, let's set it
 	if ~!AP,state,~!Local,instanceName!~,beginingDistance!~,==,,
 		setNested AP,state,~!Local,instanceName!~,beginingDistance,~!AP,state,~!Local,instanceName!~,distance!~
 		debug 1,Navigator: beginingDistance to ~!AP,state,~!Local,instanceName!~,beginingDistance!~
-	
-	
+
+
 	# If we have a previous distance and heading, let's do stuff.
 	if ~!AP,state,~!Local,instanceName!~,lastDistance!~,!=,,
 		# get speed over the last iteration.
-		
+
 		# TODO replace with degreesToDistance
 		# 2CoordsToDistance previousCoords,newCoords / timeDifference
 		# AP,state,~!Local,instanceName!~,longitude-deg
@@ -68,76 +77,99 @@ loop
 		set Local,previousLat,~!AP,previousState,~!Local,instanceName!~,latitude-deg!~
 		set Local,currentLong,~!AP,state,~!Local,instanceName!~,longitude-deg!~
 		set Local,currentLat,~!AP,state,~!Local,instanceName!~,latitude-deg!~
-		
+
 		# longitude-deg
 		# latitude-deg
-		
+
 		set Local,previousLocation,~!Local,previousLong!~-~!Local,previousLat!~
 		set Local,currentLocation,~!Local,currentLong!~-~!Local,currentLat!~
-		
+
 		# debug 1,prevPosition=~!Local,previousLocation!~  currentPositon=~!Local,currentLocation!~ instance=~!Local,instanceName!~
 		if ~!Local,previousLocation!~,!=,~!Local,currentLocation!~,
 			# If we have moved, let's Calculate stuff and make decisions
 			# Take the current state with the current time
 			# TODO the problem is that the time is updated on every check, while the position is only updated when an update is received. So this miss-match causes miss-calculations.
-			# TODO distance is in degrees, while 
+			# TODO distance is in degrees, while
 			microNow Local,now
 			setNested AP,state,~!Local,instanceName!~,now,~!Local,now!~
-	
+
 			debug 3,processWayPoints DEBUG00 2CoordsToDistance Local,degreesSinceLastIteration,~!Local,previousLong!~,~!Local,previousLat!~,~!Local,currentLong!~,~!Local,currentLat!~
-			
+
 			2CoordsToDistance Local,degreesSinceLastIteration,~!Local,previousLong!~,~!Local,previousLat!~,~!Local,currentLong!~,~!Local,currentLat!~
 			setNested AP,state,~!Local,instanceName!~,degreesSinceLastIteration,~!Local,degreesSinceLastIteration!~
-			
+
 			degreesToDistance Local,distanceSinceLastIteration,~!Local,degreesSinceLastIteration!~
 			setNested AP,state,~!Local,instanceName!~,distanceSinceLastIteration,~!Local,distanceSinceLastIteration!~
-			
+
 			basicMaths Local,timeDifference,~!AP,state,~!Local,instanceName!~,now!~,-,~!AP,previousState,~!Local,instanceName!~,now!~
 			setNested AP,state,~!Local,instanceName!~,timeDifference,~!Local,timeDifference!~
-			
+
 			basicMaths Local,speedOfIteration,~!AP,state,~!Local,instanceName!~,degreesSinceLastIteration!~,/,~!Local,timeDifference!~
-			
-			
+
+
 			# Give up threshold from speed*giveUpSeconds
 			basicMaths Local,giveUpThreshold,~!Local,speedOfIteration!~,*,~!Navigator,giveUpSeconds!~
-		
+
 			# TODO Decide weather to ditch a waypoint if the distance has decreased by a certain amount, but is now increasing.
-			
-			
+
+
 			basicMaths Navigator,distanceChange,~!AP,state,~!Local,instanceName!~,lastDistance!~,-,~!AP,state,~!Local,instanceName!~,distance!~
 			basicMaths Navigator,sensitiveChange,~!Navigator,distanceChange!~,*,10
-			
-			
+
+
+
+			set Local,shouldDoNext,0
+			# Are we still making progress?
+			if ~!AP,state,~!Local,instanceName!~,lastDistance!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
+				setAPVar ~!Local,instanceName!~,wpProgress,progressing
+				debug 1,~!Local,instanceName!~: Progressing: ~!AP,state,~!Local,instanceName!~,lastDistance!~,>,~!AP,state,~!Local,instanceName!~,distance!~
+			else
+				if ~!Local,wpProgress!~,!=,beginning,
+					setAPVar ~!Local,instanceName!~,wpProgress,backwards
+					set Local,shouldDoNext,1
+					debug 1,~!Local,instanceName!~: This is not true anymore: ~!AP,state,~!Local,instanceName!~,lastDistance!~,>,~!AP,state,~!Local,instanceName!~,distance!~
+					debug 1,~!Result,instanceName!~: We seem to have gone past the waypoint after making progress. Let's process the next one. Previous state: ~!Local,wpProgress!~
+				else
+					debug 1,~!Local,instanceName!~: ~!Local,wpProgress!~: ~!AP,state,~!Local,instanceName!~,lastDistance!~,>,~!AP,state,~!Local,instanceName!~,distance!~
+
 			# Are we close to the way point?
 			# debug 1,is if ~!Navigator,sensitiveChange!~,>,~!AP,state,~!Local,instanceName!~,distance!~ ?
 			# if ~!Navigator,sensitiveChange!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
 			debug 4,if ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
 			# TODO The problem is that we need to trigger getNext before we start moving.
 			if ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
+				set Local,shouldDoNext,1
+				debug 1,~!Result,instanceName!~: Our distance (~!AP,state,~!Local,instanceName!~,distance!~) to the next waypoint is less than our giveUpThreshold (~!Local,giveUpThreshold!~). Let's move on to the next one.
+
+
+
+			if ~!Local,shouldDoNext!~,==,1,
 				debug 1,processWayPoints: ~!Result,instanceName!~ reached waypoint ~!Result,longitude!~,~!Result,latitude!~. ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~
 				debug 3,processWayPoints DEBUG01 distanceD=~!AP,state,~!Local,instanceName!~,distanceSinceLastIteration!~/~!Local,distanceSinceLastIteration!~ timeD=~!Local,timeDifference!~ now=~!AP,state,~!Local,instanceName!~,now!~ before=~!AP,previousState,~!Local,instanceName!~,now!~   giveUpThreshold=~!Local,giveUpThreshold!~=(~!Local,speedOfIteration!~ * ~!Navigator,giveUpSeconds!~) ?>? ~!AP,state,~!Local,instanceName!~,distance!~ degreesSinceLastIteration=~!Local,degreesSinceLastIteration!~
-				
+
+				wp
+
 				keepPoint ~!Local,instanceName!~,passedWaypoints,~!Result,longitude!~,~!Result,latitude!~,~!AP,state,~!Local,instanceName!~,altitude-ft!~,~!Result,eventCategory!~-~!Result,eventName!~-~!Result,eventValue!~
-				
+
 				if ~!Result,pivotLongitude!~,!=,,
 					debug 1,Got a pivot for ~!Local,instanceName!~. Setting that to ~!Result,pivotLongitude!~,~!Result,pivotLatitude!~.
 					setNested AP,state,~!Local,instanceName!~,pivot,longitude,~!Result,pivotLongitude!~
 					setNested AP,state,~!Local,instanceName!~,pivot,latitude,~!Result,pivotLatitude!~
 				else
 					unset AP,state,~!Local,instanceName!~,pivot
-				
+
 				if ~!Result,eventCategory!~,!=,,
 					if ~!Result,eventName!~,!=,,
 						debug 1,processWayPoints: Triggering requested event ~!Result,eventCategory!~,~!Result,eventName!~ with value "~!Result,eventValue!~".
 						triggerEvent ~!Result,eventCategory!~,~!Result,eventName!~,~!Result,eventValue!~
-				
+
 				callFeature ~!Navigator,getNext!~
-		
+
 			# Set up some previous values
 			# TODO only do this if the timeDifference is greater than 0.
 			# TODO This should be refactored into a better place
 			copy ["AP,state,~!Local,instanceName!~","AP,previousState,~!Local,instanceName!~"]
-		
+
 		else
 			pass
 			# debug 0,processWayPoints We have not moved or not got new position data.

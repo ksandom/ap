@@ -13,6 +13,11 @@ set AP-Dynamic,beginDescent,
 	# TODO Write this.
 registerOnceForEvent AP-Dynamic,beginDescent,~!AP-Dynamic,beginDescent!~
 
+
+getAPVar ~!Local,instanceName!~,airspeed-kt,Local,speed
+if ~!Local,speed!~,==,,
+	debug 0,~!Color,red!~WARNING: ~!Color,default!~At least some data is missing. Check the connection and that it has had time to get data.
+
 countToVar Local,numberOfResults
 if ~!Local,numberOfResults!~,==,1,
 	# We've got a runway. Let's save it and get on with it.

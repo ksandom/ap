@@ -1,5 +1,5 @@
 # Enter into a line in a controlled way. This is useful to enter into a precise approach. --enterLine=instanceName=default,radius,angleInDegrees,lineEntryLongitude,lineEntryLatitude,extendKM=0 "entry" is the line entry. "current" is the aircraft position. ~ route,approach,enter,line
-parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntryLongitude":"0","lineEntryLatitude":"0","currentLongitude":"0","currentLatitude":"0","extendKM":"1"}
+parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntryLongitude":"0","lineEntryLatitude":"0","currentLongitude":"0","currentLatitude":"0","extendKM":"10"}
 
 isolate
 	getCategory Local
@@ -18,20 +18,22 @@ radiansToDegrees Local,runwayAngleDegrees,~!Me,runwayAngle!~
 # TODO Take into account that when we enter into this, we might not be facing the right way. We will therefore need to turn, and this will have an impact on entering into the arc .
 
 # We may want to put an extra way point a short time before entry into the line to get the plane going on a straight couse in a stable way. We'll need to calculate it here to offset everything, but add it last, so it's in the right order.
-pass
-	if ~!Local,extendKM!~,!=,0,
-		debug 1,No extention before entering approach.
-		calculateNewPosition Tmp,originPosition,~!Local,inverseRunwayAngleDegrees!~,~!Local,radius!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
-	else
-		debug 1,~!Local,extendKM!~KM extention before entering approach.
-		setNested Tmp,originPosition,longitude,~!Local,lineEntryLongitude!~
-		setNested Tmp,originPosition,latitude,~!Local,lineEntryLatitude!~
+
+set Local,extention,unknown
+if ~!Local,extendKM!~,!=,0,
+	debug 1,No extention before entering approach.
+	calculateNewPosition Local,extention,~!Local,inverseRunwayAngleDegrees!~,~!Local,radius!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
+else
+	debug 1,~!Local,extendKM!~KM extention before entering approach.
+	setNested Local,extention,longitude,~!Local,lineEntryLongitude!~
+	setNested Local,extention,latitude,~!Local,lineEntryLatitude!~
 
 
 # TODO This appears to be incorrect.
 # Calculate pivot point.
 rotateAngleInDegrees Local,pivotAngle,~!Local,inverseRunwayAngleDegrees!~,270
-calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
+#calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
+calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Local,extention,longitude!~,~!Local,extention,latitude!~
 
 
 debug 1,pivot calculations: runwayAngle=~!Local,runwayAngleDegrees!~,~!Local,inverseRunwayAngleDegrees!~   pivotAngle=~!Local,pivotAngle!~ r=~!Local,radius!~ orgPos=~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~    pivot=~!Local,pivot!~
@@ -48,7 +50,7 @@ keepPoint ~!Local,instanceName!~,interestPoints,~!Local,arcEntryPoint,longitude!
 
 # Add extended waypoint.
 if ~!Local,extendKM!~,!=,0,
-	# addWaypoint ~!Local,instanceName!~,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~,Arc,exit,~!Local,instanceName!~
+	addWaypoint ~!Local,instanceName!~,~!Local,extention,longitude!~,~!Local,extention,latitude!~,Arc,exit,~!Local,instanceName!~
 	# keepPoint ~!Local,instanceName!~,interestPoints,~!Tmp,originPosition,longitude!~,~!Tmp,originPosition,latitude!~,500,Arc-exit-~!Local,instanceName!~
 	keepPoint ~!Local,instanceName!~,interestPoints,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~,500,lineEntry
 else

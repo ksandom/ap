@@ -7,7 +7,7 @@ isolate
 			set Navigator,instanceName,~!Result,key!~
 			if ~!Navigator,origins,~!Navigator,instanceName!~,longitude!~,==,,
 				setOrigin ~!Navigator,instanceName!~,~!AP,state,~!Navigator,instanceName!~,longitude-deg!~,~!AP,state,~!Navigator,instanceName!~,latitude-deg!~
-			
+
 			isolate processWayPoints,~!Navigator,instanceName!~
 			if ~!Navigator,instanceName!~,!=,,
 				calculateDeviance ~!Navigator,instanceName!~

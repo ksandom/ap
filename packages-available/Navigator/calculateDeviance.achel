@@ -1,87 +1,96 @@
 # Calculate how far off we are from the requested course. This is really useful when a precise, straight path is required. For a more relaxed path, the heading is more likely to be useful. --calculateDeviance=instanceName ~ nav,waypoints,calculation
 parameters instanceName
 
-# get origin
-setNested ["Navigator","deviance","origin",~!Navigator,origins,~!Local,instanceName!~!~]
+set Local,ready,1
+
+if ~!AP,state,~!Local,instanceName!~,longitude-deg!~,==,,
+	set Local,ready,0
+
+
+if ~!Local,ready!~,==,1,
+	# get origin
+	setNested ["Navigator","deviance","origin",~!Navigator,origins,~!Local,instanceName!~!~]
 
 
 
-# get actual position
-setNested ["Navigator","deviance","position","longitude",~!AP,state,~!Local,instanceName!~,longitude-deg!~]
-setNested ["Navigator","deviance","position","latitude",~!AP,state,~!Local,instanceName!~,latitude-deg!~]
+	# get actual position
+	setNested ["Navigator","deviance","position","longitude",~!AP,state,~!Local,instanceName!~,longitude-deg!~]
+	setNested ["Navigator","deviance","position","latitude",~!AP,state,~!Local,instanceName!~,latitude-deg!~]
 
 
 
-# get destination
-setNested ["Navigator","deviance","destination",~!AP,state,~!Local,instanceName!~,destination!~]
+	# get destination
+	setNested ["Navigator","deviance","destination",~!AP,state,~!Local,instanceName!~,destination!~]
 
 
 
-# calculate angle and distance from origin to actual position.
-2CoordsToAngle Local,angle,~!Navigator,deviance,origin,longitude!~,~!Navigator,deviance,origin,latitude!~,~!Navigator,deviance,position,longitude!~,~!Navigator,deviance,position,latitude!~
-2CoordsToDistance Local,distance,~!Navigator,deviance,origin,longitude!~,~!Navigator,deviance,origin,latitude!~,~!Navigator,deviance,position,longitude!~,~!Navigator,deviance,position,latitude!~
-setNested Navigator,deviance,position,angle,~!Local,angle!~
-setNested Navigator,deviance,position,distance,~!Local,distance!~
-
-
-
-
-# get angle to requested course from origin.
-degreesToRadians Local,destinationAngle,~!AP,state,~!Local,instanceName!~,track-goal!~
-setNested ["Navigator","deviance","destination","angle","~!Local,destinationAngle!~"]
-
-
-
-
-# calculate coordinates of where we would be if we were on the requested course.
-angleAndDistanceToCoord Local,shouldBeOffsets,~!Navigator,deviance,destination,angle!~,~!Navigator,deviance,position,distance!~
-basicMaths Local,shouldBeLongitude,~!Navigator,deviance,origin,longitude!~,+,~!Local,shouldBeOffsets,x!~
-basicMaths Local,shouldBeLatitude,~!Navigator,deviance,origin,latitude!~,+,~!Local,shouldBeOffsets,y!~
-
-setNested Navigator,deviance,shouldBe,longitude,~!Local,shouldBeLongitude!~
-setNested Navigator,deviance,shouldBe,latitude,~!Local,shouldBeLatitude!~
+	# calculate angle and distance from origin to actual position.
+	2CoordsToAngle Local,angle,~!Navigator,deviance,origin,longitude!~,~!Navigator,deviance,origin,latitude!~,~!Navigator,deviance,position,longitude!~,~!Navigator,deviance,position,latitude!~
+	2CoordsToDistance Local,distance,~!Navigator,deviance,origin,longitude!~,~!Navigator,deviance,origin,latitude!~,~!Navigator,deviance,position,longitude!~,~!Navigator,deviance,position,latitude!~
+	setNested Navigator,deviance,position,angle,~!Local,angle!~
+	setNested Navigator,deviance,position,distance,~!Local,distance!~
 
 
 
 
-# calculate the distance between where we are and where we should be.
-2CoordsToDistance Local,deviance,~!Navigator,deviance,position,longitude!~,~!Navigator,deviance,position,latitude!~,~!Navigator,deviance,shouldBe,longitude!~,~!Navigator,deviance,shouldBe,latitude!~
+	# get angle to requested course from origin.
+	degreesToRadians Local,destinationAngle,~!AP,state,~!Local,instanceName!~,track-goal!~
+	setNested ["Navigator","deviance","destination","angle","~!Local,destinationAngle!~"]
 
 
-# Take direction into account
-if ~!Navigator,deviance,position,angle!~,==,undefined,
-	debug 3,calculateDeviance: On track.  Navigator,deviance,position,angle==~!Navigator,deviance,position,angle!~
-elseIf ~!Navigator,deviance,position,angle!~,<,~!Navigator,deviance,destination,angle!~,
-	debug 3,calculateDeviance: Left.  if ~!Navigator,deviance,position,angle!~,<,~!Navigator,deviance,destination,angle!~,
-	basicMaths Local,deviance,~!Local,deviance!~,*,-1
+
+
+	# calculate coordinates of where we would be if we were on the requested course.
+	angleAndDistanceToCoord Local,shouldBeOffsets,~!Navigator,deviance,destination,angle!~,~!Navigator,deviance,position,distance!~
+	basicMaths Local,shouldBeLongitude,~!Navigator,deviance,origin,longitude!~,+,~!Local,shouldBeOffsets,x!~
+	basicMaths Local,shouldBeLatitude,~!Navigator,deviance,origin,latitude!~,+,~!Local,shouldBeOffsets,y!~
+
+	setNested Navigator,deviance,shouldBe,longitude,~!Local,shouldBeLongitude!~
+	setNested Navigator,deviance,shouldBe,latitude,~!Local,shouldBeLatitude!~
+
+
+
+
+	# calculate the distance between where we are and where we should be.
+	2CoordsToDistance Local,deviance,~!Navigator,deviance,position,longitude!~,~!Navigator,deviance,position,latitude!~,~!Navigator,deviance,shouldBe,longitude!~,~!Navigator,deviance,shouldBe,latitude!~
+
+
+	# Take direction into account
+	if ~!Navigator,deviance,position,angle!~,==,undefined,
+		debug 3,calculateDeviance: On track.  Navigator,deviance,position,angle==~!Navigator,deviance,position,angle!~
+	elseIf ~!Navigator,deviance,position,angle!~,<,~!Navigator,deviance,destination,angle!~,
+		debug 3,calculateDeviance: Left.  if ~!Navigator,deviance,position,angle!~,<,~!Navigator,deviance,destination,angle!~,
+		basicMaths Local,deviance,~!Local,deviance!~,*,-1
+	else
+		debug 3,calculateDeviance: Right.  if ~!Navigator,deviance,position,angle!~,<,~!Navigator,deviance,destination,angle!~,
+
+
+	# Give us the meters equivalent.
+	degreesToMeters Local,devianceInMeters,~!Local,deviance!~
+
+
+	# Keep track of the previous and current deviance.
+	if ~!AP,state,~!Local,instanceName!~,course-deviance!~,!=,,
+		setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!AP,state,~!Local,instanceName!~,course-deviance!~
+	else
+		setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!Local,deviance!~
+
+	# Send it where needed.
+	setNested AP,state,~!Local,instanceName!~,course-deviance,~!Local,deviance!~
+	setNested AP,state,~!Local,instanceName!~,course-devianceInMeters,~!Local,devianceInMeters!~
+	setNested Navigator,deviance,~!Local,instanceName!~,course-deviance,~!Local,deviance!~
+	setNested Navigator,deviance,~!Local,instanceName!~,cource-devianceInMeters,~!Local,devianceInMeters!~
+
+	speedBasedDeviance
+
+
+
+	pass
+		# TODO Debugging remove these lines
+		debug 1,calculateDeviance: The debugging is coming from there.
+		retrieveResults Navigator,deviance
+		nested
+		outNow
+
 else
-	debug 3,calculateDeviance: Right.  if ~!Navigator,deviance,position,angle!~,<,~!Navigator,deviance,destination,angle!~,
-
-
-# Give us the meters equivalent.
-degreesToMeters Local,devianceInMeters,~!Local,deviance!~
-
-
-# Keep track of the previous and current deviance.
-if ~!AP,state,~!Local,instanceName!~,course-deviance!~,!=,,
-	setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!AP,state,~!Local,instanceName!~,course-deviance!~
-else
-	setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!Local,deviance!~
-
-# Send it where needed.
-setNested AP,state,~!Local,instanceName!~,course-deviance,~!Local,deviance!~
-setNested AP,state,~!Local,instanceName!~,course-devianceInMeters,~!Local,devianceInMeters!~
-setNested Navigator,deviance,~!Local,instanceName!~,course-deviance,~!Local,deviance!~
-setNested Navigator,deviance,~!Local,instanceName!~,cource-devianceInMeters,~!Local,devianceInMeters!~
-
-speedBasedDeviance
-
-
-
-pass
-	# TODO Debugging remove these lines
-	debug 1,calculateDeviance: The debugging is coming from there.
-	retrieveResults Navigator,deviance
-	nested
-	outNow
-
+	debug 1,Instance ~!Local,instanceName!~ is not ready to fly.

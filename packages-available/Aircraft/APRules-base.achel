@@ -17,12 +17,12 @@ massSet ["AP,stateRules,base,base,roll"],
 	setNested ~!Me,stuff!~,input,max,80
 	setNested ~!Me,stuff!~,input,multiplier,1
 	setNested ~!Me,stuff!~,input,expo,1
-	
+
 	setNested ~!Me,stuff!~,output,min,0.8
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,-0.8
 	setNested ~!Me,stuff!~,output,multiplier,1
-	
+
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,roll-deg"]
 	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,roll-goal"]
@@ -35,17 +35,17 @@ massSet ["AP,stateRules,base,base,pitch"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
 	# setNested ~!Me,stuff!~,pid,use,1
 	# setNested ["~!Me,stuff!~,algorithm","PID"]
-	
+
 	setNested ~!Me,stuff!~,input,min,-90
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,90
 	setNested ~!Me,stuff!~,input,multiplier,1
-	
+
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,1
 	setNested ~!Me,stuff!~,output,multiplier,0.8
-	
+
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,pitch-deg"]
 	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,pitch-goal"]
@@ -67,19 +67,19 @@ massSet ["AP,stateRules,base,base,yaw"],
 	setNested ~!Me,stuff!~,pid,iI,1
 	setNested ~!Me,stuff!~,pid,kD,0.5
 	setNested ~!Me,stuff!~,pid,iD,1
-	
-	
+
+
 	setNested ~!Me,stuff!~,input,min,-45
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,45
 	setNested ~!Me,stuff!~,input,multiplier,1
 	setNested ~!Me,stuff!~,input,expo,1
-	
+
 	setNested ~!Me,stuff!~,output,min,-0.4
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,0.4
 	setNested ~!Me,stuff!~,output,multiplier,1
-	
+
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,track-deviance"]
 	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,base,yaw,input,center"]
@@ -92,7 +92,7 @@ setNested ["AP","stateRules","base","baseAltitude",~!AP,stateRules,base,base!~]
 massSet ["AP,stateRules,base,baseAltitude,altitude"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
 	#setNested ["~!Me,stuff!~,algorithm","PID"]
-	
+
 	# AutoTighten tuning.
 	setNested ~!Me,stuff!~,autoTighten,enabled,0
 	setNested ~!Me,stuff!~,autoTighten,checkInterval,1
@@ -102,7 +102,7 @@ massSet ["AP,stateRules,base,baseAltitude,altitude"],
 	setNested ~!Me,stuff!~,autoTighten,loosenThreshold,0.95
 	setNested ~!Me,stuff!~,autoTighten,tightenedMin,-500
 	setNested ~!Me,stuff!~,autoTighten,tightenedMax,500
-	
+
 	# PID Tuning.
 	setNested ~!Me,stuff!~,debug,0
 	setNested ~!Me,stuff!~,pid,kP,1
@@ -114,17 +114,17 @@ massSet ["AP,stateRules,base,baseAltitude,altitude"],
 	setNested ~!Me,stuff!~,pid,iI,1
 	setNested ~!Me,stuff!~,pid,kD,0
 	setNested ~!Me,stuff!~,pid,iD,1
-	
+
 	setNested ~!Me,stuff!~,input,min,-3000
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,3000
 	setNested ~!Me,stuff!~,input,multiplier,1
-	
+
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,1
 	setNested ~!Me,stuff!~,output,multiplier,1
-	
+
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,altitude-deviance"]
 	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,baseAltitude,altitude,input,center"]
@@ -148,7 +148,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,lineUpAndWait,groundspeed"],
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,40
 	setNested ~!Me,stuff!~,input,multiplier,1
-	
+
 	setNested ~!Me,stuff!~,output,min,1
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,-1
@@ -156,13 +156,13 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,lineUpAndWait,groundspeed"],
 
 massSet ["AP,stateRules,~!Tmp,instanceName!~,lineUpAndWait,yaw"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
-	
+
 	setNested ~!Me,stuff!~,input,min,-5
 	setNested ~!Me,stuff!~,input,max,5
-	
+
 	setNested ~!Me,stuff!~,output,min,0.2
 	setNested ~!Me,stuff!~,output,max,-0.2
-	
+
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,track-deviance"]
 	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,base,yaw,input,center"]
@@ -178,7 +178,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,rollForward,groundspeed"],
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,40
 	setNested ~!Me,stuff!~,input,multiplier,1
-	
+
 	setNested ~!Me,stuff!~,output,min,1
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,-1
@@ -224,7 +224,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,speedEvents"],
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,4000
 	setNested ~!Me,stuff!~,input,multiplier,1
-	
+
 	setNested ~!Me,stuff!~,output,min,1
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,-1
@@ -265,19 +265,19 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,yaw"],
 	setNested ~!Me,stuff!~,pid,iI,1
 	setNested ~!Me,stuff!~,pid,kD,0.5
 	setNested ~!Me,stuff!~,pid,iD,1
-	
-	
+
+
 	setNested ~!Me,stuff!~,input,min,-10
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,10
 	setNested ~!Me,stuff!~,input,multiplier,1
 	setNested ~!Me,stuff!~,input,expo,1
-	
+
 	setNested ~!Me,stuff!~,output,min,0.4
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,-0.4
 	setNested ~!Me,stuff!~,output,multiplier,1
-	
+
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,course-devianceInMeters"]
 	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,base,yaw,input,center"]
@@ -397,17 +397,17 @@ pass massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,pitch"],
 	setNested ~!Me,stuff!~,debug,1
 	# setNested ~!Me,stuff!~,pid,use,1
 	# setNested ["~!Me,stuff!~,algorithm","PID"]
-	
+
 	setNested ~!Me,stuff!~,input,min,-60
 	setNested ~!Me,stuff!~,input,center,0
 	setNested ~!Me,stuff!~,input,max,60
 	setNested ~!Me,stuff!~,input,multiplier,1
-	
+
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,1
 	setNested ~!Me,stuff!~,output,multiplier,0.2
-	
+
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,airspeed-deviance"]
 	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,pitch-goal"]
@@ -417,8 +417,14 @@ pass massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,pitch"],
 # Follow an arc to turn
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "followArcSustain", ~!AP,stateRules,~!Tmp,instanceName!~,sustain!~]
 massSet ["AP,stateRules,~!Tmp,instanceName!~,followArcSustain,yaw"],
+	setNested ~!Me,stuff!~,input,min,5
+	setNested ~!Me,stuff!~,input,center,0
+	setNested ~!Me,stuff!~,input,max,-5
+	setNested ~!Me,stuff!~,input,multiplier,-1
+	setNested ~!Me,stuff!~,input,expo,1
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,arc,arc,radius-goal"]
 	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,arc,zero"]
+
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,1

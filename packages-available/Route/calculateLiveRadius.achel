@@ -11,6 +11,10 @@ degreesToKM Local,distance,~!Local,rawDistance!~
 # Take the current radius, and subtract the goal from it.
 basicMaths Local,radiusGoal,~!Local,distance!~,-,~!AP,state,~!Local,instanceName!~,arc,radius-desired!~
 
+# Invert it to change the direction of the turn.
+# basicMaths Local,radiusGoal,~!Local,radiusGoal!~,*,-1
+
+
 # Save it to AP state.
 setNested AP,state,~!Local,instanceName!~,arc,radius-current,~!Local,distance!~
 setNested AP,state,~!Local,instanceName!~,arc,radius-goal,~!Local,radiusGoal!~

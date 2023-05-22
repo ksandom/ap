@@ -8,10 +8,13 @@ loop
 	2CoordsToDistance Result,distance,~!Navigator,currentPosition,longitude!~,~!Navigator,currentPosition,latitude!~,~!Result,longitude!~,~!Result,latitude!~
 	2CoordsToAngle Result,heading,~!Navigator,currentPosition,longitude!~,~!Navigator,currentPosition,latitude!~,~!Result,longitude!~,~!Result,latitude!~
 
-	radiansToDegrees Result,heading,~!Result,heading!~
+	if ~!Result,heading!~,!=,undefined,
+		radiansToDegrees Result,heading,~!Result,heading!~
 
-	basicMaths Result,userDistance,~!Result,distance!~,*,~!Navigator,unitBaseMeasurement!~
-	basicMaths Result,userDistance,~!Result,userDistance!~,/,360
-	round Result,userDistance,~!Result,userDistance!~,2
+		basicMaths Result,userDistance,~!Result,distance!~,*,~!Navigator,unitBaseMeasurement!~
+		basicMaths Result,userDistance,~!Result,userDistance!~,/,360
+		round Result,userDistance,~!Result,userDistance!~,2
 
-	set Navigator,instanceName,~!Result,instanceName!~
+		set Navigator,instanceName,~!Result,instanceName!~
+	else
+		debug 3,We have no previous location to calculate a track heading.
