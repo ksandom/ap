@@ -1,5 +1,11 @@
 # Get the current status of each way point in the resultSet.  ~ nav,waypoint
 
+positiveCRC longitude,longitudeID
+positiveCRC latitude,latitudeID
+
+chooseBasedOn longitudeID,longitudeColor,Color
+chooseBasedOn latitudeID,latitudeColor,Color
+
 loop
 	# Figure out where we are and where we need to go.
 	getCurrentPosition Navigator,currentPosition,~!Result,instanceName!~
