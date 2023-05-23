@@ -1,5 +1,6 @@
-# Calculate the live radius of an AP instance following an arc. --calculateRadius=instanceName ~ arc,route
-parameters {"instanceName":"default"}
+# Calculate the live radius of an AP instance following an arc. --calculateArcRadiusOffset=instanceName,Category,variable ~ arc,route
+
+parameters {"instanceName":"default","Category":"Local","variable":"arcHeadingOffset"}
 
 # Take current location, and pivot to calculate the difference in KM.
 getCurrentPosition Route,currentPosition,~!Local,instanceName!~
@@ -12,9 +13,16 @@ degreesToKM Local,distance,~!Local,rawDistance!~
 basicMaths Local,radiusGoal,~!Local,distance!~,-,~!AP,state,~!Local,instanceName!~,arc,radius-desired!~
 
 # Invert it to change the direction of the turn.
-# basicMaths Local,radiusGoal,~!Local,radiusGoal!~,*,-1
+basicMaths Local,radiusGoal,~!Local,radiusGoal!~,*,-1
 
 
 # Save it to AP state.
 setNested AP,state,~!Local,instanceName!~,arc,radius-current,~!Local,distance!~
 setNested AP,state,~!Local,instanceName!~,arc,radius-goal,~!Local,radiusGoal!~
+
+# Export it.
+set ~!Local,Category!~,~!Local,variable!~,~!Local,radiusGoal!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~
+
+
+debug 3,liveRadius: ~!Local,instanceName!~ distance=~!Local,distance!~ radiusGoal=~!Local,radiusGoal!~

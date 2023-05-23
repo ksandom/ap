@@ -417,12 +417,12 @@ pass massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,pitch"],
 # Follow an arc to turn
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "followArcSustain", ~!AP,stateRules,~!Tmp,instanceName!~,sustain!~]
 massSet ["AP,stateRules,~!Tmp,instanceName!~,followArcSustain,yaw"],
-	setNested ~!Me,stuff!~,input,min,5
+	setNested ~!Me,stuff!~,input,min,-10
 	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,-5
+	setNested ~!Me,stuff!~,input,max,10
 	setNested ~!Me,stuff!~,input,multiplier,-1
 	setNested ~!Me,stuff!~,input,expo,1
-	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,arc,arc,radius-goal"]
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,arc,decision"]
 	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,arc,zero"]
 
 	setNested ~!Me,stuff!~,output,min,-1

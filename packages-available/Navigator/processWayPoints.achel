@@ -52,7 +52,7 @@ loop
 	# If we don't have a begining distance, let's set it
 	if ~!AP,state,~!Local,instanceName!~,beginingDistance!~,==,,
 		setNested AP,state,~!Local,instanceName!~,beginingDistance,~!AP,state,~!Local,instanceName!~,distance!~
-		debug 1,Navigator: beginingDistance to ~!AP,state,~!Local,instanceName!~,beginingDistance!~
+		# debug 1,Navigator: beginingDistance to ~!AP,state,~!Local,instanceName!~,beginingDistance!~
 
 
 	# If we have a previous distance and heading, let's do stuff.

@@ -1,0 +1,33 @@
+# Go in circles. This is intended for demonstrating that the followArcSustain state is working. --circle=instanceName ~ testing
+parameters {"instanceName":"default"}
+
+# Make sure we don't hit the ground while testing.
+altitude ~!Local,instanceName!~,10000
+
+
+# Get information for calculating the pivot.
+getAPVar ~!Local,instanceName!~,cruiseTurningRadiusKM,Local,radius
+
+getAPVar ~!Local,instanceName!~,heading-deg,Local,heading
+rotateAngleInDegrees Local,pivotAngle,~!Local,heading!~,90
+
+getCurrentPosition Local,current,~!Local,instanceName!~
+keepPoint ~!Local,instanceName!~,interestPoints,~!Local,current,longitude!~,~!Local,current,latitude!~,500,origin-~!Local,instanceName!~
+
+
+# Calculate the pivot.
+# {"Category":"Tmp", "value":"newPosition", "angleInDegrees":"90", "distanceInKM":"10" ,"fromLongitude":"", "fromLatitude":""}
+calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Local,current,longitude!~,~!Local,current,latitude!~
+keepPoint ~!Local,instanceName!~,interestPoints,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~,500,PIVOT!-~!Local,instanceName!~
+setNested AP,state,~!Local,instanceName!~,pivot,longitude,~!Local,pivot,longitude!~
+setNested AP,state,~!Local,instanceName!~,pivot,latitude,~!Local,pivot,latitude!~
+
+debug 1,radius=~!Local,radius!~ heading=~!Local,heading!~ pivotAngle=~!Local,pivotAngle!~ current=~!Local,current!~ pivot=~!Local,pivot!~
+
+
+# Set it all in action.
+arcEntry ~!Local,instanceName!~
+
+
+# Dump state right now to give feedback quickly.
+historyToKML ~!Local,instanceName!~

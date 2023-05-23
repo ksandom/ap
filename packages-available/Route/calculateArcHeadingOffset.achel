@@ -1,0 +1,35 @@
+# Calculate where we are vs should-be on an arc heading-wise. --calculateArcHeadingOffset=instanceName,Category,variable . ~ arc,route
+
+parameters {"instanceName":"default","Category":"Local","variable":"arcHeadingOffset"}
+
+pi Local,pi
+basicMaths Local,negativePi,~!Local,pi!~,*,-1
+
+# Figure out which direction we should be facing.
+getCurrentPosition Route,currentPosition,~!Local,instanceName!~
+2CoordsToAngle Local,angle,~!Route,currentPosition,longitude!~,~!Route,currentPosition,latitude!~,~!AP,state,~!Local,instanceName!~,pivot,longitude!~,~!AP,state,~!Local,instanceName!~,pivot,latitude!~
+radiansToDegrees Local,angleDegrees,~!Local,angle!~
+rotateAngleInDegrees Local,requestedDirectionDegrees,~!Local,angleDegrees!~,270
+degreesToRadians Local,requestedDirection,~!Local,requestedDirectionDegrees!~
+
+# Get which direction we are actually facing.
+getAPVar ~!Local,instanceName!~,heading-deg,Local,headingDegrees
+degreesToRadians Local,heading,~!Local,headingDegrees!~
+
+# Make both angles centered on 0.
+rotateAngleInRadians Local,requestedDirection,~!Local,requestedDirection!~,~!Local,negativePi!~
+rotateAngleInRadians Local,heading,~!Local,heading!~,~!Local,negativePi!~
+
+# Bring them together.
+absolute Local,absHeading,~!Local,heading!~
+absolute Local,absRequestedDirection,~!Local,requestedDirection!~
+basicMaths Local,difference,~!Local,absHeading!~,-,~!Local,absRequestedDirection!~
+absolute ~!Local,Category!~,~!Local,variable!~,~!Local,difference!~
+
+if ~!Local,requestedDirection!~,>,~!Local,heading!~,
+    basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,*,-1
+
+# debug 1,h=~!Local,heading!~(~!Local,absHeading!~) rd=~!Local,requestedDirection!~(~!Local,absRequestedDirection!~) diff=~!Local,difference!~ result=~!~!Local,Category!~,~!Local,variable!~!~
+
+# Make available outside this scope.
+makeAvailable ~!Local,Category!~,~!Local,variable!~

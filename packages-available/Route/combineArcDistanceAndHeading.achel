@@ -1,0 +1,39 @@
+# Combine the arc heading and distance together to make sensible decisions. --combineArcDistanceAndHeading=instance,Category,variable,distance,heading ~ arc,route
+
+parameters {"instanceName":"default","Category":"Local","variable":"arcHeadingOffset","distanceOffset":"0","headingOffset":"0"}
+
+# Tunables.
+# TODO Move these to the aircraft config.
+set Local,distanceMultiplier,1.5
+set Local,headingMultiplier,8
+set Local,headingManualOffset,-0.3
+set Local,max,10
+set Local,percentDistance,0.3
+
+# Apply multipliers and offsets.
+basicMaths Local,distanceOffset,~!Local,distanceOffset!~,*,~!Local,distanceMultiplier!~
+basicMaths Local,headingOffset,~!Local,headingOffset!~,+,~!Local,headingManualOffset!~
+basicMaths Local,headingOffset,~!Local,headingOffset!~,*,~!Local,headingMultiplier!~
+
+# Assert the max range.
+assertWithinRange Local,distanceOffset,~!Local,max!~,~!Local,distanceOffset!~
+assertWithinRange Local,headingOffset,~!Local,max!~,~!Local,headingOffset!~
+
+# Determine percentages.
+# Distance | 0                                    max |
+#          | All heading                 All distance |
+# basicMaths Local,percentDistance,~!Local,distanceOffset!~,/,~!Local,max!~
+absolute Local,percentDistance,~!Local,percentDistance!~
+basicMaths Local,percentHeading,1,-,~!Local,percentDistance!~
+
+# Apply percentages.
+basicMaths Local,applyDistance,~!Local,distanceOffset!~,*,~!Local,percentDistance!~
+basicMaths Local,applyHeading,~!Local,headingOffset!~,*,~!Local,percentHeading!~
+
+# Combine.
+basicMaths ~!Local,Category!~,~!Local,variable!~,~!Local,applyDistance!~,+,~!Local,applyHeading!~
+assertWithinRange ~!Local,Category!~,~!!Local,variable!~,~!Local,max!~,~!~!Local,Category!~,~!!Local,variable!~!~
+
+debug 1,combinedHeading: dO=~!Local,distanceOffset!~ hO=~!Local,headingOffset!~ d%=~!Local,percentDistance!~ h%=~!Local,percentHeading!~ dA=~!Local,applyDistance!~ hA=~!Local,applyHeading!~  v=~!~!Local,Category!~,~!Local,variable!~!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~
