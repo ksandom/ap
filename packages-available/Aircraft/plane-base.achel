@@ -1,11 +1,10 @@
-# Set settings for a boeing 777 ~ AP,rules,plane,aircraft
-#onDefine aliasFeature plane-b777,777
+# Some base settings that every plane should apply. ~ AP,base,rules,plane,aircraft
+
 parameters {"instanceName":"default"}
 
-plane-base ~!Local,instanceName!~
-
-# NOTE v1 is currently just a dummy number, but to be correct should be calculated based on aircraft specs, loading, conditions and runway length.
 massSet ["AP,state,~!Local,instanceName!~"],
+    setNested ~!Me,stuff!~,type,plane
+
     # Speeds.
     setNested ~!Me,stuff!~,v1,90
     setNested ~!Me,stuff!~,v2,170
@@ -23,6 +22,3 @@ massSet ["AP,state,~!Local,instanceName!~"],
 
     # Manoeuvrability.
     setNested ~!Me,stuff!~,cruiseTurningRadiusKM,10
-
-registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,0,~!Local,instanceName!~
-registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,1,~!Local,instanceName!~

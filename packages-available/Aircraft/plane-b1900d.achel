@@ -2,18 +2,27 @@
 #onDefine aliasFeature plane-b1900d,1900
 parameters {"instanceName":"default"}
 
+plane-base ~!Local,instanceName!~
+
 # NOTE v1 is currently just a dummy number, but to be correct should be calculated based on aircraft specs, loading, conditions and runway length.
-setNested ["AP","state","~!Local,instanceName!~","type","plane"]
-setNested ["AP","state","~!Local,instanceName!~","v1","80"]
-setNested ["AP","state","~!Local,instanceName!~","v2","120"]
-setNested ["AP","state","~!Local,instanceName!~","vCruise","260"]
-setNested ["AP","state","~!Local,instanceName!~","vLand","85"]
-setNested ["AP","state","~!Local,instanceName!~","safeAltitude","2000"]
-setNested ["AP","state","~!Local,instanceName!~","cruiseAltitude","17000"]
-setNested ["AP","state","~!Local,instanceName!~","altitudeOffsetAtSealevel","300"]
-setNested ["AP","state","~!Local,instanceName!~","takeOffThrust",1]
-setNested ["AP","state","~!Local,instanceName!~","climbThrust",0.8]
-setNested ["AP","state","~!Local,instanceName!~","cruiseTurningRadiusKM",6]
+massSet ["AP,state,~!Local,instanceName!~"],
+    # Speeds.
+    setNested ~!Me,stuff!~,v1,80
+    setNested ~!Me,stuff!~,v2,120
+    setNested ~!Me,stuff!~,vCruise,260
+    setNested ~!Me,stuff!~,vLand,85
+
+    # Altitudes.
+    setNested ~!Me,stuff!~,safeAltitude,2000
+    setNested ~!Me,stuff!~,altitudeOffsetAtSealevel,300
+    setNested ~!Me,stuff!~,cruiseAltitude,17000
+
+    # Thrust.
+    setNested ~!Me,stuff!~,takeOffThrust,1
+    setNested ~!Me,stuff!~,climbThrust,0.8
+
+    # Manoeuvrability.
+    setNested ~!Me,stuff!~,cruiseTurningRadiusKM,6
 
 # TODO Check if this is needed.
 # registerForEvent Timer,piggyBack,throttlePiggyBack,0,~!Local,instanceName!~
