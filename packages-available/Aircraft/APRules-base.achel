@@ -451,11 +451,6 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,speedControlled,speed"],
 	setNested ["~!Me,stuff!~","output","allowPanic","0"]
 
 
-pass
-	get AP,stateRules,~!Tmp,instanceName!~,sustain
-	setNested
-	outNow
-
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "chill", ~!AP,stateRules,~!Tmp,instanceName!~,sustain!~]
 massSet ["AP,stateRules,~!Tmp,instanceName!~,chill,roll"],
 	setNested ~!Me,stuff!~,output,min,-0.3
