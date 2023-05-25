@@ -80,7 +80,6 @@ loop
 			setNested AP,state,~!Local,instanceName!~,distanceSinceLastIteration,~!Local,distanceSinceLastIteration!~
 
 			basicMaths Local,timeDifference,~!AP,state,~!Local,instanceName!~,now!~,-,~!AP,previousState,~!Local,instanceName!~,now!~
-			debug 0,timeDifference=~!Local,timeDifference!~
 			setNested AP,state,~!Local,instanceName!~,timeDifference,~!Local,timeDifference!~
 
 			basicMaths Local,speedOfIteration,~!AP,state,~!Local,instanceName!~,degreesSinceLastIteration!~,/,~!Local,timeDifference!~
