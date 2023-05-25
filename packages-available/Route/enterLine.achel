@@ -29,20 +29,18 @@ else
 	setNested Local,extention,latitude,~!Local,lineEntryLatitude!~
 
 
-# TODO This appears to be incorrect.
 # Calculate pivot point.
 rotateAngleInDegrees Local,pivotAngle,~!Local,inverseRunwayAngleDegrees!~,270
-#calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
 calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Local,extention,longitude!~,~!Local,extention,latitude!~
 
 
-debug 1,pivot calculations: runwayAngle=~!Local,runwayAngleDegrees!~,~!Local,inverseRunwayAngleDegrees!~   pivotAngle=~!Local,pivotAngle!~ r=~!Local,radius!~ orgPos=~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~    pivot=~!Local,pivot!~
+debug 2,pivot calculations: runwayAngle=~!Local,runwayAngleDegrees!~,~!Local,inverseRunwayAngleDegrees!~   pivotAngle=~!Local,pivotAngle!~ r=~!Local,radius!~ orgPos=~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~    pivot=~!Local,pivot!~
 
 keepPoint ~!Local,instanceName!~,interestPoints,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~,500,pivot-~!Local,instanceName!~
 
 # Calculate arc entry point. (currentPosition, pivotPosition, radius)
 calculateArcEntryPoint Local,arcEntryPoint,~!Local,radius!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
-debug 0,pivot=~!Local,pivot,longitude!~,~!Local,pivot,latitude!~ r=~!Local,radius!~
+debug 3,pivot=~!Local,pivot,longitude!~,~!Local,pivot,latitude!~ r=~!Local,radius!~
 
 # Add the entry waypoint and trigger the arc turn.
 addWaypoint ~!Local,instanceName!~,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,Arc,entry,~!Local,instanceName!~,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~

@@ -38,50 +38,24 @@ if ~!Local,numberOfResults!~,==,1,
 	calcApproachEntryFromFinalApproach ~!Local,instanceName!~,Tmp,approachEntry
 
 
-
-	# Calculate where to begin the descent.
-	# feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,altitude-ft!~
-	# feetToMeters Tmp,altitudeInMeters,~!AP,state,~!Local,instanceName!~,cruiseAltitude!~
-	# degreesToRadians Tmp,approachAngleInRadians,~!Local,approachAngleInDegrees!~
-	# rightTriangleGetAdjacentFromAngleAndOpposite Tmp,beginDescentDistance,~!Tmp,approachAngleInRadians!~,~!Tmp,altitudeInMeters!~
-
-	# debug 1,altitude Feet: ~!AP,state,~!Local,instanceName!~,altitude-ft!~ Meters: ~!Tmp,altitudeInMeters!~
-	# debug 1,approachAngleInRadians: ~!Tmp,approachAngleInRadians!~
-	# debug 1,beginDescentDistance-preKM: ~!Tmp,beginDescentDistance!~
-
+	# Convert to KM from meters.
 	basicMaths Tmp,beginDescentDistance,~!Tmp,beginDescentDistance!~,/,1000
 
 	# Calculate direction to plot the approach.
 	first
 	loop
-		# setNested ["Local","runway",{"longitudeBegin":"~!Result,longitudeBegin!~","latitudeBegin":"~!Result,latitudeBegin!~","longitudeEnd":"~!Result,longitudeEnd!~","latitudeEnd":"~!Result,latitudeEnd!~"}]
-
-		# 2CoordsToAngle Tmp,angle,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~,~!Local,runway,longitudeEnd!~,~!Local,runway,latitudeEnd!~
-		# radiansToDegrees Tmp,angleDegrees,~!Tmp,angle!~
-		# rotateAngleInDegrees Local,rotatedAngleDegrees,~!Tmp,angleDegrees!~,180
-
-		# calculateNewPosition Route,newPosition,~!Local,rotatedAngleDegrees!~,~!Tmp,beginDescentDistance!~,~!Local,runway,longitudeBegin!~,~!Local,runway,latitudeBegin!~
-
 		getNavBeginLocation Local,startPosition,~!Local,instanceName!~
 
-		debug 0,Using location: ~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
-
+		debug 2,Using location: ~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
 
 		getNamedPosition ~!Local,instanceName!~,routePlanning,approachEntry,Local,approachEntry
-		# parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntryLongitude":"0","lineEntryLatitude":"0","currentLongitude":"0","currentLatitude":"0","extendKM":"1"}
 		set Local,cruiseTurningRadiusKM,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~
 
 		apToMeWithContext ~!Local,instanceName!~,routePlanning,runwayAngle
 		radiansToDegrees Local,angleDegrees,~!Me,runwayAngle!~
-		debug 1,About to enterLine ~!Local,angleDegrees!~,~!Me,runwayAngle!~
+		debug 2,About to enterLine ~!Local,angleDegrees!~,~!Me,runwayAngle!~
 
 		enterLine ~!Local,instanceName!~,~!Local,cruiseTurningRadiusKM!~,~!Local,angleDegrees!~,~!Local,approachEntry,lon!~,~!Local,approachEntry,lat!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
-
-		# getNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,Local,runwayBegin
-		# addWaypoint ~!Local,instanceName!~,~!Local,runwayBegin,lon!~,~!Local,runwayBegin,lat!~,Landing,runwayBegin,~!Local,instanceName!~
-
-		# getNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,Local,runwayEnd
-		# addWaypoint ~!Local,instanceName!~,~!Local,runwayEnd,lon!~,~!Local,runwayEnd,lat!~,Landing,runwayEnd,~!Local,instanceName!~
 
 
 	# add waypoints
@@ -98,7 +72,6 @@ if ~!Local,numberOfResults!~,==,1,
 	# Add the end of the runway to keep the plane straight.
 	getNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,Local,runwayEnd
 	addWaypoint ~!Local,instanceName!~,~!Local,runwayEnd,lon!~,~!Local,runwayEnd,lat!~,Flight,runwayEnd,~!Local,instanceName!~
-
 
 
 	# TODO Calculate distance to begin descent, from 3 degrees and current altitude.

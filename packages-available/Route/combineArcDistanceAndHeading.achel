@@ -34,6 +34,6 @@ basicMaths Local,applyHeading,~!Local,headingOffset!~,*,~!Local,percentHeading!~
 basicMaths ~!Local,Category!~,~!Local,variable!~,~!Local,applyDistance!~,+,~!Local,applyHeading!~
 assertWithinRange ~!Local,Category!~,~!!Local,variable!~,~!Local,max!~,~!~!Local,Category!~,~!!Local,variable!~!~
 
-debug 1,combinedHeading: dO=~!Local,distanceOffset!~ hO=~!Local,headingOffset!~ d%=~!Local,percentDistance!~ h%=~!Local,percentHeading!~ dA=~!Local,applyDistance!~ hA=~!Local,applyHeading!~  v=~!~!Local,Category!~,~!Local,variable!~!~
+debug 2,combinedHeading: dO=~!Local,distanceOffset!~ hO=~!Local,headingOffset!~ d%=~!Local,percentDistance!~ h%=~!Local,percentHeading!~ dA=~!Local,applyDistance!~ hA=~!Local,applyHeading!~  v=~!~!Local,Category!~,~!Local,variable!~!~
 
 makeAvailable ~!Local,Category!~,~!Local,variable!~
