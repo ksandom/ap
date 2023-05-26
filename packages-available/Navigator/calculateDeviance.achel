@@ -6,6 +6,9 @@ set Local,ready,1
 if ~!AP,state,~!Local,instanceName!~,longitude-deg!~,==,,
 	set Local,ready,0
 
+if ~!AP,state,~!Local,instanceName!~,destination,longitude!~,==,,
+	set Local,ready,0
+
 
 if ~!Local,ready!~,==,1,
 	# get origin

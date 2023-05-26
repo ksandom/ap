@@ -466,18 +466,77 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,chill,yaw"],
 
 
 massSet ["AP,state,~!Tmp,instanceName!~,arc"],
-	setNested ~!Me,stuff!~,distanceMultiplier,0.00015
+	# Basic operations.
+	# Tuning how much value each input has.
+	setNested ~!Me,stuff!~,distanceMultiplier,0.00012
 	setNested ~!Me,stuff!~,headingMultiplier,7
+
+	# Adding a little weight to help it around a corner.
 	setNested ~!Me,stuff!~,headingManualOffset,-0.3
+
+	# The max (and therefore min=max*-1) range of output.
 	setNested ~!Me,stuff!~,max,10
+
+	# How much of the input is from the distance. The rest is from the heading.
 	setNested ~!Me,stuff!~,percentDistance,0.3
 
+
+	# Auto-tuning.
+	# When to tune the sensitivity. If distance is below, reduce the sensitivity. If it's higher, increase it.
+	setNested ~!Me,stuff!~,rawDistanceLowTrigger,250
+	setNested ~!Me,stuff!~,rawDistanceHighTrigger,1000
+
+	# What to multiply the sensitivity by to increase or decrease it. Set to 1 to disable.
+	setNested ~!Me,stuff!~,sensitivityIncMultiplier,1.1
+	setNested ~!Me,stuff!~,sensitivityDecMultiplier,0.95
+
+	# Max and min sensitivity values.
+	setNested ~!Me,stuff!~,sensitivityMax,1
+	setNested ~!Me,stuff!~,sensitivityMin,0.8
+
+	# The starting value for the sensitivity.
+	setNested ~!Me,stuff!~,sensitivitySeed,1
+
+	# How often to tune the settings. New values only come about once a second. So it should be at least longer than that, probably more.
+	setNested ~!Me,stuff!~,interval,3
+
+
 massSet ["AP,state,~!Tmp,instanceName!~,line"],
-	setNested ~!Me,stuff!~,distanceMultiplier,0.00015
+	# Basic operations.
+	# Tuning how much value each input has.
+	setNested ~!Me,stuff!~,distanceMultiplier,0.0025
 	setNested ~!Me,stuff!~,headingMultiplier,8
+
+	# Adding a little weight to help it around a corner.
 	setNested ~!Me,stuff!~,headingManualOffset,0
+
+	# The max (and therefore min=max*-1) range of output.
 	setNested ~!Me,stuff!~,max,10
-	setNested ~!Me,stuff!~,percentDistance,0.3
+
+	# How much of the input is from the distance. The rest is from the heading.
+	setNested ~!Me,stuff!~,percentDistance,0.5
+
+
+	# Auto-tuning.
+	# When to tune the sensitivity. If distance is below, reduce the sensitivity. If it's higher, increase it.
+	setNested ~!Me,stuff!~,rawDistanceLowTrigger,150
+	setNested ~!Me,stuff!~,rawDistanceHighTrigger,250
+
+	# What to multiply the sensitivity by to increase or decrease it. Set to 1 to disable.
+	setNested ~!Me,stuff!~,sensitivityIncMultiplier,1.1
+	setNested ~!Me,stuff!~,sensitivityDecMultiplier,0.98
+
+	# Max and min sensitivity values.
+	setNested ~!Me,stuff!~,sensitivityMax,1
+	setNested ~!Me,stuff!~,sensitivityMin,0.4
+
+	# The starting value for the sensitivity.
+	setNested ~!Me,stuff!~,sensitivitySeed,1
+
+	# How often to tune the settings. New values only come about once a second. So it should be at least longer than that, probably more.
+	setNested ~!Me,stuff!~,interval,3
+
+
 
 
 unset Tmp,instanceName

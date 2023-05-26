@@ -5,6 +5,8 @@ parameters {"instanceName":"default"}
 getAPVar ~!Local,instanceName!~,course-devianceInMeters,Local,distance
 getAPVar ~!Local,instanceName!~,track-deviance,Local,headingOffset
 
+basicMaths Local,distance,~!Local,distance!~,*,-1
+
 combineDistanceAndHeading ~!Local,instanceName!~,Local,decision,line,~!Local,distance!~,~!Local,headingOffset!~
 
 debug 2,decision=~!Local,decision!~ distance=~!Local,distance!~ headingOffset=~!Local,headingOffset!~

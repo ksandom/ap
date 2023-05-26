@@ -20,6 +20,10 @@ set Navigator,getNext,
 	unset AP,state,~!Local,instanceName!~,lastDistance
 	unset AP,state,~!Local,instanceName!~,distance
 
+	# Reset arc/line deviation sensitivity.
+	setAPVarWithContext ~!Local,instanceName!~,arcSensitivity,sensitivity,
+	setAPVarWithContext ~!Local,instanceName!~,lineSensitivity,sensitivity,
+
 # We just want to work with the waypoints.
 retrieveResults Navigator,instances,~!Local,instanceName!~
 

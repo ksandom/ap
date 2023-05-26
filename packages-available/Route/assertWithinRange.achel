@@ -1,15 +1,21 @@
-# Assert that a value is within a specified range. The range is +/- the maxValue. --assertWithinRange=Category,variable,maxValue,value ~ data
+# Assert that a value is within a specified range. The range is +/- the maxValue. --assertWithinRange=Category,variable,maxValue,value[,minValue] ~ data
 
-parameters Category,variable,maxValue,value
+parameters Category,variable,maxValue,value,inputMinValue
 
-basicMaths Local,minValue,~!Local,maxValue!~,*,-1
+# Either derive a minValue, or take the parameter if it is used.
+set Local,minValue,0
+if ~!Local,inputMinValue!~,!=,,
+    set Local,minValue,~!Local,inputMinValue!~
+else
+    basicMaths Local,minValue,~!Local,maxValue!~,*,-1
 
+# Apply the constraints.
 if ~!Local,value!~,>,~!Local,maxValue!~,
     set Local,value,~!Local,maxValue!~
 
 if ~!Local,value!~,<,~!Local,minValue!~,
     set Local,value,~!Local,minValue!~
 
+# Return it.
 set ~!Local,Category!~,~!Local,variable!~,~!Local,value!~
-
 makeAvailable ~!Local,Category!~,~!Local,variable!~
