@@ -10,6 +10,7 @@ pass isolate
 	nested
 	outNow
 
+set Me,first,true
 loop
 	# Figure out where we are and where we need to go.
 	getCurrentPosition Navigator,currentPosition,~!Result,instanceName!~
@@ -35,6 +36,13 @@ loop
 		set Result,timeToWaypoint,unknown
 		set Result,lastProcessTime,~!Local,now!~
 		set Result,distance,~!Local,distance!~
+
+		if ~!Me,first!~,==,true,
+			if ~!Local,distance!~,!=,,
+				set Result,minDistance,~!Local,distance!~
+				set Me,first,false
+		else
+			set Result,minDistance,
 	else
 		# We have looked at this point before. Let's figure out how quickly we are getting closer.
 		basicMaths Local,distanceDifference,~!Result,distance!~,-,~!Local,distance!~
@@ -48,6 +56,10 @@ loop
 				set Result,timeToWaypoint,inf
 			set Result,lastProcessTime,~!Local,now!~
 			set Result,distance,~!Local,distance!~
+
+			if ~!Result,minDistance!~,!=,,
+				if ~!Local,distance!~,<,~!Result,minDistance!~,
+					set Result,minDistance,~!Local,distance!~
 
 	# debug 1,Waypoint: ~!Result,eventCategory!~,~!Result,eventName!~  oN=~!Result,lastProcessTime!~ nN=~!Local,now!~ tD=~!Result,timeDifference!~  d=~!Local,distance!~ (~!Result,distance!~)  dD=~!Result,distanceDifference!~  s=~!Result,speed!~  hfp=~!Result,hadFirstProcess!~  ttwp=~!Result,timeToWaypoint!~
 

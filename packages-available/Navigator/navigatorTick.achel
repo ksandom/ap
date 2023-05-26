@@ -8,6 +8,11 @@ isolate
 			if ~!Navigator,origins,~!Navigator,instanceName!~,longitude!~,==,,
 				setOrigin ~!Navigator,instanceName!~,~!AP,state,~!Navigator,instanceName!~,longitude-deg!~,~!AP,state,~!Navigator,instanceName!~,latitude-deg!~
 
-			isolate processWayPoints,~!Navigator,instanceName!~
+			isolate
+				processWayPoints ~!Navigator,instanceName!~
+
 			if ~!Navigator,instanceName!~,!=,,
 				calculateDeviance ~!Navigator,instanceName!~
+
+				# TODO Apply this only when it's needed (most of the time, but not always.)
+				calculateLineState ~!Navigator,instanceName!~

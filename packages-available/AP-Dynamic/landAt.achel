@@ -53,9 +53,9 @@ if ~!Local,numberOfResults!~,==,1,
 
 		apToMeWithContext ~!Local,instanceName!~,routePlanning,runwayAngle
 		radiansToDegrees Local,angleDegrees,~!Me,runwayAngle!~
-		debug 2,About to enterLine ~!Local,angleDegrees!~,~!Me,runwayAngle!~
+		debug 2,About to calculateLineEntry ~!Local,angleDegrees!~,~!Me,runwayAngle!~
 
-		enterLine ~!Local,instanceName!~,~!Local,cruiseTurningRadiusKM!~,~!Local,angleDegrees!~,~!Local,approachEntry,lon!~,~!Local,approachEntry,lat!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
+		calculateLineEntry ~!Local,instanceName!~,~!Local,cruiseTurningRadiusKM!~,~!Local,angleDegrees!~,~!Local,approachEntry,lon!~,~!Local,approachEntry,lat!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
 
 
 	# add waypoints

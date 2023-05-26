@@ -3,6 +3,6 @@
 parameters {"instanceName":"default"}
 
 debug 0,Exiting arc turn for ~!Local,instanceName!~.
-unregisterForEvent Timer,arc,calculateLiveRadius,~!Local,instanceName!~
+unregisterForEvent Timer,arc,calculateArcState,~!Local,instanceName!~
 unset AP,state,~!Local,instanceName!~,arc
 setAPState sustain,~!Local,instanceName!~

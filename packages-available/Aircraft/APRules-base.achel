@@ -69,9 +69,9 @@ massSet ["AP,stateRules,base,base,yaw"],
 	setNested ~!Me,stuff!~,pid,iD,1
 
 
-	setNested ~!Me,stuff!~,input,min,-45
+	setNested ~!Me,stuff!~,input,min,-10
 	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,45
+	setNested ~!Me,stuff!~,input,max,10
 	setNested ~!Me,stuff!~,input,multiplier,1
 	setNested ~!Me,stuff!~,input,expo,1
 
@@ -81,7 +81,7 @@ massSet ["AP,stateRules,base,base,yaw"],
 	setNested ~!Me,stuff!~,output,multiplier,1
 
 	# TODO These need to be abstracted out
-	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,track-deviance"]
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,line,decision"]
 	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,base,yaw,input,center"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,rudder-req"]
 	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/rudder ~%value%~"]
@@ -164,7 +164,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,lineUpAndWait,yaw"],
 	setNested ~!Me,stuff!~,output,max,-0.2
 
 	# TODO These need to be abstracted out
-	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,track-deviance"]
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,line,decision"]
 	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,base,yaw,input,center"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,rudder-req"]
 	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/rudder ~%value%~"]
@@ -463,5 +463,21 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,chill,yaw"],
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,0.1
 	setNested ~!Me,stuff!~,output,multiplier,1
+
+
+massSet ["AP,state,~!Tmp,instanceName!~,arc"],
+	setNested ~!Me,stuff!~,distanceMultiplier,0.00015
+	setNested ~!Me,stuff!~,headingMultiplier,7
+	setNested ~!Me,stuff!~,headingManualOffset,-0.3
+	setNested ~!Me,stuff!~,max,10
+	setNested ~!Me,stuff!~,percentDistance,0.3
+
+massSet ["AP,state,~!Tmp,instanceName!~,line"],
+	setNested ~!Me,stuff!~,distanceMultiplier,0.00015
+	setNested ~!Me,stuff!~,headingMultiplier,8
+	setNested ~!Me,stuff!~,headingManualOffset,0
+	setNested ~!Me,stuff!~,max,10
+	setNested ~!Me,stuff!~,percentDistance,0.3
+
 
 unset Tmp,instanceName

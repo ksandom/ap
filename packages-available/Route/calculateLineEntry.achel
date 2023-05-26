@@ -1,4 +1,4 @@
-# Enter into a line in a controlled way. This is useful to enter into a precise approach. --enterLine=instanceName=default,radius,angleInDegrees,lineEntryLongitude,lineEntryLatitude,extendKM=0 "entry" is the line entry. "current" is the aircraft position. ~ route,approach,enter,line
+# Enter into a line in a controlled way. This is useful to enter into a precise approach. --calculateLineEntry=instanceName=default,radius,angleInDegrees,lineEntryLongitude,lineEntryLatitude,extendKM=0 "entry" is the line entry. "current" is the aircraft position. ~ route,approach,enter,line
 parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntryLongitude":"0","lineEntryLatitude":"0","currentLongitude":"0","currentLatitude":"0","extendKM":"1"}
 
 keepPoint ~!Local,instanceName!~,interestPoints,~!Local,currentLongitude!~,~!Local,currentLatitude!~,500,originAtTimeOfCalculation

@@ -92,6 +92,13 @@ loop
 				set Local,shouldDoNext,1
 				debug 1,~!Result,instanceName!~: Our time (~!AP,state,~!Local,instanceName!~,distance!~) to the next waypoint is less than our giveUpThreshold (~!Local,timeDistanceThreshold!~). Let's move on to the next one.
 
+			if ~!Result,minDistance!~,!=,,
+				set Local,minDistanceMultiplier,3
+				basicMaths Local,minDistanceMultiplied,~!Result,minDistance!~,*,~!Local,minDistanceMultiplier!~
+				if ~!Result,distance!~,>,~!Local,minDistanceMultiplied!~,
+					set Local,shouldDoNext,1
+					debug 1,~!Result,instanceName!~: We are (~!Result,distance!~) more than ~!Local,minDistanceMultiplier!~ times (~!Local,minDistanceMultiplied!~) the closest distance (~!Result,minDistance!~) we have been to the current waypoint. Assuming that we have missed it.
+
 			if ~!Local,shouldDoNext!~,==,1,
 				debug 1,processWayPoints: ~!Result,instanceName!~ reached waypoint ~!Result,longitude!~,~!Result,latitude!~. ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~
 				keepPoint ~!Local,instanceName!~,passedWaypoints,~!Result,longitude!~,~!Result,latitude!~,~!AP,state,~!Local,instanceName!~,altitude-ft!~,~!Result,eventCategory!~-~!Result,eventName!~-~!Result,eventValue!~

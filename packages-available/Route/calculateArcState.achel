@@ -2,10 +2,10 @@
 
 parameters {"instanceName":"default"}
 
-calculateArcRadiusOffset ~!Local,instanceName!~,Local,arcDistance
-calculateArcHeadingOffset ~!Local,instanceName!~,Local,arcHeadingOffset
-# {"instanceName":"default","Category":"Local","variable":"arcHeadingOffset","distanceOffset":"0","headingOffset":"0"}
-combineArcDistanceAndHeading ~!Local,instanceName!~,Local,arcDecision,~!Local,arcDistance!~,~!Local,arcHeadingOffset!~
+calculateRadiusOffset ~!Local,instanceName!~,Local,arcDistance
+calculateHeadingOffset ~!Local,instanceName!~,Local,arcHeadingOffset
+
+combineDistanceAndHeading ~!Local,instanceName!~,Local,arcDecision,arc,~!Local,arcDistance!~,~!Local,arcHeadingOffset!~
 
 # debug 1,decision=~!Local,arcDecision!~ arcDistance=~!Local,arcDistance!~ arcHeadingOffset=~!Local,arcHeadingOffset!~
 setAPVarWithContext ~!Local,instanceName!~,arc,decision,~!Local,arcDecision!~

@@ -15,6 +15,7 @@ radiansToDegrees Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngle!~
 debug 0,radiansToDegrees ~!Local,arcEntryRawAngleInDegrees!~,~!Local,arcEntryRawAngle!~
 
 # Calculate our angle from north to the pivot.
+# TODO At the moment the right-angle is at the pivot. But if we do it at the Arc-entry, it will match the origin much better.
 2CoordsToAngle Local,approachPivotAngle,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
 radiansToDegrees Local,approachPivotAngleInDegrees,~!Local,approachPivotAngle!~
 

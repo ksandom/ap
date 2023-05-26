@@ -1,4 +1,4 @@
-# Calculate the live radius of an AP instance following an arc. --calculateArcRadiusOffset=instanceName,Category,variable ~ arc,route
+# Calculate the live radius of an AP instance following an arc. --calculateRadiusOffset=instanceName,Category,variable ~ arc,route
 
 parameters {"instanceName":"default","Category":"Local","variable":"arcHeadingOffset"}
 
@@ -7,7 +7,7 @@ getCurrentPosition Route,currentPosition,~!Local,instanceName!~
 
 2CoordsToDistance Local,rawDistance,~!Route,currentPosition,longitude!~,~!Route,currentPosition,latitude!~,~!AP,state,~!Local,instanceName!~,pivot,longitude!~,~!AP,state,~!Local,instanceName!~,pivot,latitude!~
 
-degreesToKM Local,distance,~!Local,rawDistance!~
+degreesToMeters Local,distance,~!Local,rawDistance!~
 
 # Take the current radius, and subtract the goal from it.
 basicMaths Local,radiusGoal,~!Local,distance!~,-,~!AP,state,~!Local,instanceName!~,arc,radius-desired!~

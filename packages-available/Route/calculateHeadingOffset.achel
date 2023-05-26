@@ -1,4 +1,4 @@
-# Calculate where we are vs should-be on an arc heading-wise. --calculateArcHeadingOffset=instanceName,Category,variable . ~ arc,route
+# Calculate where we are vs should-be on an arc heading-wise. --calculateHeadingOffset=instanceName,Category,variable . ~ arc,route
 
 parameters {"instanceName":"default","Category":"Local","variable":"arcHeadingOffset"}
 
