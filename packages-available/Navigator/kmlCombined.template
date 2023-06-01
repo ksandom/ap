@@ -30,6 +30,29 @@
         <color>7f00ff00</color>
       </PolyStyle>
     </Style>
+    <Style id="currentLine">
+      <LineStyle>
+        <color>6f22ff22</color>
+        <width>4</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4f008800</color>
+      </PolyStyle>
+    </Style>
+    <Placemark>
+      <name>Current waypoint line</name>
+      <description>Current waypoint pair for ~!Local,instanceName!~.</description>
+      <styleUrl>#currentLine</styleUrl>
+      <LineString>
+        <extrude>1</extrude>
+        <tessellate>1</tessellate>
+        <altitudeMode>absolute</altitudeMode>
+        <coordinates>
+          ~!Navigator,origins,~!Local,instanceName!~,longitude!~,~!Navigator,origins,~!Local,instanceName!~,latitude!~,500
+          ~!AP,state,~!Local,instanceName!~,destination,longitude!~,~!AP,state,~!Local,instanceName!~,destination,latitude!~,500
+        </coordinates>
+      </LineString>
+    </Placemark>
     <Placemark>
       <name>Actual route</name>
       <description>Actual route for ~!Local,instanceName!~.</description>
@@ -77,6 +100,12 @@ getHistory ~!Local,instanceName!~,passedWaypoints
 
 ~>        </coordinates>
       </LineString>
+    </Placemark>
+    <Placemark>
+      <name>currentLocation-default</name>
+      <Point>
+        <coordinates>~!AP,state,~!Local,instanceName!~,longitude-deg!~,~!AP,state,~!Local,instanceName!~,latitude-deg!~,0</coordinates>
+      </Point>
     </Placemark>
 <~ macro originalWaypoints:
 getHistory ~!Local,instanceName!~,interestPoints
