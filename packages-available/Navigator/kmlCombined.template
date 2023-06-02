@@ -102,9 +102,15 @@ getHistory ~!Local,instanceName!~,passedWaypoints
       </LineString>
     </Placemark>
     <Placemark>
-      <name>currentLocation-default</name>
+      <name>currentLocation- ~!Local,instanceName!~</name>
       <Point>
         <coordinates>~!AP,state,~!Local,instanceName!~,longitude-deg!~,~!AP,state,~!Local,instanceName!~,latitude-deg!~,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>aim- ~!Local,instanceName!~</name>
+      <Point>
+        <coordinates>~!AP,state,~!Local,instanceName!~,track,aimLon!~,~!AP,state,~!Local,instanceName!~,track,aimLat!~,0</coordinates>
       </Point>
     </Placemark>
 <~ macro originalWaypoints:

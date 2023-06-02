@@ -1,0 +1,161 @@
+# Calculate how to get back on course using a metaphorical trailer bar to guide the steering. --calculateDeviance=instanceName ~ nav,waypoints,calculation
+parameters instanceName
+
+set Local,ready,1
+
+if ~!AP,state,~!Local,instanceName!~,longitude-deg!~,==,,
+    set Local,ready,0
+
+if ~!AP,state,~!Local,instanceName!~,destination,longitude!~,==,,
+    set Local,ready,0
+
+if ~!Local,ready!~,==,1,
+    # get origin
+    setNested ["Navigator","deviance","origin",~!Navigator,origins,~!Local,instanceName!~!~]
+    set Local,originX,~!Navigator,deviance,origin,longitude!~
+    set Local,originY,~!Navigator,deviance,origin,latitude!~
+
+    # get actual position
+    set Local,pointX,~!AP,state,~!Local,instanceName!~,longitude-deg!~
+    set Local,pointY,~!AP,state,~!Local,instanceName!~,latitude-deg!~
+    setNested ["Navigator","deviance","position","longitude",~!Local,pointX!~]
+    setNested ["Navigator","deviance","position","latitude",~!Local,pointY!~]
+
+    # get destination
+    setNested ["Navigator","deviance","destination",~!AP,state,~!Local,instanceName!~,destination!~]
+    set Local,destinationX,~!AP,state,~!Local,instanceName!~,destination,longitude!~
+    set Local,destinationY,~!AP,state,~!Local,instanceName!~,destination,latitude!~
+
+    # Get orientation.
+    set Local,orientationDegrees,~!AP,state,~!Local,instanceName!~,heading-deg!~
+    degreesToRadians Local,orientation,~!Local,orientationDegrees!~
+
+    # Get the linear calculations.
+    linearPointStats Local,linearStats,~!Local,pointX!~,~!Local,pointY!~,~!Local,orientation!~,~!Local,originX!~,~!Local,originY!~,~!Local,destinationX!~,~!Local,destinationY!~
+    set Local,deviance,~!Local,linearStats,distanceFromLine!~
+
+    # Get speed.
+    getAPVar ~!Local,instanceName!~,airspeed-kt,Local,speed
+
+    # Calculate how long we have been close to the track.
+    degreesToMeters Local,distanceInMeters,~!Local,linearStats,distanceFromLine!~
+    absolute Local,absDistanceInMeters,~!Local,distanceInMeters!~
+    microNow Local,now
+    set Local,timeMultiplier,1
+    set Local,proximityMultiplier,1
+    # TODO Make the threshold configurable.
+    basicMaths Local,thesholdBase,~!Local,speed!~,+,10
+    basicMaths Local,distanceThreshold,~!Local,thesholdBase!~,*,5
+    if ~!Local,absDistanceInMeters!~,>,~!Local,distanceThreshold!~,
+        debug 2,outside close zone ~!Local,instanceName!~ ~!Local,absDistanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,track,closeSince,~!Local,now!~
+    else
+        set Local,proximityMultiplier,2
+        getAPVarWithContext ~!Local,instanceName!~,track,closeSince,Local,closeSince
+        if ~!Local,closeSince!~,==,,
+            setAPVarWithContext ~!Local,instanceName!~,track,closeSince,~!Local,now!~
+            set Local,closeSince,~!Local,now!~
+            debug 1,Set closeSince=~!Local,now!~
+
+        basicMaths Local,closeTime,~!Local,now!~,-,~!Local,closeSince!~
+        if ~!Local,closeTime!~,>,1,
+            set Local,timeMultiplier,~!Local,closeTime!~
+
+    # How long should the trailer bar be in meters?
+    basicMaths Local,barLength,~!Local,speed!~,*,50
+    basicMaths Local,barLength,~!Local,barLength!~,*,~!Local,timeMultiplier!~
+    basicMaths Local,barLength,~!Local,barLength!~,*,~!Local,proximityMultiplier!~
+    basicMaths Local,barLength,~!Local,barLength!~,+,10
+    metersToDegrees Local,barLengthDegrees,~!Local,barLength!~
+
+    # Calculate aiming point along the track in meters (so the differences don't get lost in rounding errors).
+    basicMaths Local,cSquared,~!Local,barLength!~,^,2
+    basicMaths Local,aSquared,~!Local,distanceInMeters!~,^,2
+    basicMaths Local,bSquared,~!Local,cSquared!~,-,~!Local,aSquared!~
+    basicMaths Local,bMeters,~!Local,bSquared!~,^,0.5
+    metersToDegrees Local,b,~!Local,bMeters!~
+
+    angleAndDistanceToCoord Local,bOffset,~!Local,linearStats,extra,lineAngle!~,~!Local,b!~
+    basicMaths Local,aimX,~!Local,linearStats,extra,idealPosition,x!~,+,~!Local,bOffset,x!~
+    basicMaths Local,aimY,~!Local,linearStats,extra,idealPosition,y!~,+,~!Local,bOffset,y!~
+
+    # Calculate angular offset from the current point.
+    2CoordsToAngle Local,rawAimAngle,~!Local,pointX!~,~!Local,pointY!~,~!Local,aimX!~,~!Local,aimY!~
+    angleDiffRadians Local,aimAngle,~!Local,rawAimAngle!~,~!Local,orientation!~
+
+    # Sensitivity multiplier.
+    # TODO Make this configurable.
+    basicMaths Local,aimAngle,~!Local,aimAngle!~,*,-0.3
+
+    # Desensitise with time.
+    basicMaths Local,timeDivider,~!Local,timeMultiplier!~,/,40
+    basicMaths Local,timeDivider,~!Local,timeDivider!~,+,1
+    if ~!Local,timeDivider!~,>,10,
+        set Local,timeDivider,10
+
+    basicMaths Local,aimAngle,~!Local,aimAngle!~,/,~!Local,timeDivider!~
+
+    # Direction multiplier.
+    # TODO Dive into whether this is needed. Look at how the numbers are changing underneath during different states.
+    # absolute Local,aimAngle,~!Local,aimAngle!~
+    if ~!Local,linearStats,distanceFromLine!~,>,0,
+        basicMaths Local,aimAngle,~!Local,aimAngle!~,*,-1
+
+    # Calculate overshoot.
+    getAPVarWithContext ~!Local,instanceName!~,track,lastDistance,Local,lastDistance
+    if ~!Local,lastDistance!~,==,,
+        debug 1,No overshoot history. Setting it up now.
+        set Local,lastDistance,~!Local,distanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,lastDistance!~
+        setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+
+    if ~!Local,distanceInMeters!~,!=,~!Local,lastDistance!~,
+        getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
+        basicMaths Local,distanceChange,~!Local,lastDistance!~,-,~!Local,distanceInMeters!~
+        basicMaths Local,nowChange,~!Local,lastNow!~,-,~!Local,now!~
+        basicMaths Local,metersPerSecond,~!Local,distanceChange!~,/,~!Local,nowChange!~
+
+        basicMaths Local,overshootSeconds,~!Local,distanceInMeters!~,/,~!Local,metersPerSecond!~
+
+        angleDiffRadians Local,planeToLineAngle,~!Local,linearStats,extra,lineAngle!~,~!Local,orientation!~
+
+        basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
+        basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,0.5
+
+        debug 1,Distance has changed. Re-calculated as dC=~!Local,distanceChange!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecond!~
+
+        setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,distanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+
+        # Did we overshoot?
+        set Local,before,0
+        set Local,after,0
+        if ~!Local,lastDistance!~,<,0,
+            set Local,before,1
+        if ~!Local,distanceInMeters!~,<,0,
+            set Local,after,1
+
+        if ~!Local,before!~,!=,~!Local,after!~,
+            debug 1,---------------- Crossed the line. ----------------
+
+    basicMaths Local,aimAngleWithOvershoot,~!Local,aimAngle!~,-,~!Local,overshootCounterAngle!~
+
+    # Disable overshoot protection.
+    # set Local,aimAngleWithOvershoot,~!Local,aimAngle!~
+
+    # Make it available to the AP.
+    radiansToDegrees Local,aimAngle-deg,~!Local,aimAngleWithOvershoot!~
+    setAPVarWithContext ~!Local,instanceName!~,track,aimAngle,~!Local,aimAngleWithOvershoot!~
+    setAPVarWithContext ~!Local,instanceName!~,track,aimAngle-deg,~!Local,aimAngle-deg!~
+
+    # For use in the map.
+    setAPVarWithContext ~!Local,instanceName!~,track,aimLon,~!Local,aimX!~
+    setAPVarWithContext ~!Local,instanceName!~,track,aimLat,~!Local,aimY!~
+
+
+
+    # debug 1,bOffset=~!Local,bOffset!~  lA=~!Local,linearStats,extra,lineAngle!~  b=~!Local,b!~(~!Local,bMeters!~)  bSquared=~!Local,bSquared!~  cSquared=~!Local,cSquared!~  aSquared=~!Local,aSquared!~  distanceInMeters=~!Local,distanceInMeters!~  barLength=~!Local,barLength!~(~!Local,barLengthDegrees!~)
+    debug 2,d=~!Local,distanceInMeters!~(~!Local,linearStats,distanceFromLine!~) effort=~!Local,aimAngle-deg!~ s=~!Local,speed!~ barLength=~!Local,barLength!~ aim=~!Local,aimY!~,~!Local,aimX!~ closeTime=~!Local,closeTime!~=~!Local,now!~,-,~!Local,closeSince!~ multipliers=~!Local,timeMultiplier!~,~!Local,proximityMultiplier!~
+
+    debug 1,effort=~!Local,aimAngle-deg!~  aimAngle=~!Local,aimAngleWithOvershoot!~=~!Local,aimAngle!~,-,~!Local,overshootCounterAngle!~  d=~!Local,distanceInMeters!~  angles: r=~!Local,rawAimAngle!~ h/o=~!Local,orientation!~
+

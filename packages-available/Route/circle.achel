@@ -3,6 +3,7 @@ parameters {"instanceName":"default"}
 
 # Make sure we don't hit the ground while testing.
 altitude ~!Local,instanceName!~,10000
+speed ~!Local,instanceName!~,300
 
 
 # Get information for calculating the pivot.

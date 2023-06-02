@@ -279,7 +279,8 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,takeOffAccelerate,yaw"],
 	setNested ~!Me,stuff!~,output,multiplier,1
 
 	# TODO These need to be abstracted out
-	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,course-devianceInMeters"]
+	# setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,course-devianceInMeters"]
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,line,decision"]
 	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,base,yaw,input,center"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,rudder-req"]
 	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/rudder ~%value%~"]
@@ -385,10 +386,10 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,altitude"],
 	setNested ~!Me,stuff!~,output,multiplier,1
 
 massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,yaw"],
-	setNested ~!Me,stuff!~,output,min,-0.3
+	setNested ~!Me,stuff!~,output,min,-0.5
 	setNested ~!Me,stuff!~,output,center,0
-	setNested ~!Me,stuff!~,output,max,0.3
-	setNested ~!Me,stuff!~,output,multiplier,1
+	setNested ~!Me,stuff!~,output,max,0.5
+	setNested ~!Me,stuff!~,output,multiplier,-1
 
 # Pitch
 # This is an experiment to keep the speed close to ideal using pitch. I need to lay a few more foundations for this to work well.
@@ -410,7 +411,7 @@ pass massSet ["AP,stateRules,~!Tmp,instanceName!~,sustain,pitch"],
 
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,airspeed-deviance"]
-	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,pitch-goal"]
+	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,airspeed-goal"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,elevator-req"]
 	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/elevator ~%value%~"]
 
@@ -427,6 +428,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,followArcSustain,yaw"],
 
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,input,multiplier,1
 	setNested ~!Me,stuff!~,output,max,1
 
 
@@ -468,11 +470,11 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,chill,yaw"],
 massSet ["AP,state,~!Tmp,instanceName!~,arc"],
 	# Basic operations.
 	# Tuning how much value each input has.
-	setNested ~!Me,stuff!~,distanceMultiplier,0.00012
+	setNested ~!Me,stuff!~,distanceMultiplier,0.0004
 	setNested ~!Me,stuff!~,headingMultiplier,7
 
 	# Adding a little weight to help it around a corner.
-	setNested ~!Me,stuff!~,headingManualOffset,-0.3
+	setNested ~!Me,stuff!~,headingManualOffset,-0.2
 
 	# The max (and therefore min=max*-1) range of output.
 	setNested ~!Me,stuff!~,max,10
@@ -504,8 +506,8 @@ massSet ["AP,state,~!Tmp,instanceName!~,arc"],
 massSet ["AP,state,~!Tmp,instanceName!~,line"],
 	# Basic operations.
 	# Tuning how much value each input has.
-	setNested ~!Me,stuff!~,distanceMultiplier,0.0025
-	setNested ~!Me,stuff!~,headingMultiplier,8
+	setNested ~!Me,stuff!~,distanceMultiplier,0.0005
+	setNested ~!Me,stuff!~,headingMultiplier,7
 
 	# Adding a little weight to help it around a corner.
 	setNested ~!Me,stuff!~,headingManualOffset,0
@@ -514,7 +516,7 @@ massSet ["AP,state,~!Tmp,instanceName!~,line"],
 	setNested ~!Me,stuff!~,max,10
 
 	# How much of the input is from the distance. The rest is from the heading.
-	setNested ~!Me,stuff!~,percentDistance,0.5
+	setNested ~!Me,stuff!~,percentDistance,0.7
 
 
 	# Auto-tuning.
@@ -523,15 +525,15 @@ massSet ["AP,state,~!Tmp,instanceName!~,line"],
 	setNested ~!Me,stuff!~,rawDistanceHighTrigger,250
 
 	# What to multiply the sensitivity by to increase or decrease it. Set to 1 to disable.
-	setNested ~!Me,stuff!~,sensitivityIncMultiplier,1.1
-	setNested ~!Me,stuff!~,sensitivityDecMultiplier,0.98
+	setNested ~!Me,stuff!~,sensitivityIncMultiplier,0.98
+	setNested ~!Me,stuff!~,sensitivityDecMultiplier,1.1
 
 	# Max and min sensitivity values.
 	setNested ~!Me,stuff!~,sensitivityMax,1
 	setNested ~!Me,stuff!~,sensitivityMin,0.4
 
 	# The starting value for the sensitivity.
-	setNested ~!Me,stuff!~,sensitivitySeed,1
+	setNested ~!Me,stuff!~,sensitivitySeed,0.5
 
 	# How often to tune the settings. New values only come about once a second. So it should be at least longer than that, probably more.
 	setNested ~!Me,stuff!~,interval,3

@@ -1,0 +1,8 @@
+# Show the autopilot rules for an instance. --showRules=instanceName ~ aircraft,rules
+
+parameters {"instanceName":"default"}
+
+isolate
+    retrieveResults AP,stateRules,~!Local,instanceName!~
+    nested
+    outNow
