@@ -16,3 +16,5 @@ isolate
 
 				# TODO Apply this only when it's needed (most of the time, but not always.)
 				calculateLineState ~!Navigator,instanceName!~
+
+		triggerEvent Navegator,ticked,~!Navigator,instanceName!~

@@ -1,0 +1,12 @@
+# Record the current AP state for later exporting to the CSV file. --recordState=instanceName ~ record,blackbox,hidden
+
+parameters instanceName
+microNow Local,now
+
+debug 3,Got state for ~!Local,instanceName!~ at ~!Local,now!~
+
+isolate
+    get AP,state,~!Local,instanceName!~
+    flatten
+
+    stashResults AP,recorder,~!Local,instanceName!~,~!Local,now!~
