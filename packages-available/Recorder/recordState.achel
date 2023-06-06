@@ -6,7 +6,14 @@ microNow Local,now
 debug 3,Got state for ~!Local,instanceName!~ at ~!Local,now!~
 
 isolate
+    setAPVar ~!Local,instanceName!~,now,~!Local,microNow!~
+    now Local,normalNow
+    fuzzyTime Local,fuzzyTime,~!Local,normalNow!~
+    setAPVar ~!Local,instanceName!~,fuzzyNow,~!Local,fuzzyTime!~
+
     get AP,state,~!Local,instanceName!~
     flatten
 
     stashResults AP,recorder,~!Local,instanceName!~,~!Local,now!~
+
+mark ~!Local,instanceName!~,

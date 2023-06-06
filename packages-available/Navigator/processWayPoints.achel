@@ -119,6 +119,8 @@ loop
 						debug 1,processWayPoints: Triggering requested event ~!Result,eventCategory!~,~!Result,eventName!~ with value "~!Result,eventValue!~".
 						triggerEvent ~!Result,eventCategory!~,~!Result,eventName!~,~!Result,eventValue!~
 
+				mark ~!Local,instanceName!~,Reached waypoint ~!Result,key!~: ~!Result,eventCategory!~,~!Result,eventName!~,~!Result,eventValue!~ lon/lat=~!Result,longitude!~,~!Result,latitude!~   lat/lon=~!Result,latitude!~,~!Result,longitude!~
+
 				set Me,key,~!Result,key!~
 				set Me,instanceName,~!Local,instanceName!~
 				callFeature ~!Navigator,getNext!~
