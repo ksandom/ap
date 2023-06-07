@@ -5,16 +5,20 @@ isolate
 	loop
 		if ~!Result,key!~,!=,0,
 			set Navigator,instanceName,~!Result,key!~
-			if ~!Navigator,origins,~!Navigator,instanceName!~,longitude!~,==,,
-				setOrigin ~!Navigator,instanceName!~,~!AP,state,~!Navigator,instanceName!~,longitude-deg!~,~!AP,state,~!Navigator,instanceName!~,latitude-deg!~
 
-			isolate
-				processWayPoints ~!Navigator,instanceName!~
+			locationHasChanged Local,changed,~!Navigator,instanceName!~
+			if ~!Local,changed!~,==,changed,
 
-			if ~!Navigator,instanceName!~,!=,,
-				calculateDeviance ~!Navigator,instanceName!~
+				if ~!Navigator,origins,~!Navigator,instanceName!~,longitude!~,==,,
+					setOrigin ~!Navigator,instanceName!~,~!AP,state,~!Navigator,instanceName!~,longitude-deg!~,~!AP,state,~!Navigator,instanceName!~,latitude-deg!~
 
-				# TODO Apply this only when it's needed (most of the time, but not always.)
-				calculateLineState ~!Navigator,instanceName!~
+				isolate
+					processWayPoints ~!Navigator,instanceName!~
 
-		triggerEvent Navegator,ticked,~!Navigator,instanceName!~
+				if ~!Navigator,instanceName!~,!=,,
+					calculateDeviance ~!Navigator,instanceName!~
+
+					# TODO Apply this only when it's needed (most of the time, but not always.)
+					calculateLineState ~!Navigator,instanceName!~
+
+				triggerEvent Navegator,ticked,~!Navigator,instanceName!~

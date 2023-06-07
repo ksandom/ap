@@ -1,0 +1,19 @@
+# Test whether the location has changed since the last time we checked. --locationHasChanged=Category,variable,instanceName ~ ap,nav,hidden
+
+parameters Category,variable,instanceName
+
+getCurrentPosition Local,currentLocation
+getAPVarWithContext ~!Local,instanceName!~,changeTracking,lastLongitude,Local,lastLongitude
+getAPVarWithContext ~!Local,instanceName!~,changeTracking,lastLatitude,Local,lastLatitude
+
+set ~!Local,Category!~,~!Local,variable!~,changed
+
+if ~!Local,currentLocation,longitude!~,==,~!Local,lastLongitude!~,
+    if ~!Local,currentLocation,latitude!~,==,~!Local,lastLatitude!~,
+        set ~!Local,Category!~,~!Local,variable!~,notChanged
+
+if ~!~!Local,Category!~,~!Local,variable!~!~,==,changed,
+    setAPVarWithContext ~!Local,instanceName!~,changeTracking,lastLongitude,~!Local,currentLocation,longitude!~
+    setAPVarWithContext ~!Local,instanceName!~,changeTracking,lastLatitude,~!Local,currentLocation,latitude!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~
