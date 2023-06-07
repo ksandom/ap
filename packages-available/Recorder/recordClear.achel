@@ -1,0 +1,5 @@
+# Clear the currently recorded history. --recordClear=instanceName ~ record,blackbox
+
+parameters {"instanceName":"default"}
+
+unset AP,recorder,~!Local,instanceName!~
