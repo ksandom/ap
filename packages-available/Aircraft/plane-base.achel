@@ -22,3 +22,10 @@ massSet ["AP,state,~!Local,instanceName!~"],
 
     # Manoeuvrability.
     setNested ~!Me,stuff!~,cruiseTurningRadiusKM,10
+
+    # Line capture.
+    # If the heading difference is less than this threshold, overshoot protection will not apply.
+    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,15
+    degreesToRadians Local,overshootHeadingThresholdRadians,~!~!Me,stuff!~,overshootHeadingThresholdDegrees!~
+    setNested ~!Me,stuff!~,overshootHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
+

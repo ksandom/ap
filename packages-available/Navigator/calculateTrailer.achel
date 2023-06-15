@@ -106,47 +106,52 @@ if ~!Local,ready!~,==,1,
     if ~!Local,linearStats,distanceFromLine!~,>,0,
         basicMaths Local,aimAngle,~!Local,aimAngle!~,*,-1
 
-    # Calculate overshoot.
-    getAPVarWithContext ~!Local,instanceName!~,track,lastDistance,Local,lastDistance
-    if ~!Local,lastDistance!~,==,,
-        debug 1,No overshoot history. Setting it up now.
-        set Local,lastDistance,~!Local,distanceInMeters!~
-        setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,lastDistance!~
-        setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+    # Overshoot.
+    set Local,shotDoOvershoot,1
+    getAPVar ~!Local,instanceName!~,overshootHeadingThresholdRadians,Local,overshootHeadingThresholdRadians
+    angleDiffRadians Local,planeToLineAngle,~!Local,linearStats,extra,lineAngle!~,~!Local,orientation!~
+    absolute Local,planeToLineAngleAbs,~!Local,planeToLineAngle!~
+    if ~!Local,planeToLineAngleAbs!~,<,~!Local,overshootHeadingThresholdRadians!~,
+        set Local,shotDoOvershoot,0
 
-    if ~!Local,distanceInMeters!~,!=,~!Local,lastDistance!~,
-        getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
-        basicMaths Local,distanceChange,~!Local,lastDistance!~,-,~!Local,distanceInMeters!~
-        basicMaths Local,nowChange,~!Local,lastNow!~,-,~!Local,now!~
-        basicMaths Local,metersPerSecond,~!Local,distanceChange!~,/,~!Local,nowChange!~
+    if ~!Local,shotDoOvershoot!~,==,1,
+        getAPVarWithContext ~!Local,instanceName!~,track,lastDistance,Local,lastDistance
+        if ~!Local,lastDistance!~,==,,
+            debug 1,No overshoot history. Setting it up now.
+            set Local,lastDistance,~!Local,distanceInMeters!~
+            setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,lastDistance!~
+            setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
 
-        basicMaths Local,overshootSeconds,~!Local,distanceInMeters!~,/,~!Local,metersPerSecond!~
+        if ~!Local,distanceInMeters!~,!=,~!Local,lastDistance!~,
+            getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
+            basicMaths Local,distanceChange,~!Local,lastDistance!~,-,~!Local,distanceInMeters!~
+            basicMaths Local,nowChange,~!Local,lastNow!~,-,~!Local,now!~
+            basicMaths Local,metersPerSecond,~!Local,distanceChange!~,/,~!Local,nowChange!~
 
-        angleDiffRadians Local,planeToLineAngle,~!Local,linearStats,extra,lineAngle!~,~!Local,orientation!~
+            basicMaths Local,overshootSeconds,~!Local,distanceInMeters!~,/,~!Local,metersPerSecond!~
 
-        basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
-        basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,0.4
+            basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
+            basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,0.4
 
-        debug 1,Distance has changed. Re-calculated as dC=~!Local,distanceChange!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecond!~
+            debug 2,Distance has changed. Re-calculated as dC=~!Local,distanceChange!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecond!~
 
-        setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,distanceInMeters!~
-        setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+            setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,distanceInMeters!~
+            setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
 
-        # Did we overshoot?
-        set Local,before,0
-        set Local,after,0
-        if ~!Local,lastDistance!~,<,0,
-            set Local,before,1
-        if ~!Local,distanceInMeters!~,<,0,
-            set Local,after,1
+            # Did we overshoot?
+            set Local,before,0
+            set Local,after,0
+            if ~!Local,lastDistance!~,<,0,
+                set Local,before,1
+            if ~!Local,distanceInMeters!~,<,0,
+                set Local,after,1
 
-        if ~!Local,before!~,!=,~!Local,after!~,
-            debug 1,---------------- Crossed the line. ----------------
+            if ~!Local,before!~,!=,~!Local,after!~,
+                debug 1,---------------- Crossed the line. ----------------
 
-    basicMaths Local,aimAngleWithOvershoot,~!Local,aimAngle!~,-,~!Local,overshootCounterAngle!~
-
-    # Disable overshoot protection.
-    # set Local,aimAngleWithOvershoot,~!Local,aimAngle!~
+        basicMaths Local,aimAngleWithOvershoot,~!Local,aimAngle!~,-,~!Local,overshootCounterAngle!~
+    else
+        set Local,aimAngleWithOvershoot,~!Local,aimAngle!~
 
     # Make it available to the AP.
     radiansToDegrees Local,aimAngle-deg,~!Local,aimAngleWithOvershoot!~
@@ -162,5 +167,53 @@ if ~!Local,ready!~,==,1,
     # debug 1,bOffset=~!Local,bOffset!~  lA=~!Local,linearStats,extra,lineAngle!~  b=~!Local,b!~(~!Local,bMeters!~)  bSquared=~!Local,bSquared!~  cSquared=~!Local,cSquared!~  aSquared=~!Local,aSquared!~  distanceInMeters=~!Local,distanceInMeters!~  barLength=~!Local,barLength!~(~!Local,barLengthDegrees!~)
     debug 2,d=~!Local,distanceInMeters!~(~!Local,linearStats,distanceFromLine!~) effort=~!Local,aimAngle-deg!~ s=~!Local,speed!~ barLength=~!Local,barLength!~ aim=~!Local,aimY!~,~!Local,aimX!~ closeTime=~!Local,closeTime!~=~!Local,now!~,-,~!Local,closeSince!~ multipliers=~!Local,timeMultiplier!~,~!Local,proximityMultiplier!~
 
-    debug 1,effort=~!Local,aimAngle-deg!~  aimAngle=~!Local,aimAngleWithOvershoot!~=~!Local,aimAngle!~,-,~!Local,overshootCounterAngle!~  d=~!Local,distanceInMeters!~  angles: r=~!Local,rawAimAngle!~ h/o=~!Local,orientation!~
+    debug 2,effort=~!Local,aimAngle-deg!~  aimAngle=~!Local,aimAngleWithOvershoot!~=~!Local,aimAngle!~,-,~!Local,overshootCounterAngle!~  d=~!Local,distanceInMeters!~  angles: r=~!Local,rawAimAngle!~ h/o=~!Local,orientation!~
+
+    # Generated with ./generateTrailerDebug.sh
+    ifVerboseEnough 1,
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absDistanceInMeters,~!Local,absDistanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,after,~!Local,after!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimAngle,~!Local,aimAngle!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimAngle-deg,~!Local,aimAngle-deg!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimAngleWithOvershoot,~!Local,aimAngleWithOvershoot!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimX,~!Local,aimX!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimY,~!Local,aimY!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aSquared,~!Local,aSquared!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,b,~!Local,b!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,barLength,~!Local,barLength!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,barLengthDegrees,~!Local,barLengthDegrees!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,before,~!Local,before!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bMeters,~!Local,bMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bOffset,~!Local,bOffset!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bSquared,~!Local,bSquared!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeSince,~!Local,closeSince!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeTime,~!Local,closeTime!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,cSquared,~!Local,cSquared!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,destinationX,~!Local,destinationX!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,destinationY,~!Local,destinationY!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,deviance,~!Local,deviance!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceChange,~!Local,distanceChange!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceInMeters,~!Local,distanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceThreshold,~!Local,distanceThreshold!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistance,~!Local,lastDistance!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,linearStats,~!Local,linearStats!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxBarLength,~!Local,maxBarLength!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,metersPerSecond,~!Local,metersPerSecond!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,now,~!Local,now!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,nowChange,~!Local,nowChange!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,orientation,~!Local,orientation!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,orientationDegrees,~!Local,orientationDegrees!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,originX,~!Local,originX!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,originY,~!Local,originY!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootCounterAngle,~!Local,overshootCounterAngle!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootSeconds,~!Local,overshootSeconds!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,planeToLineAngle,~!Local,planeToLineAngle!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,pointX,~!Local,pointX!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,pointY,~!Local,pointY!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,proximityMultiplier,~!Local,proximityMultiplier!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,rawAimAngle,~!Local,rawAimAngle!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,ready,~!Local,ready!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,thesholdBase,~!Local,thesholdBase!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,timeDivider,~!Local,timeDivider!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,timeMultiplier,~!Local,timeMultiplier!~
 
