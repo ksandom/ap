@@ -8,7 +8,7 @@ plane-base ~!Local,instanceName!~
 massSet ["AP,state,~!Local,instanceName!~"],
     # Speeds.
     setNested ~!Me,stuff!~,v1,90
-    setNested ~!Me,stuff!~,v2,170
+    setNested ~!Me,stuff!~,v2,180
     setNested ~!Me,stuff!~,vCruise,300
     setNested ~!Me,stuff!~,vLand,155
 
