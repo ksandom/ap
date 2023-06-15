@@ -58,14 +58,19 @@ if ~!Local,ready!~,==,1,
             debug 1,Set closeSince=~!Local,now!~
 
         basicMaths Local,closeTime,~!Local,now!~,-,~!Local,closeSince!~
-        if ~!Local,closeTime!~,>,1,
-            set Local,timeMultiplier,~!Local,closeTime!~
+        if ~!Local,closeTime!~,>,2,
+            basicMaths Local,timeMultiplier,~!Local,closeTime!~,/,2
 
     # How long should the trailer bar be in meters?
-    basicMaths Local,barLength,~!Local,speed!~,*,50
+    basicMaths Local,barLength,~!Local,speed!~,*,40
     basicMaths Local,barLength,~!Local,barLength!~,*,~!Local,timeMultiplier!~
     basicMaths Local,barLength,~!Local,barLength!~,*,~!Local,proximityMultiplier!~
     basicMaths Local,barLength,~!Local,barLength!~,+,10
+
+    set Local,maxBarLength,100000
+    if ~!Local,barLength!~,>,~!Local,maxBarLength!~,
+        set ~!Local,barLength!~,~!Local,maxBarLength!~
+
     metersToDegrees Local,barLengthDegrees,~!Local,barLength!~
 
     # Calculate aiming point along the track in meters (so the differences don't get lost in rounding errors).
@@ -85,7 +90,7 @@ if ~!Local,ready!~,==,1,
 
     # Sensitivity multiplier.
     # TODO Make this configurable.
-    basicMaths Local,aimAngle,~!Local,aimAngle!~,*,-0.3
+    basicMaths Local,aimAngle,~!Local,aimAngle!~,*,-0.4
 
     # Desensitise with time.
     basicMaths Local,timeDivider,~!Local,timeMultiplier!~,/,40
@@ -120,7 +125,7 @@ if ~!Local,ready!~,==,1,
         angleDiffRadians Local,planeToLineAngle,~!Local,linearStats,extra,lineAngle!~,~!Local,orientation!~
 
         basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
-        basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,0.5
+        basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,0.4
 
         debug 1,Distance has changed. Re-calculated as dC=~!Local,distanceChange!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecond!~
 
