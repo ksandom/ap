@@ -6,6 +6,5 @@ mark ~!Local,instanceName!~,Recording paused.
 recordState ~!Local,instanceName!~
 
 unregisterForEvent Navegator,ticked,recordState,~!Local,instanceName!~
-unregisterForEvent Tui,quit,recordDump,~!Local,instanceName!~
 
 debug 1,Paused flight log for ~!Local,instanceName!~.
