@@ -1,4 +1,4 @@
-# Calculate how to get back on course using a metaphorical trailer bar to guide the steering. --calculateDeviance=instanceName ~ nav,waypoints,calculation
+# Calculate how to get back on course using a metaphorical trailer bar to guide the steering. --calculateTrailer=instanceName ~ nav,waypoints,calculation
 parameters instanceName
 
 set Local,ready,1
@@ -148,6 +148,7 @@ if ~!Local,ready!~,==,1,
 
             if ~!Local,before!~,!=,~!Local,after!~,
                 debug 1,---------------- Crossed the line. ----------------
+                mark ~!Local,instanceName!~,Crossed the line.
 
         basicMaths Local,aimAngleWithOvershoot,~!Local,aimAngle!~,-,~!Local,overshootCounterAngle!~
     else
@@ -170,7 +171,7 @@ if ~!Local,ready!~,==,1,
     debug 2,effort=~!Local,aimAngle-deg!~  aimAngle=~!Local,aimAngleWithOvershoot!~=~!Local,aimAngle!~,-,~!Local,overshootCounterAngle!~  d=~!Local,distanceInMeters!~  angles: r=~!Local,rawAimAngle!~ h/o=~!Local,orientation!~
 
     # Generated with ./generateTrailerDebug.sh
-    ifVerboseEnough 1,
+    isolate
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absDistanceInMeters,~!Local,absDistanceInMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,after,~!Local,after!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimAngle,~!Local,aimAngle!~
