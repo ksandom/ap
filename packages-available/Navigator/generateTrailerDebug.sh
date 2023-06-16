@@ -1,9 +1,30 @@
 #!/bin/bash
 # Generate trailer debugging.
 
+function doLine
+{
+    echo "        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,$1,~!Local,$2!~"
+}
+
+function listVariables
+{
+    grep 'getAPVar.*Local' calculateTrailer.achel | sed 's/.*,Local,//g'
+    grep ' Local,' calculateTrailer.achel | sed 's/.* Local,//g;s/,.*//g'
+}
 
 echo "    # Generated with ./generateTrailerDebug.sh"
-echo "    ifVerboseEnough 1,"
+echo "    isolate "
 while read varName; do
-    echo "        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,$varName,~!Local,$varName!~"
-done < <(grep ' Local,' calculateTrailer.achel | sed 's/.* Local,//g;s/,.*//g' | sort -u)
+    case $varName in
+        "bOffset")
+            doLine "$varName-x" "$varName,x"
+            doLine "$varName-y" "$varName,y"
+        ;;
+        "linearStats")
+            true
+        ;;
+        *)
+            doLine "$varName" "$varName"
+        ;;
+    esac
+done < <(listVariables | sort -u)
