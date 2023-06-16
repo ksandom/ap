@@ -59,7 +59,7 @@ if ~!Local,ready!~,==,1,
 
         basicMaths Local,closeTime,~!Local,now!~,-,~!Local,closeSince!~
         if ~!Local,closeTime!~,>,2,
-            basicMaths Local,timeMultiplier,~!Local,closeTime!~,/,2
+            basicMaths Local,timeMultiplier,~!Local,closeTime!~,/,10
 
     # How long should the trailer bar be in meters?
     basicMaths Local,barLength,~!Local,speed!~,*,40
@@ -67,9 +67,9 @@ if ~!Local,ready!~,==,1,
     basicMaths Local,barLength,~!Local,barLength!~,*,~!Local,proximityMultiplier!~
     basicMaths Local,barLength,~!Local,barLength!~,+,10
 
-    set Local,maxBarLength,100000
+    getAPVar ~!Local,instanceName!~,maxBarLength,Local,maxBarLength
     if ~!Local,barLength!~,>,~!Local,maxBarLength!~,
-        set ~!Local,barLength!~,~!Local,maxBarLength!~
+        set Local,barLength,~!Local,maxBarLength!~
 
     metersToDegrees Local,barLengthDegrees,~!Local,barLength!~
 
@@ -93,12 +93,13 @@ if ~!Local,ready!~,==,1,
     basicMaths Local,aimAngle,~!Local,aimAngle!~,*,-0.4
 
     # Desensitise with time.
-    basicMaths Local,timeDivider,~!Local,timeMultiplier!~,/,40
+    basicMaths Local,timeDivider,~!Local,timeMultiplier!~,/,4
     basicMaths Local,timeDivider,~!Local,timeDivider!~,+,1
     if ~!Local,timeDivider!~,>,10,
         set Local,timeDivider,10
 
-    basicMaths Local,aimAngle,~!Local,aimAngle!~,/,~!Local,timeDivider!~
+    # TODO I think that this is counter-productive. Do more testing.
+    # basicMaths Local,aimAngle,~!Local,aimAngle!~,/,~!Local,timeDivider!~
 
     # Direction multiplier.
     # TODO Dive into whether this is needed. Look at how the numbers are changing underneath during different states.
@@ -106,55 +107,96 @@ if ~!Local,ready!~,==,1,
     if ~!Local,linearStats,distanceFromLine!~,>,0,
         basicMaths Local,aimAngle,~!Local,aimAngle!~,*,-1
 
+
+
+
+    # New overshoot code.
+    # If heading diff is greater than threshold.
+    #   If the new distance is in the direction of closer to the line from the perspective of the old distance.
+    #     Take absolute distance difference.
+    #     Take absolute distance remaining.
+    #     Take absolute remaining distance and divide by absolute distance difference.
+    #     Divide by time difference.
+    #
+    #     If distance remaining is negative
+    #       Invert.
+
     # Overshoot.
-    set Local,shotDoOvershoot,1
+    # If heading diff is greater than threshold.
+    set Local,shouldDoOvershoot,1
+    set Local,overshootWhy,na
     getAPVar ~!Local,instanceName!~,overshootHeadingThresholdRadians,Local,overshootHeadingThresholdRadians
     angleDiffRadians Local,planeToLineAngle,~!Local,linearStats,extra,lineAngle!~,~!Local,orientation!~
     absolute Local,planeToLineAngleAbs,~!Local,planeToLineAngle!~
     if ~!Local,planeToLineAngleAbs!~,<,~!Local,overshootHeadingThresholdRadians!~,
-        set Local,shotDoOvershoot,0
+        set Local,shouldDoOvershoot,0
+        set Local,overshootWhy,angleThreshold: ~!Local,planeToLineAngleAbs!~ < ~!Local,overshootHeadingThresholdRadians!~
 
-    if ~!Local,shotDoOvershoot!~,==,1,
-        getAPVarWithContext ~!Local,instanceName!~,track,lastDistance,Local,lastDistance
-        if ~!Local,lastDistance!~,==,,
-            debug 1,No overshoot history. Setting it up now.
-            set Local,lastDistance,~!Local,distanceInMeters!~
-            setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,lastDistance!~
-            setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+    # Test: If the new distance is in the direction of closer to the line from the perspective of the old distance.
+    getAPVarWithContext ~!Local,instanceName!~,track,lastDistance,Local,lastDistance
+    if ~!Local,lastDistance!~,==,,
+        debug 1,No overshoot history. Setting it up now.
+        set Local,lastDistance,~!Local,distanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,lastDistance!~
+        setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
 
-        if ~!Local,distanceInMeters!~,!=,~!Local,lastDistance!~,
-            getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
-            basicMaths Local,distanceChange,~!Local,lastDistance!~,-,~!Local,distanceInMeters!~
-            basicMaths Local,nowChange,~!Local,lastNow!~,-,~!Local,now!~
-            basicMaths Local,metersPerSecond,~!Local,distanceChange!~,/,~!Local,nowChange!~
+    if ~!Local,distanceInMeters!~,==,~!Local,lastDistance!~,
+        set Local,shouldDoOvershoot,0
+        set Local,overshootWhy,noChange: ~!Local,distanceInMeters!~
 
-            basicMaths Local,overshootSeconds,~!Local,distanceInMeters!~,/,~!Local,metersPerSecond!~
+    set Local,closer,0
+    if ~!Local,lastDistance!~,<,0,
+        if ~!Local,distanceInMeters!~,>,~!Local,lastDistance!~,
+            set Local,closer,1
+    if ~!Local,lastDistance!~,>=,0,
+        if ~!Local,distanceInMeters!~,<,~!Local,lastDistance!~,
+            set Local,closer,1
 
-            basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
-            basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,0.4
+    if ~!Local,closer!~,==,0,
+        set Local,shouldDoOvershoot,0
+        set Local,overshootWhy,notCloser: ~!Local,distanceInMeters!~ vs ~!Local,lastDistance!~,
 
-            debug 2,Distance has changed. Re-calculated as dC=~!Local,distanceChange!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecond!~
+    if ~!Local,shouldDoOvershoot!~,==,1,
+        basicMaths Local,distanceDiff,~!Local,distanceInMeters!~,-,~!Local,lastDistance!~
+        absolute Local,distanceDiffAbsolute,~!Local,distanceDiff!~
+        absolute Local,distanceRemainingAbsolute,~!Local,distanceInMeters!~
 
-            setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,distanceInMeters!~
-            setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+        basicMaths Local,stepsRemaining,~!Local,distanceRemainingAbsolute!~,/,~!Local,distanceDiffAbsolute!~
 
-            # Did we overshoot?
-            set Local,before,0
-            set Local,after,0
-            if ~!Local,lastDistance!~,<,0,
-                set Local,before,1
-            if ~!Local,distanceInMeters!~,<,0,
-                set Local,after,1
+        getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
+        basicMaths Local,nowChange,~!Local,lastNow!~,-,~!Local,now!~
+        basicMaths Local,metersPerSecond,~!Local,distanceDiffAbsolute!~,/,~!Local,nowChange!~
+        basicMaths Local,overshootSeconds,~!Local,distanceRemainingAbsolute!~,/,~!Local,metersPerSecond!~
 
-            if ~!Local,before!~,!=,~!Local,after!~,
-                debug 1,---------------- Crossed the line. ----------------
-                mark ~!Local,instanceName!~,Crossed the line.
+        basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
+        basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,-0.3
+
+
+
+        debug 1,Overshoot dC=~!Local,distanceDiff!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecond!~ oss=~!Local,overshootSeconds!~ oA=~!Local,overshootCounterAngle!~
+
+        # Did we overshoot?
+        set Local,before,0
+        set Local,after,0
+        if ~!Local,lastDistance!~,<,0,
+            set Local,before,1
+        if ~!Local,distanceInMeters!~,<,0,
+            set Local,after,1
+
+        if ~!Local,before!~,!=,~!Local,after!~,
+            debug 1,---------------- Crossed the line. ----------------
+            mark ~!Local,instanceName!~,Crossed the line.
 
         basicMaths Local,aimAngleWithOvershoot,~!Local,aimAngle!~,-,~!Local,overshootCounterAngle!~
     else
         set Local,aimAngleWithOvershoot,~!Local,aimAngle!~
 
+    setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,distanceInMeters!~
+    setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+
+
     # Make it available to the AP.
+    # TODO Change Local,aimAngle-deg to Local,aimAngleWithOvershoot-deg
     radiansToDegrees Local,aimAngle-deg,~!Local,aimAngleWithOvershoot!~
     setAPVarWithContext ~!Local,instanceName!~,track,aimAngle,~!Local,aimAngleWithOvershoot!~
     setAPVarWithContext ~!Local,instanceName!~,track,aimAngle-deg,~!Local,aimAngle-deg!~
@@ -177,6 +219,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimAngle,~!Local,aimAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimAngle-deg,~!Local,aimAngle-deg!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimAngleWithOvershoot,~!Local,aimAngleWithOvershoot!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimAngleWithOvershoot-deg,~!Local,aimAngleWithOvershoot-deg!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimX,~!Local,aimX!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimY,~!Local,aimY!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aSquared,~!Local,aSquared!~
@@ -185,19 +228,23 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,barLengthDegrees,~!Local,barLengthDegrees!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,before,~!Local,before!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bMeters,~!Local,bMeters!~
-        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bOffset,~!Local,bOffset!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bOffset-x,~!Local,bOffset,x!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bOffset-y,~!Local,bOffset,y!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bSquared,~!Local,bSquared!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closer,~!Local,closer!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeSince,~!Local,closeSince!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeTime,~!Local,closeTime!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,cSquared,~!Local,cSquared!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,destinationX,~!Local,destinationX!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,destinationY,~!Local,destinationY!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,deviance,~!Local,deviance!~
-        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceChange,~!Local,distanceChange!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiff,~!Local,distanceDiff!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceInMeters,~!Local,distanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceRemainingAbsolute,~!Local,distanceRemainingAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceThreshold,~!Local,distanceThreshold!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistance,~!Local,lastDistance!~
-        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,linearStats,~!Local,linearStats!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastNow,~!Local,lastNow!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxBarLength,~!Local,maxBarLength!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,metersPerSecond,~!Local,metersPerSecond!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,now,~!Local,now!~
@@ -207,14 +254,19 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,originX,~!Local,originX!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,originY,~!Local,originY!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootCounterAngle,~!Local,overshootCounterAngle!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootSeconds,~!Local,overshootSeconds!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootWhy,~!Local,overshootWhy!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,planeToLineAngle,~!Local,planeToLineAngle!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,planeToLineAngleAbs,~!Local,planeToLineAngleAbs!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,pointX,~!Local,pointX!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,pointY,~!Local,pointY!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,proximityMultiplier,~!Local,proximityMultiplier!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,rawAimAngle,~!Local,rawAimAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,ready,~!Local,ready!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,shouldDoOvershoot,~!Local,shouldDoOvershoot!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,speed,~!Local,speed!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,stepsRemaining,~!Local,stepsRemaining!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,thesholdBase,~!Local,thesholdBase!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,timeDivider,~!Local,timeDivider!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,timeMultiplier,~!Local,timeMultiplier!~
-
