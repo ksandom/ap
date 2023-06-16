@@ -7,7 +7,8 @@ debug 1,periodicHistoryToKML: instanceName: ~!Local,instanceName!~ intervalInMil
 # TODO make this instance aware
 set Navigator,historyHandeler,
 	parameters instanceName
-	historyToKML ~!Local,instanceName!~
+	isolate
+		historyToKML ~!Local,instanceName!~
 
 createTimer history,~!Local,intervalInMilliseconds!~
 registerOnceForEvent Timer,history,~!Navigator,historyHandeler!~,~!Local,instanceName!~
