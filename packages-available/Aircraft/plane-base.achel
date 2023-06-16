@@ -25,7 +25,8 @@ massSet ["AP,state,~!Local,instanceName!~"],
 
     # Line capture.
     # If the heading difference is less than this threshold, overshoot protection will not apply.
-    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,15
+    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,5
     degreesToRadians Local,overshootHeadingThresholdRadians,~!~!Me,stuff!~,overshootHeadingThresholdDegrees!~
     setNested ~!Me,stuff!~,overshootHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
+    setNested ~!Me,stuff!~,maxBarLength,4000
 
