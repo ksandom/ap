@@ -36,12 +36,12 @@ if ~!Local,timeSinceLastTune!~,>,~!Local,interval!~,
 
     if ~!Local,absDistanceOffset!~,<,~!Local,rawDistanceLowTrigger!~,
         basicMaths Local,sensitivity,~!Local,sensitivity!~,*,~!Local,sensitivityDecMultiplier!~
-        debug 1,Sensititivy decrease: ~!Local,sensitivity!~
+        debug 2,Sensititivy decrease: ~!Local,sensitivity!~
     elseIf ~!Local,absDistanceOffset!~,>,~!Local,rawDistanceHighTrigger!~,
         basicMaths Local,sensitivity,~!Local,sensitivity!~,*,~!Local,sensitivityIncMultiplier!~
-        debug 1,Sensititivy increase: ~!Local,sensitivity!~
+        debug 2,Sensititivy increase: ~!Local,sensitivity!~
     else
-        debug 1,No change in sensititivy: ~!Local,sensitivity!~
+        debug 2,No change in sensititivy: ~!Local,sensitivity!~
 
 assertWithinRange Local,sensitivity,~!Local,sensitivityMax!~,~!Local,sensitivity!~,~!Local,sensitivityMin!~
 setAPVarWithContext ~!Local,instanceName!~,~!Local,type!~Sensitivity,sensitivity,~!Local,sensitivity!~
@@ -78,6 +78,6 @@ set ~!Local,Category!~,~!Local,variable!~,~!Local,scaled!~
 # (~!Local,now!~,-,~!Local,lastTune!~==>~!Local,timeSinceLastTune!~,>,~!Local,interval!~)
 
 debug 2,Detailed: dO=~!Local,scaledDistanceOffset!~(~!Local,distanceOffset!~) hO=~!Local,scaledHeadingOffset!~(~!Local,headingOffset!~) d%=~!Local,percentDistance!~ h%=~!Local,percentHeading!~ dA=~!Local,applyDistance!~ hA=~!Local,applyHeading!~ s=~!Local,sensitivity!~   v=~!Local,combined!~ , ~!Local,restrained!~ , ~!Local,scaled!~
-debug 1,dO=~!Local,distanceOffset!~ hO=~!Local,headingOffset!~ d%=~!Local,percentDistance!~ h%=~!Local,percentHeading!~ dA=~!Local,applyDistance!~ hA=~!Local,applyHeading!~ s=~!Local,sensitivity!~   v=~!Local,combined!~ , ~!Local,restrained!~ , ~!Local,scaled!~
+debug 2,dO=~!Local,distanceOffset!~ hO=~!Local,headingOffset!~ d%=~!Local,percentDistance!~ h%=~!Local,percentHeading!~ dA=~!Local,applyDistance!~ hA=~!Local,applyHeading!~ s=~!Local,sensitivity!~   v=~!Local,combined!~ , ~!Local,restrained!~ , ~!Local,scaled!~
 
 makeAvailable ~!Local,Category!~,~!Local,variable!~
