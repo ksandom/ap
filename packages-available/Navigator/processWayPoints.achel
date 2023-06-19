@@ -90,12 +90,25 @@ loop
 
 
 			set Local,shouldDoNext,0
+
+			# Is the waypoint behind us, but close-ISH to us?
+			angleDiffDegrees Local,WaypointHeadingDiff,~!AP,state,~!Local,instanceName!~,track-goal!~,
+			absolute Local,absoluteAngleDegrees,~!Local,WaypointHeadingDiff!~,~!AP,state,~!Local,instanceName!~,heading-deg!~
+			if ~!Local,absoluteAngleDegrees!~,>,90,
+				basicMaths Local,allowableRadius,~!AP,state,~!Local,instanceName!~,airspeed-kt!~,*,50
+				getAPVar ~!Local,instanceName!~,distance,Local,distanceToWaypoint
+				degreesToMeters Local,radiusToWaypoint,~!Local,distanceToWaypoint!~
+				if ~!Local,radiusToWaypoint!~,<,~!Local,allowableRadius!~,
+					set Local,shouldDoNext,1
+					debug 1,~!Result,instanceName!~: The waypoint is behind us at ~!Local,WaypointHeadingDiff!~ degrees. And it is (~!Local,radiusToWaypoint!~m) within the allowable radius (~!Local,allowableRadius!~m) for this speed (~!AP,state,~!Local,instanceName!~,airspeed-kt!~).
+
 			# Are we close in time to the waypoint?
 			set Local,timeDistanceThreshold,3
 			if ~!Result,timeToWaypoint!~,<,~!Local,timeDistanceThreshold!~,
 				set Local,shouldDoNext,1
 				debug 1,~!Result,instanceName!~: Our time (~!AP,state,~!Local,instanceName!~,distance!~) to the next waypoint is less than our giveUpThreshold (~!Local,timeDistanceThreshold!~). Let's move on to the next one.
 
+			# Have we passed the waypoint?
 			if ~!Result,minDistance!~,!=,,
 				set Local,minDistanceMultiplier,3
 				basicMaths Local,minDistanceMultiplied,~!Result,minDistance!~,*,~!Local,minDistanceMultiplier!~
