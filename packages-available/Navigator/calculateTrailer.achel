@@ -90,7 +90,7 @@ if ~!Local,ready!~,==,1,
 
     # Sensitivity multiplier.
     # TODO Make this configurable.
-    basicMaths Local,aimAngle,~!Local,aimAngle!~,*,-0.4
+    basicMaths Local,aimAngle,~!Local,aimAngle!~,*,0.4
 
     # Desensitise with time.
     basicMaths Local,timeDivider,~!Local,timeMultiplier!~,/,4
@@ -98,14 +98,6 @@ if ~!Local,ready!~,==,1,
     if ~!Local,timeDivider!~,>,10,
         set Local,timeDivider,10
 
-    # TODO I think that this is counter-productive. Do more testing.
-    # basicMaths Local,aimAngle,~!Local,aimAngle!~,/,~!Local,timeDivider!~
-
-    # Direction multiplier.
-    # TODO Dive into whether this is needed. Look at how the numbers are changing underneath during different states.
-    # absolute Local,aimAngle,~!Local,aimAngle!~
-    if ~!Local,linearStats,distanceFromLine!~,>,0,
-        basicMaths Local,aimAngle,~!Local,aimAngle!~,*,-1
 
 
 
@@ -196,7 +188,6 @@ if ~!Local,ready!~,==,1,
 
 
     # Make it available to the AP.
-    # TODO Change Local,aimAngle-deg to Local,aimAngleWithOvershoot-deg
     radiansToDegrees Local,aimAngle-deg,~!Local,aimAngleWithOvershoot!~
     setAPVarWithContext ~!Local,instanceName!~,track,aimAngle,~!Local,aimAngleWithOvershoot!~
     setAPVarWithContext ~!Local,instanceName!~,track,aimAngle-deg,~!Local,aimAngle-deg!~
@@ -230,6 +221,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bMeters,~!Local,bMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bOffset-x,~!Local,bOffset,x!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bOffset-y,~!Local,bOffset,y!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,branch,~!Local,branch!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bSquared,~!Local,bSquared!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closer,~!Local,closer!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeSince,~!Local,closeSince!~

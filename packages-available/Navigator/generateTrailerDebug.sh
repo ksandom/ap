@@ -10,6 +10,7 @@ function listVariables
 {
     grep 'getAPVar.*Local' calculateTrailer.achel | sed 's/.*,Local,//g'
     grep ' Local,' calculateTrailer.achel | sed 's/.* Local,//g;s/,.*//g'
+    echo "branch"
 }
 
 echo "    # Generated with ./generateTrailerDebug.sh"
