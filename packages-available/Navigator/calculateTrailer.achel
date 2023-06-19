@@ -161,7 +161,7 @@ if ~!Local,ready!~,==,1,
         basicMaths Local,overshootSeconds,~!Local,distanceRemainingAbsolute!~,/,~!Local,metersPerSecond!~
 
         basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
-        basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,-0.3
+        basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,-0.2
 
 
 
