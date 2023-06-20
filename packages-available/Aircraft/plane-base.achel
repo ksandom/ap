@@ -30,3 +30,6 @@ massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
     setNested ~!Me,stuff!~,maxBarLength,40000
 
+    setNested ~!Me,stuff!~,trailerStrength,2
+    setNested ~!Me,stuff!~,headingStrength,0.1
+    setNested ~!Me,stuff!~,overshootStrength,0.2

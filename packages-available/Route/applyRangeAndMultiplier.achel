@@ -1,0 +1,8 @@
+# Apply a multiplier, and assert a specified range to a specified value. The range is +/- the maxValue. --applyRangeAndMultiplier=Category,variable,maxValue,value,[minValue],multiplier ~ data
+
+parameters Category,variable,maxValue,value,inputMinValue,multiplier
+
+applyMultiplier Local,value,~!Local,multiplier!~,~!Local,value!~
+assertWithinRange ~!Local,Category!~,~!Local,variable!~,~!Local,maxValue!~,~!Local,value!~,~!Local,inputMinValue!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~
