@@ -92,8 +92,8 @@ loop
 			set Local,shouldDoNext,0
 
 			# Is the waypoint behind us, but close-ISH to us?
-			angleDiffDegrees Local,WaypointHeadingDiff,~!AP,state,~!Local,instanceName!~,track-goal!~,
-			absolute Local,absoluteAngleDegrees,~!Local,WaypointHeadingDiff!~,~!AP,state,~!Local,instanceName!~,heading-deg!~
+			angleDiffDegrees Local,WaypointHeadingDiff,~!AP,state,~!Local,instanceName!~,track-goal!~,~!AP,state,~!Local,instanceName!~,heading-deg!~
+			absolute Local,absoluteAngleDegrees,~!Local,WaypointHeadingDiff!~
 			if ~!Local,absoluteAngleDegrees!~,>,90,
 				basicMaths Local,allowableRadius,~!AP,state,~!Local,instanceName!~,airspeed-kt!~,*,50
 				getAPVar ~!Local,instanceName!~,distance,Local,distanceToWaypoint
@@ -101,20 +101,6 @@ loop
 				if ~!Local,radiusToWaypoint!~,<,~!Local,allowableRadius!~,
 					set Local,shouldDoNext,1
 					debug 1,~!Result,instanceName!~: The waypoint is behind us at ~!Local,WaypointHeadingDiff!~ degrees. And it is (~!Local,radiusToWaypoint!~m) within the allowable radius (~!Local,allowableRadius!~m) for this speed (~!AP,state,~!Local,instanceName!~,airspeed-kt!~).
-
-			# Are we close in time to the waypoint?
-			set Local,timeDistanceThreshold,3
-			if ~!Result,timeToWaypoint!~,<,~!Local,timeDistanceThreshold!~,
-				set Local,shouldDoNext,1
-				debug 1,~!Result,instanceName!~: Our time (~!AP,state,~!Local,instanceName!~,distance!~) to the next waypoint is less than our giveUpThreshold (~!Local,timeDistanceThreshold!~). Let's move on to the next one.
-
-			# Have we passed the waypoint?
-			if ~!Result,minDistance!~,!=,,
-				set Local,minDistanceMultiplier,3
-				basicMaths Local,minDistanceMultiplied,~!Result,minDistance!~,*,~!Local,minDistanceMultiplier!~
-				if ~!Result,distance!~,>,~!Local,minDistanceMultiplied!~,
-					set Local,shouldDoNext,1
-					debug 1,~!Result,instanceName!~: We are (~!Result,distance!~) more than ~!Local,minDistanceMultiplier!~ times (~!Local,minDistanceMultiplied!~) the closest distance (~!Result,minDistance!~) we have been to the current waypoint. Assuming that we have missed it.
 
 			if ~!Local,shouldDoNext!~,==,1,
 				debug 1,processWayPoints: ~!Result,instanceName!~ reached waypoint ~!Result,longitude!~,~!Result,latitude!~. ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~
