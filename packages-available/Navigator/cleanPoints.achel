@@ -58,7 +58,7 @@ if ~!Local,canDoCalculations!~,==,1,
 
         if ~!Local,pointsSkipped!~,>,~!Local,maxPointsToSkip!~,
             # We didn't use live last time. We should definitely do so this time.
-            debug 1,We would have skipped this point. But we would exceed maxPointsToSkip (~!Local,maxPointsToSkip!~).
+            debug 1,  We would have skipped this point. But we would exceed maxPointsToSkip (~!Local,maxPointsToSkip!~).
             set Local,useLive,1
             set Local,pointsSkipped,0
             set Local,shouldSkipPoint,1
@@ -72,7 +72,6 @@ if ~!Local,canDoCalculations!~,==,1,
         debug 1,Requesting skip ~!Local,instanceName!~: ~!Local,predictedLocation,latitude!~,~!Local,predictedLocation,longitude!~
     else
         setNamedPosition ~!Local,instanceName!~,pointsCleaning,lastPosition,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~,silent
-        debug 1,Using original values ~!Local,instanceName!~.
 
 
 # Final basic checks.
