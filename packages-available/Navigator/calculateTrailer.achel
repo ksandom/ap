@@ -89,7 +89,8 @@ if ~!Local,ready!~,==,1,
     angleDiffRadians Local,aimAngle,~!Local,linearStats,extra,lineAngle!~,~!Local,rawAimAngle!~
     basicMaths Local,aimAngle,~!Local,aimAngle!~,*,-1
 
-    angleDiffRadians Local,headingOffset,~!Local,rawAimAngle!~,~!Local,orientation!~
+    # angleDiffRadians Local,headingOffset,~!Local,rawAimAngle!~,~!Local,orientation!~
+    angleDiffRadians Local,headingOffset,~!Local,linearStats,extra,lineAngle!~,~!Local,orientation!~
 
     # Desensitise with time.
     basicMaths Local,timeDivider,~!Local,closeTime!~,/,100
@@ -139,10 +140,12 @@ if ~!Local,ready!~,==,1,
     set Local,closer,0
     if ~!Local,lastDistance!~,<,0,
         if ~!Local,distanceInMeters!~,>,~!Local,lastDistance!~,
-            set Local,closer,1
+            if ~!Local,distanceInMeters!~,<,0,
+                set Local,closer,1
     if ~!Local,lastDistance!~,>=,0,
         if ~!Local,distanceInMeters!~,<,~!Local,lastDistance!~,
-            set Local,closer,1
+            if ~!Local,distanceInMeters!~,>,0,
+                set Local,closer,1
 
     if ~!Local,closer!~,==,0,
         set Local,shouldDoOvershoot,0
@@ -156,11 +159,13 @@ if ~!Local,ready!~,==,1,
         basicMaths Local,stepsRemaining,~!Local,distanceRemainingAbsolute!~,/,~!Local,distanceDiffAbsolute!~
 
         getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
-        basicMaths Local,nowChange,~!Local,lastNow!~,-,~!Local,now!~
+        basicMaths Local,nowChange,~!Local,now!~,-,~!Local,lastNow!~
         basicMaths Local,metersPerSecond,~!Local,distanceDiffAbsolute!~,/,~!Local,nowChange!~
         basicMaths Local,overshootSeconds,~!Local,distanceRemainingAbsolute!~,/,~!Local,metersPerSecond!~
 
-        basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
+        # basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
+        basicMaths Local,overshootCounterAngle,1,/,~!Local,overshootSeconds!~
+        basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,-1
 
 
 

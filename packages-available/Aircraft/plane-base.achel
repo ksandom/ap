@@ -48,12 +48,12 @@ massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,trailerCruise,overshootHeadingThresholdDegrees,5
     degreesToRadians Local,overshootHeadingThresholdRadians,~!~!Me,stuff!~,trailerCruise,overshootHeadingThresholdDegrees!~
     setNested ~!Me,stuff!~,trailerCruise,overshootHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
-    setNested ~!Me,stuff!~,trailerCruise,maxBarLength,40000
+    setNested ~!Me,stuff!~,trailerCruise,maxBarLength,20000
 
-    setNested ~!Me,stuff!~,trailerCruise,strengthTrailer,0.6
-    setNested ~!Me,stuff!~,trailerCruise,strengthHeadingHigh,0.3
-    setNested ~!Me,stuff!~,trailerCruise,strengthHeadingLow,0.01
+    setNested ~!Me,stuff!~,trailerCruise,strengthTrailer,1
+    setNested ~!Me,stuff!~,trailerCruise,strengthHeadingHigh,0.2
+    setNested ~!Me,stuff!~,trailerCruise,strengthHeadingLow,0.05
     setNested ~!Me,stuff!~,trailerCruise,strengthHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
-    setNested ~!Me,stuff!~,trailerCruise,strengthOvershoot,0.8
+    setNested ~!Me,stuff!~,trailerCruise,strengthOvershoot,4
 
 trailerProfile ~!Local,instanceName!~,trailerCruise
