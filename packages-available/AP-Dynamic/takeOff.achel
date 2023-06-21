@@ -7,7 +7,8 @@ if ~!Local,instanceName!~,==,,
 
 debug 2,takeOff: instanceName=~!Local,instanceName!~
 
-
+trailerProfile ~!Local,instanceName!~,trailerTakeOff
+resetTrailer ~!Local,instanceName!~
 
 # Prepare the plane for flight
 deliver clientSocket,~!Local,instanceName!~,set /controls/flight/flaps 0.3

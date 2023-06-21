@@ -14,14 +14,14 @@ massSet ["AP,state,~!Local,instanceName!~"],
     # Altitudes.
     setNested ~!Me,stuff!~,safeAltitude,4000
     setNested ~!Me,stuff!~,altitudeOffsetAtSealevel,1150
-    setNested ~!Me,stuff!~,cruiseAltitude,10000
+    setNested ~!Me,stuff!~,trailerCruiseAltitude,10000
 
     # Thrust.
-    setNested ~!Me,stuff!~,takeOffThrust,1
+    setNested ~!Me,stuff!~,trailerTakeOffThrust,1
     setNested ~!Me,stuff!~,climbThrust,0.8
 
     # Manoeuvrability.
-    setNested ~!Me,stuff!~,cruiseTurningRadiusKM,10
+    setNested ~!Me,stuff!~,trailerCruiseTurningRadiusKM,10
 
     # Points cleaning.
     setNested ~!Me,stuff!~,pointsCleaningAngleToleranceDegrees,3
@@ -30,12 +30,30 @@ massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,maxPointsToSkip,2
 
     # Line capture.
-    # If the heading difference is less than this threshold, overshoot protection will not apply.
-    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,5
-    degreesToRadians Local,overshootHeadingThresholdRadians,~!~!Me,stuff!~,overshootHeadingThresholdDegrees!~
-    setNested ~!Me,stuff!~,overshootHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
-    setNested ~!Me,stuff!~,maxBarLength,40000
+    # NOTE that If these settings get added to. They need to be added to trailerProfile.achel.
 
-    setNested ~!Me,stuff!~,trailerStrength,0.6
-    setNested ~!Me,stuff!~,headingStrength,0.2
-    setNested ~!Me,stuff!~,overshootStrength,0.2
+    # Take off settings.
+    setNested ~!Me,stuff!~,trailerTakeOff,overshootHeadingThresholdDegrees,5
+    degreesToRadians Local,overshootHeadingThresholdRadians,~!~!Me,stuff!~,trailerTakeOff,overshootHeadingThresholdDegrees!~
+    setNested ~!Me,stuff!~,trailerTakeOff,overshootHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
+    setNested ~!Me,stuff!~,trailerTakeOff,maxBarLength,80000
+
+    setNested ~!Me,stuff!~,trailerTakeOff,strengthTrailer,1.2
+    setNested ~!Me,stuff!~,trailerTakeOff,strengthHeadingHigh,0
+    setNested ~!Me,stuff!~,trailerTakeOff,strengthHeadingLow,0
+    setNested ~!Me,stuff!~,trailerTakeOff,strengthHeadingThresholdRadians,0
+    setNested ~!Me,stuff!~,trailerTakeOff,strengthOvershoot,0
+
+    # Cruise settings.
+    setNested ~!Me,stuff!~,trailerCruise,overshootHeadingThresholdDegrees,5
+    degreesToRadians Local,overshootHeadingThresholdRadians,~!~!Me,stuff!~,trailerCruise,overshootHeadingThresholdDegrees!~
+    setNested ~!Me,stuff!~,trailerCruise,overshootHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
+    setNested ~!Me,stuff!~,trailerCruise,maxBarLength,40000
+
+    setNested ~!Me,stuff!~,trailerCruise,strengthTrailer,0.6
+    setNested ~!Me,stuff!~,trailerCruise,strengthHeadingHigh,0.3
+    setNested ~!Me,stuff!~,trailerCruise,strengthHeadingLow,0.01
+    setNested ~!Me,stuff!~,trailerCruise,strengthHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
+    setNested ~!Me,stuff!~,trailerCruise,strengthOvershoot,0.8
+
+trailerProfile ~!Local,instanceName!~,trailerCruise

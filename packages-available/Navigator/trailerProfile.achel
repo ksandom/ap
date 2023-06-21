@@ -1,0 +1,26 @@
+# Choose the profile to use for the SandomTrailer algorithm. --trailerProfile=instanceName,profileName ~ navigation,trailer
+
+parameters {"instanceName":"default","profileName":"trailerCruise"}
+
+debug 1,Choosing trailer profile: ~!Local,profileName!~ for instance: ~!Local,instanceName!~.
+
+# This reduces code duplication.
+set Local,copyVar,
+    parameters instanceName,profileName,variableName
+    getAPVarWithContext ~!Local,instanceName!~,~!Local,profileName!~,~!Local,variableName!~,Local,value
+    setAPVar ~!Local,instanceName!~,~!Local,variableName!~,~!Local,value!~
+
+    debug 1,  Copied var: ~!Local,instanceName!~,~!Local,profileName!~,~!Local,variableName!~: ~!Local,value!~
+
+
+# Do the work.
+set Local,commonParameters,~!Local,copyVar!~,~!Local,instanceName!~,~!Local,profileName!~
+
+callFeatureNoReturn ~!Local,commonParameters!~,overshootHeadingThresholdDegrees
+callFeatureNoReturn ~!Local,commonParameters!~,overshootHeadingThresholdRadians
+callFeatureNoReturn ~!Local,commonParameters!~,maxBarLength
+callFeatureNoReturn ~!Local,commonParameters!~,strengthTrailer
+callFeatureNoReturn ~!Local,commonParameters!~,strengthHeadingHigh
+callFeatureNoReturn ~!Local,commonParameters!~,strengthHeadingLow
+callFeatureNoReturn ~!Local,commonParameters!~,strengthHeadingThresholdRadians
+callFeatureNoReturn ~!Local,commonParameters!~,strengthOvershoot

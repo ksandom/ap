@@ -77,12 +77,12 @@ if ~!Local,canDoCalculations!~,==,1,
 # Final basic checks.
 if ~!Local,currentPosition,longitude!~,==,~!Local,lastPosition,lon!~,
     debug 1,~!Local,instanceName!~: Longitude didn't change between these two points. Requesting that this point gets skipped.
-    setNamedPosition ~!Local,instanceName!~,pointsCleaning,shouldSkip-longitude,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~
+    # setNamedPosition ~!Local,instanceName!~,pointsCleaning,shouldSkip-longitude,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~
     set Local,shouldSkipPoint,1
 
 if ~!Local,currentPosition,latitude!~,==,~!Local,lastPosition,lat!~,
     debug 1,~!Local,instanceName!~: Latitude didn't change between these two points. Requesting that this point gets skipped.
-    setNamedPosition ~!Local,instanceName!~,pointsCleaning,shouldSkip-latitude,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~
+    # setNamedPosition ~!Local,instanceName!~,pointsCleaning,shouldSkip-latitude,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~
     set Local,shouldSkipPoint,1
 
 

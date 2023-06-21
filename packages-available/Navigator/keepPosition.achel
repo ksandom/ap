@@ -2,4 +2,6 @@
 parameters {"instanceName":"default"}
 
 # Save our history.
-keepPoint ~!Local,instanceName!~,history,~!AP,state,~!Local,instanceName!~,longitude-deg!~,~!AP,state,~!Local,instanceName!~,latitude-deg!~,~!AP,state,~!Local,instanceName!~,altitude-ft!~
+getAPVarWithContext ~!Local,instanceName!~,pointsCleaning,shouldSkipPoint,Local,shouldSkipPoint
+if ~!Local,shouldSkipPoint!~,==,0,
+    keepPoint ~!Local,instanceName!~,history,~!AP,state,~!Local,instanceName!~,longitude-deg!~,~!AP,state,~!Local,instanceName!~,latitude-deg!~,~!AP,state,~!Local,instanceName!~,altitude-ft!~

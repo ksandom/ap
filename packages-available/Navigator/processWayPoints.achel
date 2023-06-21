@@ -24,6 +24,9 @@ set Navigator,getNext,
 	setAPVarWithContext ~!Local,instanceName!~,arcSensitivity,sensitivity,
 	setAPVarWithContext ~!Local,instanceName!~,lineSensitivity,sensitivity,
 
+	# Reset the trailer so that we don't get wobble.
+	resetTrailer ~!Local,instanceName!~
+
 # Clean points.
 cleanPoints ~!Local,instanceName!~
 getAPVarWithContext ~!Local,instanceName!~,pointsCleaning,shouldSkipPoint,Local,shouldSkipPoint
