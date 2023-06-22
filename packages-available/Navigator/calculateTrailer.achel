@@ -190,22 +190,26 @@ if ~!Local,ready!~,==,1,
     setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
 
 
-    # Choose weights.
-    getAPVar ~!Local,instanceName!~,strengthHeadingHigh,Local,strengthHeadingHigh
-    getAPVar ~!Local,instanceName!~,strengthHeadingLow,Local,strengthHeadingLow
-    getAPVar ~!Local,instanceName!~,strengthHeadingThresholdRadians,Local,strengthHeadingThresholdRadians
-
+    # Assert that we are in the right trailerProfile.
     absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
-    if ~!Local,absoluteHeadingOffset!~,>,~!Local,strengthHeadingThresholdRadians!~,
-        set Local,strengthHeading,~!Local,strengthHeadingHigh!~
-        debug 1,Heading high: ~!Local,absoluteHeadingOffset!~,>,~!Local,strengthHeadingThresholdRadians!~ => ~!Local,strengthHeading!~
+    getAPVar ~!Local,instanceName!~,closeHeadingDiffRadians,Local,closeHeadingDiffRadians
+    getAPVar ~!Local,instanceName!~,closeDistance,Local,closeDistance
+    set Local,profileSelector,far
+    if ~!Local,absoluteHeadingOffset!~,<,~!Local,closeHeadingDiffRadians!~,
+        if ~!Local,distanceInMeters!~,<,~!Local,closeDistance!~,
+            set Local,profileSelector,close
+
+    if ~!Local,profileSelector!~,==,close,
+        getAPVar ~!Local,instanceName!~,trailerProfileClose,Local,trailerProfileToApply
     else
-        set Local,strengthHeading,~!Local,strengthHeadingLow!~
-        debug 1,Heading low: ~!Local,absoluteHeadingOffset!~,!>,~!Local,strengthHeadingThresholdRadians!~ => ~!Local,strengthHeading!~
+        getAPVar ~!Local,instanceName!~,trailerProfileFar,Local,trailerProfileToApply
+
+    trailerProfile ~!Local,instanceName!~,~!Local,trailerProfileToApply!~
 
 
     # Apply weights.
     getAPVar ~!Local,instanceName!~,strengthTrailer,Local,strengthTrailer
+    getAPVar ~!Local,instanceName!~,strengthHeading,Local,strengthHeading
     getAPVar ~!Local,instanceName!~,strengthOvershoot,Local,strengthOvershoot
 
     applyRangeAndMultiplier Local,adjustedTrailer,1,~!Local,aimAngle!~,,~!Local,strengthTrailer!~
@@ -224,7 +228,6 @@ if ~!Local,ready!~,==,1,
     # For use in the map.
     setAPVarWithContext ~!Local,instanceName!~,track,aimLon,~!Local,aimX!~
     setAPVarWithContext ~!Local,instanceName!~,track,aimLat,~!Local,aimY!~
-
 
 
     # debug 1,bOffset=~!Local,bOffset!~  lA=~!Local,linearStats,extra,lineAngle!~  b=~!Local,b!~(~!Local,bMeters!~)  bSquared=~!Local,bSquared!~  cSquared=~!Local,cSquared!~  aSquared=~!Local,aSquared!~  distanceInMeters=~!Local,distanceInMeters!~  barLength=~!Local,barLength!~(~!Local,barLengthDegrees!~)
@@ -254,6 +257,8 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bOffset-y,~!Local,bOffset,y!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,branch,~!Local,branch!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bSquared,~!Local,bSquared!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeDistance,~!Local,closeDistance!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeHeadingDiffRadians,~!Local,closeHeadingDiffRadians!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closer,~!Local,closer!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeSince,~!Local,closeSince!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeTime,~!Local,closeTime!~
@@ -287,6 +292,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,planeToLineAngleAbs,~!Local,planeToLineAngleAbs!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,pointX,~!Local,pointX!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,pointY,~!Local,pointY!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,profileSelector,~!Local,profileSelector!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,proximityMultiplier,~!Local,proximityMultiplier!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,rawAimAngle,~!Local,rawAimAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,ready,~!Local,ready!~
@@ -294,11 +300,9 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,speed,~!Local,speed!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,stepsRemaining,~!Local,stepsRemaining!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthHeading,~!Local,strengthHeading!~
-        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthHeadingHigh,~!Local,strengthHeadingHigh!~
-        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthHeadingLow,~!Local,strengthHeadingLow!~
-        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthHeadingThresholdRadians,~!Local,strengthHeadingThresholdRadians!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthOvershoot,~!Local,strengthOvershoot!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthTrailer,~!Local,strengthTrailer!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,thesholdBase,~!Local,thesholdBase!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,timeDivider,~!Local,timeDivider!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,timeMultiplier,~!Local,timeMultiplier!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,trailerProfileToApply,~!Local,trailerProfileToApply!~

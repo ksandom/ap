@@ -373,7 +373,7 @@ pass
 		setNested ["~!Me,stuff!~","input","events","sustain","debugLevel","1"]
 
 registerForEvent AP,sustain,levelOut
-registerForEvent AP,sustain,trailerProfile,~!Local,instanceName!~,trailerCruise
+registerForEvent AP,sustain,trailerProfile,~!Local,instanceName!~,trailerCruiseFindLine
 
 
 # Sustain flight - just cruise at what ever speed is natural
