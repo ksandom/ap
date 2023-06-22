@@ -50,6 +50,8 @@ if ~!Local,shouldChangeProfile!~,==,1,
 
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeHeadingDiffDegrees,closeHeadingDiffRadians
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeDistance
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,farHeadingDiffDegrees,farHeadingDiffRadians
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,farDistance
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,trailerProfileClose
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,trailerProfileFar
 

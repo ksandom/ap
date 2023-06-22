@@ -44,10 +44,13 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
     setNested ~!Me,stuff!~,strengthHeading,0
     setNested ~!Me,stuff!~,strengthOvershoot,0
 
+    setNested ~!Me,stuff!~,farHeadingDiffDegrees,2
+    setNested ~!Me,stuff!~,farDistance,2
+    setNested ~!Me,stuff!~,trailerProfileFar,na
+
     setNested ~!Me,stuff!~,closeHeadingDiffDegrees,2
     setNested ~!Me,stuff!~,closeDistance,2
     setNested ~!Me,stuff!~,trailerProfileClose,na
-    setNested ~!Me,stuff!~,trailerProfileFar,na
 
 # Cruise settings.
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
@@ -56,24 +59,46 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
 
     setNested ~!Me,stuff!~,strengthTrailer,1
     setNested ~!Me,stuff!~,strengthHeading,0.2
-    setNested ~!Me,stuff!~,strengthOvershoot,3
+    setNested ~!Me,stuff!~,strengthOvershoot,0.8
+
+    setNested ~!Me,stuff!~,farHeadingDiffDegrees,2
+    setNested ~!Me,stuff!~,farDistance,120
+    setNested ~!Me,stuff!~,trailerProfileFar,trailerCruiseSteadyLine
 
     setNested ~!Me,stuff!~,closeHeadingDiffDegrees,2
     setNested ~!Me,stuff!~,closeDistance,120
-    setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseHoldLine
+    setNested ~!Me,stuff!~,trailerProfileClose,na
+
+massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
+    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,1
+    setNested ~!Me,stuff!~,maxBarLength,40000
+
+    setNested ~!Me,stuff!~,strengthTrailer,0.8
+    setNested ~!Me,stuff!~,strengthHeading,0.03
+    setNested ~!Me,stuff!~,strengthOvershoot,0.1
+
+    setNested ~!Me,stuff!~,farHeadingDiffDegrees,15
+    setNested ~!Me,stuff!~,farDistance,800
     setNested ~!Me,stuff!~,trailerProfileFar,trailerCruiseFindLine
+
+    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,3
+    setNested ~!Me,stuff!~,closeDistance,100
+    setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseSteadyLine
 
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseHoldLine"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,1
     setNested ~!Me,stuff!~,maxBarLength,80000
 
     setNested ~!Me,stuff!~,strengthTrailer,0.8
-    setNested ~!Me,stuff!~,strengthHeading,0.005
+    setNested ~!Me,stuff!~,strengthHeading,0.03
     setNested ~!Me,stuff!~,strengthOvershoot,0.1
 
-    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,2.5
+    setNested ~!Me,stuff!~,farHeadingDiffDegrees,6
+    setNested ~!Me,stuff!~,farDistance,200
+    setNested ~!Me,stuff!~,trailerProfileFar,trailerCruiseSteadyLine
+
+    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,3
     setNested ~!Me,stuff!~,closeDistance,200
-    setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseHoldLine
-    setNested ~!Me,stuff!~,trailerProfileFar,trailerCruiseFindLine
+    setNested ~!Me,stuff!~,trailerProfileClose,na
 
 trailerProfile ~!Local,instanceName!~,trailerCruiseFindLine

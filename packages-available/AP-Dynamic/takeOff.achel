@@ -1,6 +1,8 @@
 # Make the plane take off ~ AP,dynamic
 parameters {"instanceName":"default"}
 
+debug 1,Prepare take-off sequence.
+
 set Local,instanceName,~!Global,takeOff-0!~
 if ~!Local,instanceName!~,==,,
 	set Local,instanceName,default
@@ -53,3 +55,5 @@ else
 	debug 1,We're not ready to take off. Check v1 and v2. Probably the plane profile has not been set.
 
 unset Tmp,ready
+
+debug 1,Finished setting up the takeOff.

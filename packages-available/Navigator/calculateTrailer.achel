@@ -154,14 +154,13 @@ if ~!Local,ready!~,==,1,
     if ~!Local,shouldDoOvershoot!~,==,1,
         basicMaths Local,distanceDiff,~!Local,distanceInMeters!~,-,~!Local,lastDistance!~
         absolute Local,distanceDiffAbsolute,~!Local,distanceDiff!~
-        absolute Local,distanceRemainingAbsolute,~!Local,distanceInMeters!~
 
-        basicMaths Local,stepsRemaining,~!Local,distanceRemainingAbsolute!~,/,~!Local,distanceDiffAbsolute!~
+        basicMaths Local,stepsRemaining,~!Local,absDistanceInMeters!~,/,~!Local,distanceDiffAbsolute!~
 
         getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
         basicMaths Local,nowChange,~!Local,now!~,-,~!Local,lastNow!~
         basicMaths Local,metersPerSecond,~!Local,distanceDiffAbsolute!~,/,~!Local,nowChange!~
-        basicMaths Local,overshootSeconds,~!Local,distanceRemainingAbsolute!~,/,~!Local,metersPerSecond!~
+        basicMaths Local,overshootSeconds,~!Local,absDistanceInMeters!~,/,~!Local,metersPerSecond!~
 
         # basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
         basicMaths Local,overshootCounterAngle,1,/,~!Local,overshootSeconds!~
@@ -194,15 +193,25 @@ if ~!Local,ready!~,==,1,
     absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
     getAPVar ~!Local,instanceName!~,closeHeadingDiffRadians,Local,closeHeadingDiffRadians
     getAPVar ~!Local,instanceName!~,closeDistance,Local,closeDistance
-    set Local,profileSelector,far
+    getAPVar ~!Local,instanceName!~,farHeadingDiffRadians,Local,farHeadingDiffRadians
+    getAPVar ~!Local,instanceName!~,farDistance,Local,farDistance
+
+    set Local,profileSelector,na
     if ~!Local,absoluteHeadingOffset!~,<,~!Local,closeHeadingDiffRadians!~,
-        if ~!Local,distanceInMeters!~,<,~!Local,closeDistance!~,
+        if ~!Local,absDistanceInMeters!~,<,~!Local,closeDistance!~,
             set Local,profileSelector,close
 
+    if ~!Local,absoluteHeadingOffset!~,>,~!Local,farHeadingDiffRadians!~,
+        if ~!Local,absDistanceInMeters!~,>,~!Local,farDistance!~,
+            set Local,profileSelector,far
+
+    set Local,trailerProfileToApply,na
     if ~!Local,profileSelector!~,==,close,
         getAPVar ~!Local,instanceName!~,trailerProfileClose,Local,trailerProfileToApply
-    else
+        debug 1,trailerProfile close because:  ho(~!Local,absoluteHeadingOffset!~) < ~!Local,closeHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) < ~!Local,closeDistance!~
+    if ~!Local,profileSelector!~,==,far,
         getAPVar ~!Local,instanceName!~,trailerProfileFar,Local,trailerProfileToApply
+        debug 1,trailerProfile far because:  ho(~!Local,absoluteHeadingOffset!~) > ~!Local,farHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) > ~!Local,farDistance!~
 
     trailerProfile ~!Local,instanceName!~,~!Local,trailerProfileToApply!~
 
@@ -269,7 +278,6 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiff,~!Local,distanceDiff!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceInMeters,~!Local,distanceInMeters!~
-        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceRemainingAbsolute,~!Local,distanceRemainingAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceThreshold,~!Local,distanceThreshold!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,finalAim,~!Local,finalAim!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffset,~!Local,headingOffset!~

@@ -1,6 +1,8 @@
 # Last at a specific airport and runway. Find airports and runways with --listRunways. --landAt=[instanceName=default],[airport=KSFO],[runway=10L],[approachAngleInDegrees=3] ~ AP,land
 parameters {"instanceName":"default","airport":"KSFO","runway":"10L","approachAngleInDegrees":"3"}
 
+debug 1,Prepare landing.
+
 # Find the runway.
 listRunways ~!Local,airport!~,1
 requireItem airport,^~!Local,airport!~$
@@ -105,3 +107,5 @@ unset Tmp,funnelDistance
 unset Tmp,angle
 
 historyToKML ~!Local,instanceName!~
+
+debug 1,Finished setting up the landing.
