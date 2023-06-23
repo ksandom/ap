@@ -164,7 +164,9 @@ if ~!Local,ready!~,==,1,
 
         # basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
         basicMaths Local,overshootCounterAngle,1,/,~!Local,overshootSeconds!~
-        basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,-1
+
+        if ~!Local,distanceInMeters!~,>,0,
+            basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,-1
 
 
 
@@ -190,30 +192,35 @@ if ~!Local,ready!~,==,1,
 
 
     # Assert that we are in the right trailerProfile.
-    absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
-    getAPVar ~!Local,instanceName!~,closeHeadingDiffRadians,Local,closeHeadingDiffRadians
-    getAPVar ~!Local,instanceName!~,closeDistance,Local,closeDistance
-    getAPVar ~!Local,instanceName!~,farHeadingDiffRadians,Local,farHeadingDiffRadians
-    getAPVar ~!Local,instanceName!~,farDistance,Local,farDistance
+    getAPVar ~!Local,instanceName!~,trailerProfileStart,Local,trailerProfileStart
+    getAPVar ~!Local,instanceName!~,minSeconds,Local,minSeconds
+    basicMaths Local,timeInCurrentProfile,~!Local,now!~,-,~!Local,trailerProfileStart!~
 
-    set Local,profileSelector,na
-    if ~!Local,absoluteHeadingOffset!~,<,~!Local,closeHeadingDiffRadians!~,
-        if ~!Local,absDistanceInMeters!~,<,~!Local,closeDistance!~,
-            set Local,profileSelector,close
+    if ~!Local,timeInCurrentProfile!~,>,~!Local,minSeconds!~,
+        absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
+        getAPVar ~!Local,instanceName!~,closeHeadingDiffRadians,Local,closeHeadingDiffRadians
+        getAPVar ~!Local,instanceName!~,closeDistance,Local,closeDistance
+        getAPVar ~!Local,instanceName!~,farHeadingDiffRadians,Local,farHeadingDiffRadians
+        getAPVar ~!Local,instanceName!~,farDistance,Local,farDistance
 
-    if ~!Local,absoluteHeadingOffset!~,>,~!Local,farHeadingDiffRadians!~,
-        if ~!Local,absDistanceInMeters!~,>,~!Local,farDistance!~,
-            set Local,profileSelector,far
+        set Local,profileSelector,na
+        if ~!Local,absoluteHeadingOffset!~,<,~!Local,closeHeadingDiffRadians!~,
+            if ~!Local,absDistanceInMeters!~,<,~!Local,closeDistance!~,
+                set Local,profileSelector,close
 
-    set Local,trailerProfileToApply,na
-    if ~!Local,profileSelector!~,==,close,
-        getAPVar ~!Local,instanceName!~,trailerProfileClose,Local,trailerProfileToApply
-        debug 1,trailerProfile close because:  ho(~!Local,absoluteHeadingOffset!~) < ~!Local,closeHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) < ~!Local,closeDistance!~
-    if ~!Local,profileSelector!~,==,far,
-        getAPVar ~!Local,instanceName!~,trailerProfileFar,Local,trailerProfileToApply
-        debug 1,trailerProfile far because:  ho(~!Local,absoluteHeadingOffset!~) > ~!Local,farHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) > ~!Local,farDistance!~
+        if ~!Local,absoluteHeadingOffset!~,>,~!Local,farHeadingDiffRadians!~,
+            if ~!Local,absDistanceInMeters!~,>,~!Local,farDistance!~,
+                set Local,profileSelector,far
 
-    trailerProfile ~!Local,instanceName!~,~!Local,trailerProfileToApply!~
+        set Local,trailerProfileToApply,na
+        if ~!Local,profileSelector!~,==,close,
+            getAPVar ~!Local,instanceName!~,trailerProfileClose,Local,trailerProfileToApply
+            debug 1,trailerProfile close because:  ho(~!Local,absoluteHeadingOffset!~) < ~!Local,closeHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) < ~!Local,closeDistance!~
+        if ~!Local,profileSelector!~,==,far,
+            getAPVar ~!Local,instanceName!~,trailerProfileFar,Local,trailerProfileToApply
+            debug 1,trailerProfile far because:  ho(~!Local,absoluteHeadingOffset!~) > ~!Local,farHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) > ~!Local,farDistance!~
+
+        trailerProfile ~!Local,instanceName!~,~!Local,trailerProfileToApply!~
 
 
     # Apply weights.
@@ -251,6 +258,7 @@ if ~!Local,ready!~,==,1,
     isolate
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absDistanceInMeters,~!Local,absDistanceInMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absoluteHeadingOffset,~!Local,absoluteHeadingOffset!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedBarAngle,~!Local,adjustedBarAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedHeading,~!Local,adjustedHeading!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedOvershoot,~!Local,adjustedOvershoot!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedTrailer,~!Local,adjustedTrailer!~
@@ -261,6 +269,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aimY,~!Local,aimY!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,aSquared,~!Local,aSquared!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,b,~!Local,b!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,barAngle,~!Local,barAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,barLength,~!Local,barLength!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,barLengthDegrees,~!Local,barLengthDegrees!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,before,~!Local,before!~
@@ -282,6 +291,8 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceInMeters,~!Local,distanceInMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceThreshold,~!Local,distanceThreshold!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,farDistance,~!Local,farDistance!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,farHeadingDiffRadians,~!Local,farHeadingDiffRadians!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,finalAim,~!Local,finalAim!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffset,~!Local,headingOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffsetDesenitised,~!Local,headingOffsetDesenitised!~
@@ -289,6 +300,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastNow,~!Local,lastNow!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxBarLength,~!Local,maxBarLength!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,metersPerSecond,~!Local,metersPerSecond!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,minSeconds,~!Local,minSeconds!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,now,~!Local,now!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,nowChange,~!Local,nowChange!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,orientation,~!Local,orientation!~
@@ -310,10 +322,13 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,shouldDoOvershoot,~!Local,shouldDoOvershoot!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,speed,~!Local,speed!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,stepsRemaining,~!Local,stepsRemaining!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthBarAngle,~!Local,strengthBarAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthHeading,~!Local,strengthHeading!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthOvershoot,~!Local,strengthOvershoot!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthTrailer,~!Local,strengthTrailer!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,thesholdBase,~!Local,thesholdBase!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,timeDivider,~!Local,timeDivider!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,timeInCurrentProfile,~!Local,timeInCurrentProfile!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,timeMultiplier,~!Local,timeMultiplier!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,trailerProfileStart,~!Local,trailerProfileStart!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,trailerProfileToApply,~!Local,trailerProfileToApply!~

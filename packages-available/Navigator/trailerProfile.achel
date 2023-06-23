@@ -42,6 +42,7 @@ if ~!Local,shouldChangeProfile!~,==,1,
             setAPVar ~!Local,instanceName!~,~!Local,radiansName!~,~!Local,radiansValue!~
             debug 1  Converted ~!Local,instanceName!~,~!Local,profileName!~,~!Local,variableName!~ to ~!Local,radiansName!~.
 
+    # Make the profile active.
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,overshootHeadingThresholdDegrees,overshootHeadingThresholdRadians
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,maxBarLength
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthTrailer
@@ -56,4 +57,13 @@ if ~!Local,shouldChangeProfile!~,==,1,
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,trailerProfileClose
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,trailerProfileFar
 
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,minSeconds
+
+    # Record which profile is selected.
     setAPVar ~!Local,instanceName!~,currentTrailerProfile,~!Local,profileName!~
+
+    # Track when it was made active.
+    microNow Local,now
+    setAPVar ~!Local,instanceName!~,trailerProfileStart,~!Local,now!~
+
+

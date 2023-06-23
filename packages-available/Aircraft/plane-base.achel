@@ -53,6 +53,8 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
     setNested ~!Me,stuff!~,closeDistance,2
     setNested ~!Me,stuff!~,trailerProfileClose,na
 
+    setNested ~!Me,stuff!~,minSeconds,0
+
 # Cruise settings.
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,5
@@ -71,14 +73,16 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,closeDistance,120
     setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseSteadyLine
 
+    setNested ~!Me,stuff!~,minSeconds,0
+
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
-    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,1
-    setNested ~!Me,stuff!~,maxBarLength,20000
+    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,2
+    setNested ~!Me,stuff!~,maxBarLength,40000
 
     setNested ~!Me,stuff!~,strengthTrailer,0
     setNested ~!Me,stuff!~,strengthHeading,0
-    setNested ~!Me,stuff!~,strengthBarAngle,1
-    setNested ~!Me,stuff!~,strengthOvershoot,0.15
+    setNested ~!Me,stuff!~,strengthBarAngle,0.8
+    setNested ~!Me,stuff!~,strengthOvershoot,0.1
 
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,15
     setNested ~!Me,stuff!~,farDistance,800
@@ -88,14 +92,16 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,closeDistance,50
     setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseHoldLine
 
+    setNested ~!Me,stuff!~,minSeconds,60
+
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseHoldLine"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,1
     setNested ~!Me,stuff!~,maxBarLength,80000
 
-    setNested ~!Me,stuff!~,strengthTrailer,0.8
+    setNested ~!Me,stuff!~,strengthTrailer,0.4
     setNested ~!Me,stuff!~,strengthHeading,0.03
-    setNested ~!Me,stuff!~,strengthBarAngle,0
-    setNested ~!Me,stuff!~,strengthOvershoot,0.1
+    setNested ~!Me,stuff!~,strengthBarAngle,0.2
+    setNested ~!Me,stuff!~,strengthOvershoot,0.01
 
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,3
     setNested ~!Me,stuff!~,farDistance,60
@@ -104,5 +110,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseHoldLine"],
     setNested ~!Me,stuff!~,closeHeadingDiffDegrees,3
     setNested ~!Me,stuff!~,closeDistance,200
     setNested ~!Me,stuff!~,trailerProfileClose,na
+
+    setNested ~!Me,stuff!~,minSeconds,30
 
 trailerProfile ~!Local,instanceName!~,trailerCruiseFindLine
