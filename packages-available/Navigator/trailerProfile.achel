@@ -46,6 +46,7 @@ if ~!Local,shouldChangeProfile!~,==,1,
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,maxBarLength
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthTrailer
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthHeading
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthBarAngle
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthOvershoot
 
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeHeadingDiffDegrees,closeHeadingDiffRadians

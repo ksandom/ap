@@ -89,7 +89,7 @@ if ~!Local,ready!~,==,1,
     angleDiffRadians Local,aimAngle,~!Local,linearStats,extra,lineAngle!~,~!Local,rawAimAngle!~
     basicMaths Local,aimAngle,~!Local,aimAngle!~,*,-1
 
-    # angleDiffRadians Local,headingOffset,~!Local,rawAimAngle!~,~!Local,orientation!~
+    angleDiffRadians Local,barAngle,~!Local,rawAimAngle!~,~!Local,orientation!~
     angleDiffRadians Local,headingOffset,~!Local,linearStats,extra,lineAngle!~,~!Local,orientation!~
 
     # Desensitise with time.
@@ -219,13 +219,16 @@ if ~!Local,ready!~,==,1,
     # Apply weights.
     getAPVar ~!Local,instanceName!~,strengthTrailer,Local,strengthTrailer
     getAPVar ~!Local,instanceName!~,strengthHeading,Local,strengthHeading
+    getAPVar ~!Local,instanceName!~,strengthBarAngle,Local,strengthBarAngle
     getAPVar ~!Local,instanceName!~,strengthOvershoot,Local,strengthOvershoot
 
     applyRangeAndMultiplier Local,adjustedTrailer,1,~!Local,aimAngle!~,,~!Local,strengthTrailer!~
     applyRangeAndMultiplier Local,adjustedHeading,1,~!Local,headingOffsetDesenitised!~,,~!Local,strengthHeading!~
+    applyRangeAndMultiplier Local,adjustedBarAngle,1,~!Local,barAngle!~,,~!Local,strengthBarAngle!~
     applyRangeAndMultiplier Local,adjustedOvershoot,1,~!Local,overshootCounterAngle!~,,~!Local,strengthOvershoot!~
 
     basicMaths Local,finalAim,~!Local,adjustedTrailer!~,+,~!Local,adjustedHeading!~
+    basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedBarAngle!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedOvershoot!~
 
 
