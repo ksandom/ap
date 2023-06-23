@@ -204,6 +204,17 @@ if ~!Local,ready!~,==,1,
     if ~!Local,distanceSide!~,==,~!Local,headingSide!~,
         set Local,fomoValue,~!Local,headingOffset!~
 
+    # Calculate nudge if we aren't getting closer to the goal.
+    set Local,nudge,0
+    if ~!Local,closer!~,!=,1,
+        set Local,nudge,~!Local,absDistanceInMeters!~
+        if ~!Local,nudge!~,>,10,
+            set Local,nudge,10
+
+        if ~!Local,distanceInMeters!~,<,0,
+            basicMaths Local,nudge,~!Local,nudge!~,*,-1
+
+        basicMaths Local,nudge,~!Local,nudge!~,/,10
 
 
     # Assert that we are in the right trailerProfile.
@@ -244,17 +255,20 @@ if ~!Local,ready!~,==,1,
     getAPVar ~!Local,instanceName!~,strengthBarAngle,Local,strengthBarAngle
     getAPVar ~!Local,instanceName!~,strengthOvershoot,Local,strengthOvershoot
     getAPVar ~!Local,instanceName!~,strengthFomo,Local,strengthFomo
+    getAPVar ~!Local,instanceName!~,strengthNudge,Local,strengthNudge
 
     applyRangeAndMultiplier Local,adjustedTrailer,1,~!Local,aimAngle!~,,~!Local,strengthTrailer!~
     applyRangeAndMultiplier Local,adjustedHeading,1,~!Local,headingOffsetDesenitised!~,,~!Local,strengthHeading!~
     applyRangeAndMultiplier Local,adjustedBarAngle,1,~!Local,barAngle!~,,~!Local,strengthBarAngle!~
     applyRangeAndMultiplier Local,adjustedOvershoot,1,~!Local,overshootCounterAngle!~,,~!Local,strengthOvershoot!~
     applyRangeAndMultiplier Local,adjustedFomo,1,~!Local,fomoValue!~,,~!Local,strengthFomo!~
+    applyRangeAndMultiplier Local,adjustedNudge,1,~!Local,nudge!~,,~!Local,strengthNudge!~
 
     basicMaths Local,finalAim,~!Local,adjustedTrailer!~,+,~!Local,adjustedHeading!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedBarAngle!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedOvershoot!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedFomo!~
+    basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedNudge!~
 
 
     # Make it available to the AP.
@@ -279,6 +293,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedBarAngle,~!Local,adjustedBarAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedFomo,~!Local,adjustedFomo!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedHeading,~!Local,adjustedHeading!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedNudge,~!Local,adjustedNudge!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedOvershoot,~!Local,adjustedOvershoot!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedTrailer,~!Local,adjustedTrailer!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,after,~!Local,after!~
@@ -325,6 +340,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,minSeconds,~!Local,minSeconds!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,now,~!Local,now!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,nowChange,~!Local,nowChange!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,nudge,~!Local,nudge!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,orientation,~!Local,orientation!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,orientationDegrees,~!Local,orientationDegrees!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,originX,~!Local,originX!~
@@ -347,6 +363,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthBarAngle,~!Local,strengthBarAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthFomo,~!Local,strengthFomo!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthHeading,~!Local,strengthHeading!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthNudge,~!Local,strengthNudge!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthOvershoot,~!Local,strengthOvershoot!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthTrailer,~!Local,strengthTrailer!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,thesholdBase,~!Local,thesholdBase!~

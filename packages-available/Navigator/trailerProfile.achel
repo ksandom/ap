@@ -50,6 +50,7 @@ if ~!Local,shouldChangeProfile!~,==,1,
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthBarAngle
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthOvershoot
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthFomo
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthNudge
 
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeHeadingDiffDegrees,closeHeadingDiffRadians
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeDistance
