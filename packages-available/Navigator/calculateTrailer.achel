@@ -102,6 +102,19 @@ if ~!Local,ready!~,==,1,
 
 
 
+    # Figure out if heading and distance have the same polarity.
+    set Local,distanceSide,-1
+    if ~!Local,distanceInMeters!~,>,0,
+        set Local,distanceSide,1
+
+    set Local,headingSide,-1
+    if ~!Local,headingOffset!~,>,0,
+        set Local,headingSide,1
+
+    set Local,hdDstPolarity,0
+    if ~!Local,distanceSide!~,==,~!Local,headingSide!~,
+        set Local,hdDstPolarity,1
+
 
     # New overshoot code.
     # If heading diff is greater than threshold.
@@ -149,7 +162,11 @@ if ~!Local,ready!~,==,1,
 
     if ~!Local,closer!~,==,0,
         set Local,shouldDoOvershoot,0
-        set Local,overshootWhy,notCloser: ~!Local,distanceInMeters!~ vs ~!Local,lastDistance!~,
+        set Local,overshootWhy,notCloser: ~!Local,distanceInMeters!~ vs ~!Local,lastDistance!~
+
+    if ~!Local,hdDstPolarity!~,==,1,
+        set Local,shouldDoOvershoot,0
+        set Local,overshootWhy,heading and distance don't have the same polarity.
 
     if ~!Local,shouldDoOvershoot!~,==,1,
         basicMaths Local,distanceDiff,~!Local,distanceInMeters!~,-,~!Local,lastDistance!~
@@ -193,16 +210,9 @@ if ~!Local,ready!~,==,1,
 
     # Calculate FOMO.
     set Local,fomoValue,0
-    set Local,distanceSide,-1
-    if ~!Local,distanceInMeters!~,>,0,
-        set Local,distanceSide,1
-
-    set Local,headingSide,-1
-    if ~!Local,headingOffset!~,>,0,
-        set Local,headingSide,1
-
-    if ~!Local,distanceSide!~,==,~!Local,headingSide!~,
-        set Local,fomoValue,~!Local,headingOffset!~
+    if ~!Local,hdDstPolarity!~,==,0,
+        if ~!Local,closer!~,!=,1,
+            set Local,fomoValue,~!Local,headingOffset!~
 
     # Calculate nudge if we aren't getting closer to the goal.
     set Local,nudge,0
@@ -257,12 +267,12 @@ if ~!Local,ready!~,==,1,
     getAPVar ~!Local,instanceName!~,strengthFomo,Local,strengthFomo
     getAPVar ~!Local,instanceName!~,strengthNudge,Local,strengthNudge
 
-    applyRangeAndMultiplier Local,adjustedTrailer,1,~!Local,aimAngle!~,,~!Local,strengthTrailer!~
-    applyRangeAndMultiplier Local,adjustedHeading,1,~!Local,headingOffsetDesenitised!~,,~!Local,strengthHeading!~
-    applyRangeAndMultiplier Local,adjustedBarAngle,1,~!Local,barAngle!~,,~!Local,strengthBarAngle!~
-    applyRangeAndMultiplier Local,adjustedOvershoot,1,~!Local,overshootCounterAngle!~,,~!Local,strengthOvershoot!~
-    applyRangeAndMultiplier Local,adjustedFomo,1,~!Local,fomoValue!~,,~!Local,strengthFomo!~
-    applyRangeAndMultiplier Local,adjustedNudge,1,~!Local,nudge!~,,~!Local,strengthNudge!~
+    applyRangeAndMultiplier Local,adjustedTrailer,,~!Local,aimAngle!~,,~!Local,strengthTrailer!~
+    applyRangeAndMultiplier Local,adjustedHeading,,~!Local,headingOffsetDesenitised!~,,~!Local,strengthHeading!~
+    applyRangeAndMultiplier Local,adjustedBarAngle,,~!Local,barAngle!~,,~!Local,strengthBarAngle!~
+    applyRangeAndMultiplier Local,adjustedOvershoot,,~!Local,overshootCounterAngle!~,,~!Local,strengthOvershoot!~
+    applyRangeAndMultiplier Local,adjustedFomo,,~!Local,fomoValue!~,,~!Local,strengthFomo!~
+    applyRangeAndMultiplier Local,adjustedNudge,,~!Local,nudge!~,,~!Local,strengthNudge!~
 
     basicMaths Local,finalAim,~!Local,adjustedTrailer!~,+,~!Local,adjustedHeading!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedBarAngle!~
