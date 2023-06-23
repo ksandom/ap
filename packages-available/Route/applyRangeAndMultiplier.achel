@@ -2,6 +2,9 @@
 
 parameters Category,variable,maxValue,value,inputMinValue,multiplier
 
+if ~!Local,maxValue!~,==,,
+    set Local,maxValue,~!Local,multiplier!~
+
 applyMultiplier Local,value,~!Local,multiplier!~,~!Local,value!~
 assertWithinRange ~!Local,Category!~,~!Local,variable!~,~!Local,maxValue!~,~!Local,value!~,~!Local,inputMinValue!~
 
