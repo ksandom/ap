@@ -170,7 +170,7 @@ if ~!Local,ready!~,==,1,
 
 
 
-        debug 1,Overshoot dC=~!Local,distanceDiff!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecond!~ oss=~!Local,overshootSeconds!~ oA=~!Local,overshootCounterAngle!~
+        debug 1,Overshoot oA=~!Local,overshootCounterAngle!~  dC=~!Local,distanceDiff!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecond!~ oss=~!Local,overshootSeconds!~
 
         # Did we overshoot?
         set Local,before,0
@@ -189,6 +189,21 @@ if ~!Local,ready!~,==,1,
 
     setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,distanceInMeters!~
     setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+
+
+    # Calculate FOMO.
+    set Local,fomoValue,0
+    set Local,distanceSide,-1
+    if ~!Local,distanceInMeters!~,>,0,
+        set Local,distanceSide,1
+
+    set Local,headingSide,-1
+    if ~!Local,headingOffset!~,>,0,
+        set Local,headingSide,1
+
+    if ~!Local,distanceSide!~,==,~!Local,headingSide!~,
+        set Local,fomoValue,~!Local,headingOffset!~
+
 
 
     # Assert that we are in the right trailerProfile.
@@ -215,10 +230,10 @@ if ~!Local,ready!~,==,1,
         set Local,trailerProfileToApply,na
         if ~!Local,profileSelector!~,==,close,
             getAPVar ~!Local,instanceName!~,trailerProfileClose,Local,trailerProfileToApply
-            debug 1,trailerProfile close because:  ho(~!Local,absoluteHeadingOffset!~) < ~!Local,closeHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) < ~!Local,closeDistance!~
+            # debug 1,trailerProfile close because:  ho(~!Local,absoluteHeadingOffset!~) < ~!Local,closeHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) < ~!Local,closeDistance!~
         if ~!Local,profileSelector!~,==,far,
             getAPVar ~!Local,instanceName!~,trailerProfileFar,Local,trailerProfileToApply
-            debug 1,trailerProfile far because:  ho(~!Local,absoluteHeadingOffset!~) > ~!Local,farHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) > ~!Local,farDistance!~
+            # debug 1,trailerProfile far because:  ho(~!Local,absoluteHeadingOffset!~) > ~!Local,farHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) > ~!Local,farDistance!~
 
         trailerProfile ~!Local,instanceName!~,~!Local,trailerProfileToApply!~
 
@@ -228,15 +243,18 @@ if ~!Local,ready!~,==,1,
     getAPVar ~!Local,instanceName!~,strengthHeading,Local,strengthHeading
     getAPVar ~!Local,instanceName!~,strengthBarAngle,Local,strengthBarAngle
     getAPVar ~!Local,instanceName!~,strengthOvershoot,Local,strengthOvershoot
+    getAPVar ~!Local,instanceName!~,strengthFomo,Local,strengthFomo
 
     applyRangeAndMultiplier Local,adjustedTrailer,1,~!Local,aimAngle!~,,~!Local,strengthTrailer!~
     applyRangeAndMultiplier Local,adjustedHeading,1,~!Local,headingOffsetDesenitised!~,,~!Local,strengthHeading!~
     applyRangeAndMultiplier Local,adjustedBarAngle,1,~!Local,barAngle!~,,~!Local,strengthBarAngle!~
     applyRangeAndMultiplier Local,adjustedOvershoot,1,~!Local,overshootCounterAngle!~,,~!Local,strengthOvershoot!~
+    applyRangeAndMultiplier Local,adjustedFomo,1,~!Local,fomoValue!~,,~!Local,strengthFomo!~
 
     basicMaths Local,finalAim,~!Local,adjustedTrailer!~,+,~!Local,adjustedHeading!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedBarAngle!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedOvershoot!~
+    basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedFomo!~
 
 
     # Make it available to the AP.
@@ -259,6 +277,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absDistanceInMeters,~!Local,absDistanceInMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absoluteHeadingOffset,~!Local,absoluteHeadingOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedBarAngle,~!Local,adjustedBarAngle!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedFomo,~!Local,adjustedFomo!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedHeading,~!Local,adjustedHeading!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedOvershoot,~!Local,adjustedOvershoot!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedTrailer,~!Local,adjustedTrailer!~
@@ -290,12 +309,15 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiff,~!Local,distanceDiff!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceInMeters,~!Local,distanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceSide,~!Local,distanceSide!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceThreshold,~!Local,distanceThreshold!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,farDistance,~!Local,farDistance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,farHeadingDiffRadians,~!Local,farHeadingDiffRadians!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,finalAim,~!Local,finalAim!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,fomoValue,~!Local,fomoValue!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffset,~!Local,headingOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffsetDesenitised,~!Local,headingOffsetDesenitised!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingSide,~!Local,headingSide!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistance,~!Local,lastDistance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastNow,~!Local,lastNow!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxBarLength,~!Local,maxBarLength!~
@@ -323,6 +345,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,speed,~!Local,speed!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,stepsRemaining,~!Local,stepsRemaining!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthBarAngle,~!Local,strengthBarAngle!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthFomo,~!Local,strengthFomo!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthHeading,~!Local,strengthHeading!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthOvershoot,~!Local,strengthOvershoot!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthTrailer,~!Local,strengthTrailer!~
