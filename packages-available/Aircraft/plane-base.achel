@@ -34,10 +34,16 @@ massSet ["AP,state,~!Local,instanceName!~"],
 
 # Take off. - Should be very sticky to the runway.
 massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
-    # Take off settings.
+    # Only apply the overshoot when the headingDiff is greater than this.
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,5
-    degreesToRadians Local,overshootHeadingThresholdRadians,~!~!Me,stuff!~,overshootHeadingThresholdDegrees!~
-    setNested ~!Me,stuff!~,overshootHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
+
+    # When an overshoot is needed. Multiply the raw value by this number.
+    setNested ~!Me,stuff!~,overshootMultiplier,0.5
+
+    # When an overshoot is needed. Add this number the raw value.
+    setNested ~!Me,stuff!~,overshootOffset,0
+
+    # The length of the virtual bar between the plane and the aim point on the line to track.
     setNested ~!Me,stuff!~,maxBarLength,80000
 
 
@@ -59,25 +65,31 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
     # Are we making progress towards the line? If not, give it a little nudge. Take the distance.
     setNested ~!Me,stuff!~,strengthNudge,0
 
+
+    # When the headingDiff and distance from the line are both greater than these. Apply this profile.
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,2
     setNested ~!Me,stuff!~,farDistance,2
     setNested ~!Me,stuff!~,trailerProfileFar,na
 
+    # When the headingDiff and distance from the line are both less than these. Apply this profile.
     setNested ~!Me,stuff!~,closeHeadingDiffDegrees,2
     setNested ~!Me,stuff!~,closeDistance,2
     setNested ~!Me,stuff!~,trailerProfileClose,na
 
+    # Minimum number of seconds to stay in this profile.
     setNested ~!Me,stuff!~,minSeconds,0
 
 # Cruise settings.
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,5
+    setNested ~!Me,stuff!~,overshootMultiplier,0.5
+    setNested ~!Me,stuff!~,overshootOffset,0
     setNested ~!Me,stuff!~,maxBarLength,20000
 
     setNested ~!Me,stuff!~,strengthTrailer,1
     setNested ~!Me,stuff!~,strengthHeading,0.2
     setNested ~!Me,stuff!~,strengthBarAngle,0
-    setNested ~!Me,stuff!~,strengthOvershoot,0.7
+    setNested ~!Me,stuff!~,strengthOvershoot,0.1
     setNested ~!Me,stuff!~,strengthFomo,0.2
     setNested ~!Me,stuff!~,strengthNudge,0
 
@@ -93,6 +105,8 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
 
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,0.1
+    setNested ~!Me,stuff!~,overshootMultiplier,0.5
+    setNested ~!Me,stuff!~,overshootOffset,0
     setNested ~!Me,stuff!~,maxBarLength,40000
 
     setNested ~!Me,stuff!~,strengthTrailer,0
@@ -114,6 +128,8 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
 
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseHoldLine"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,1
+    setNested ~!Me,stuff!~,overshootMultiplier,0.5
+    setNested ~!Me,stuff!~,overshootOffset,0
     setNested ~!Me,stuff!~,maxBarLength,40000
 
     setNested ~!Me,stuff!~,strengthTrailer,0

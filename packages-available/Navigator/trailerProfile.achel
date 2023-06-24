@@ -44,6 +44,9 @@ if ~!Local,shouldChangeProfile!~,==,1,
 
     # Make the profile active.
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,overshootHeadingThresholdDegrees,overshootHeadingThresholdRadians
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,overshootMultiplier
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,overshootOffset
+
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,maxBarLength
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthTrailer
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthHeading

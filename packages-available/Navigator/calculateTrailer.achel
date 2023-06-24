@@ -182,8 +182,20 @@ if ~!Local,ready!~,==,1,
         basicMaths Local,overshootSeconds,~!Local,absDistanceInMeters!~,/,~!Local,metersPerSecond!~
 
         # basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
-        basicMaths Local,overshootCounterAngle,1,/,~!Local,overshootSeconds!~
+        # basicMaths Local,overshootCounterAngle,1,/,~!Local,overshootSeconds!~
+        basicMaths Local,overshootCounterAngle,~!Local,distanceDiffAbsolute!~,/,~!Local,overshootSeconds!~
 
+        # Change the shape.
+        getAPVar ~!Local,instanceName!~,overshootMultiplier,Local,overshootMultiplier
+        getAPVar ~!Local,instanceName!~,overshootOffset,Local,overshootOffset
+
+        basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,~!Local,overshootMultiplier!~
+        basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,+,~!Local,overshootOffset!~
+
+        if ~!Local,overshootCounterAngle!~,<,0,
+            set Local,overshootCounterAngle,0
+
+        # Apply polarity based on the polarity of the distance.
         if ~!Local,distanceInMeters!~,>,0,
             basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,-1
 
