@@ -140,11 +140,13 @@ if ~!Local,ready!~,==,1,
 
     # Test: If the new distance is in the direction of closer to the line from the perspective of the old distance.
     getAPVarWithContext ~!Local,instanceName!~,track,lastDistance,Local,lastDistance
+    set Local,mute,0
     if ~!Local,lastDistance!~,==,,
         debug 1,No overshoot history. Setting it up now.
         set Local,lastDistance,~!Local,distanceInMeters!~
         setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,lastDistance!~
         setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+        set Local,mute,1
 
     if ~!Local,distanceInMeters!~,==,~!Local,lastDistance!~,
         set Local,shouldDoOvershoot,0
@@ -283,8 +285,11 @@ if ~!Local,ready!~,==,1,
 
     # Make it available to the AP.
     radiansToDegrees Local,aimAngle-deg,~!Local,finalAim!~
-    setAPVarWithContext ~!Local,instanceName!~,track,aimAngle,~!Local,finalAim!~
-    setAPVarWithContext ~!Local,instanceName!~,track,aimAngle-deg,~!Local,aimAngle-deg!~
+    if ~!Local,mute!~,!=,1,
+        setAPVarWithContext ~!Local,instanceName!~,track,aimAngle,~!Local,finalAim!~
+        setAPVarWithContext ~!Local,instanceName!~,track,aimAngle-deg,~!Local,aimAngle-deg!~
+    else
+        debug 1,Trailer muted for this iteration to allow everything to stablise after reset.
 
     # For use in the map.
     setAPVarWithContext ~!Local,instanceName!~,track,aimLon,~!Local,aimX!~
@@ -340,6 +345,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,farHeadingDiffRadians,~!Local,farHeadingDiffRadians!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,finalAim,~!Local,finalAim!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,fomoValue,~!Local,fomoValue!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,hdDstPolarity,~!Local,hdDstPolarity!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffset,~!Local,headingOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffsetDesenitised,~!Local,headingOffsetDesenitised!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingSide,~!Local,headingSide!~
@@ -348,6 +354,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxBarLength,~!Local,maxBarLength!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,metersPerSecond,~!Local,metersPerSecond!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,minSeconds,~!Local,minSeconds!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,mute,~!Local,mute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,now,~!Local,now!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,nowChange,~!Local,nowChange!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,nudge,~!Local,nudge!~
