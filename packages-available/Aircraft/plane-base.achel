@@ -105,16 +105,16 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
 
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,0.1
-    setNested ~!Me,stuff!~,overshootMultiplier,0.3
-    setNested ~!Me,stuff!~,overshootOffset,0.5
+    setNested ~!Me,stuff!~,overshootMultiplier,0.5
+    setNested ~!Me,stuff!~,overshootOffset,0
     setNested ~!Me,stuff!~,maxBarLength,40000
 
     setNested ~!Me,stuff!~,strengthTrailer,0
-    setNested ~!Me,stuff!~,strengthHeading,0.04
+    setNested ~!Me,stuff!~,strengthHeading,0.01
     setNested ~!Me,stuff!~,strengthBarAngle,0.0
-    setNested ~!Me,stuff!~,strengthOvershoot,0.03
-    setNested ~!Me,stuff!~,strengthFomo,0.05
-    setNested ~!Me,stuff!~,strengthNudge,0.03
+    setNested ~!Me,stuff!~,strengthOvershoot,0.04
+    setNested ~!Me,stuff!~,strengthFomo,0.1
+    setNested ~!Me,stuff!~,strengthNudge,0.01
 
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,15
     setNested ~!Me,stuff!~,farDistance,600
@@ -127,16 +127,16 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,minSeconds,120
 
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseHoldLine"],
-    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,1
-    setNested ~!Me,stuff!~,overshootMultiplier,0.5
-    setNested ~!Me,stuff!~,overshootOffset,0
+    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,0.1
+    setNested ~!Me,stuff!~,overshootMultiplier,0.2
+    setNested ~!Me,stuff!~,overshootOffset,0.8
     setNested ~!Me,stuff!~,maxBarLength,40000
 
     setNested ~!Me,stuff!~,strengthTrailer,0
-    setNested ~!Me,stuff!~,strengthHeading,0
-    setNested ~!Me,stuff!~,strengthBarAngle,0.02
-    setNested ~!Me,stuff!~,strengthOvershoot,0.1
-    setNested ~!Me,stuff!~,strengthFomo,0.2
+    setNested ~!Me,stuff!~,strengthHeading,0.01
+    setNested ~!Me,stuff!~,strengthBarAngle,0.0
+    setNested ~!Me,stuff!~,strengthOvershoot,0.02
+    setNested ~!Me,stuff!~,strengthFomo,0.1
     setNested ~!Me,stuff!~,strengthNudge,0.01
 
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,3
