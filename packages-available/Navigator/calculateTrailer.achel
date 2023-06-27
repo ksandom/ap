@@ -162,18 +162,36 @@ if ~!Local,ready!~,==,1,
             if ~!Local,distanceInMeters!~,>,0,
                 set Local,closer,1
 
+    # Don't apply overshoot if we aren't getting closer to the line.
     if ~!Local,closer!~,==,0,
         set Local,shouldDoOvershoot,0
         set Local,overshootWhy,notCloser: ~!Local,distanceInMeters!~ vs ~!Local,lastDistance!~
 
+    # Overshoot should only apply when we are facing the same direction as travel.
     if ~!Local,hdDstPolarity!~,==,1,
         set Local,shouldDoOvershoot,0
         set Local,overshootWhy,heading and distance don't have the same polarity.
 
-    if ~!Local,shouldDoOvershoot!~,==,1,
-        basicMaths Local,distanceDiff,~!Local,distanceInMeters!~,-,~!Local,lastDistance!~
-        absolute Local,distanceDiffAbsolute,~!Local,distanceDiff!~
+    # Detect bogus data.
+    basicMaths Local,distanceDiff,~!Local,distanceInMeters!~,-,~!Local,lastDistance!~
+    absolute Local,distanceDiffAbsolute,~!Local,distanceDiff!~
+    getAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,Local,lastDistanceDiffAbsolute
+    if ~!Local,lastDistanceDiffAbsolute!~,==,,
+        set Local,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+        setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~
+    else
+        basicMaths Local,doubleLastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~,*,2
+        if ~!Local,distanceDiffAbsolute!~,>,~!Local,doubleLastDistanceDiffAbsolute!~,
+            debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,doubleLastDistanceDiffAbsolute!~). Skipping this iteration.
+            set Local,shouldDoOvershoot,0
+            set Local,overshootWhy,Bogus data (~!Local,distanceDiffAbsolute!~>~!Local,doubleLastDistanceDiffAbsolute!~).
+            set Local,mute,1
+            # The check will make less sense with each iteration. So this stops us from testing it on the next iteration.
+            setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,
+        setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
 
+    # Do the overshoot.
+    if ~!Local,shouldDoOvershoot!~,==,1,
         basicMaths Local,stepsRemaining,~!Local,absDistanceInMeters!~,/,~!Local,distanceDiffAbsolute!~
 
         getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
