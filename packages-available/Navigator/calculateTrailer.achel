@@ -183,7 +183,8 @@ if ~!Local,ready!~,==,1,
 
         # basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
         # basicMaths Local,overshootCounterAngle,1,/,~!Local,overshootSeconds!~
-        basicMaths Local,overshootCounterAngle,~!Local,distanceDiffAbsolute!~,/,~!Local,overshootSeconds!~
+        # basicMaths Local,overshootCounterAngle,~!Local,distanceDiffAbsolute!~,/,~!Local,overshootSeconds!~
+        basicMaths Local,overshootCounterAngle,~!Local,metersPerSecond!~,/,~!Local,overshootSeconds!~
 
         # Change the shape.
         getAPVar ~!Local,instanceName!~,overshootMultiplier,Local,overshootMultiplier
@@ -222,7 +223,7 @@ if ~!Local,ready!~,==,1,
     setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
 
 
-    # Calculate FOMO.
+    # Calculate FOMO from headingOffset.
     absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
     set Local,fomoValue,0
     if ~!Local,hdDstPolarity!~,==,1,
@@ -231,7 +232,7 @@ if ~!Local,ready!~,==,1,
             if ~!Local,distanceInMeters!~,<,0,
                 basicMaths Local,fomoValue,~!Local,fomoValue!~,*,-1
 
-    # Calculate nudge if we aren't getting closer to the goal.
+    # Calculate nudge from distance if we aren't getting closer to the goal.
     set Local,nudge,0
     if ~!Local,closer!~,!=,1,
         set Local,nudge,~!Local,absDistanceInMeters!~
