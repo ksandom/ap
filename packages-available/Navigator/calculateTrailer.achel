@@ -179,30 +179,49 @@ if ~!Local,ready!~,==,1,
     if ~!Local,lastDistanceDiffAbsolute!~,==,,
         set Local,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~
+        setAPVarWithContext ~!Local,instanceName!~,track,bogusCount,0
     else
-        basicMaths Local,doubleLastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~,*,2
-        if ~!Local,distanceDiffAbsolute!~,>,~!Local,doubleLastDistanceDiffAbsolute!~,
-            debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,doubleLastDistanceDiffAbsolute!~). Skipping this iteration.
-            set Local,shouldDoOvershoot,0
-            set Local,overshootWhy,Bogus data (~!Local,distanceDiffAbsolute!~>~!Local,doubleLastDistanceDiffAbsolute!~).
-            set Local,mute,1
-            # The check will make less sense with each iteration. So this stops us from testing it on the next iteration.
-            setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,
-        setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+        getAPVarWithContext ~!Local,instanceName!~,track,bogusCount,Local,bogusCount
+        basicMaths Local,bogusCount,~!Local,bogusCount!~,+,1
+        basicMaths Local,effectiveCount,~!Local,bogusCount!~,+,1
+        basicMaths Local,distanceDiffThreshold,~!Local,lastDistanceDiffAbsolute!~,*,~!Local,effectiveCount!~
+
+        if ~!Local,distanceDiffAbsolute!~,>,~!Local,distanceDiffThreshold!~,
+            getAPVar ~!Local,instanceName!~,maxPointsToSkip,Local,maxPointsToSkip
+            if ~!Local,bogusCount!~,<=,~!Local,maxPointsToSkip!~,
+                debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~). Skipping this point.
+                set Local,shouldDoOvershoot,0
+                set Local,overshootWhy,Bogus data (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~).
+                set Local,mute,1
+            else
+                debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~). But we have exceeded (~!Local,bogusCount!~) maxPointsToSkip (~!Local,maxPointsToSkip!~,). So letting this point past.
+                set Local,bogusCount,0
+                setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+        else
+            set Local,bogusCount,0
+            setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+        setAPVarWithContext ~!Local,instanceName!~,track,bogusCount,~!Local,bogusCount!~
+
+        basicMaths Local,stepsRemaining,~!Local,absDistanceInMeters!~,/,~!Local,distanceDiffAbsolute!~
+
+    # Some calculations to be shared.
+    getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
+    basicMaths Local,nowChange,~!Local,now!~,-,~!Local,lastNow!~
+    basicMaths Local,metersPerSecond,~!Local,distanceDiffAbsolute!~,/,~!Local,nowChange!~
+    basicMaths Local,overshootSeconds,~!Local,absDistanceInMeters!~,/,~!Local,metersPerSecond!~
 
     # Do the overshoot.
     if ~!Local,shouldDoOvershoot!~,==,1,
-        basicMaths Local,stepsRemaining,~!Local,absDistanceInMeters!~,/,~!Local,distanceDiffAbsolute!~
-
-        getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
-        basicMaths Local,nowChange,~!Local,now!~,-,~!Local,lastNow!~
-        basicMaths Local,metersPerSecond,~!Local,distanceDiffAbsolute!~,/,~!Local,nowChange!~
-        basicMaths Local,overshootSeconds,~!Local,absDistanceInMeters!~,/,~!Local,metersPerSecond!~
-
         # basicMaths Local,overshootCounterAngle,~!Local,planeToLineAngle!~,/,~!Local,overshootSeconds!~
         # basicMaths Local,overshootCounterAngle,1,/,~!Local,overshootSeconds!~
         # basicMaths Local,overshootCounterAngle,~!Local,distanceDiffAbsolute!~,/,~!Local,overshootSeconds!~
-        basicMaths Local,overshootCounterAngle,~!Local,metersPerSecond!~,/,~!Local,overshootSeconds!~
+
+        set Local,minOvershootSeconds,~!Local,overshootSeconds!~
+        # TODO Make this limit configurable.
+        if ~!Local,minOvershootSeconds!~,<,2,
+            set Local,minOvershootSeconds,2
+
+        basicMaths Local,overshootCounterAngle,~!Local,metersPerSecond!~,/,~!Local,minOvershootSeconds!~
 
         # Change the shape.
         getAPVar ~!Local,instanceName!~,overshootMultiplier,Local,overshootMultiplier
@@ -237,8 +256,9 @@ if ~!Local,ready!~,==,1,
     if ~!Local,shouldDoOvershoot!~,!=,1,
         set Local,overshootCounterAngle,0
 
-    setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,distanceInMeters!~
-    setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+    if ~!Local,mute!~,==,0,
+        setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,distanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
 
 
     # Calculate FOMO from headingOffset.
@@ -246,7 +266,9 @@ if ~!Local,ready!~,==,1,
     set Local,fomoValue,0
     if ~!Local,hdDstPolarity!~,==,1,
         if ~!Local,closer!~,!=,1,
-            set Local,fomoValue,~!Local,absoluteHeadingOffset!~
+            # basicMaths Local,fomoValue,~!Local,absoluteHeadingOffset!~,*,~!Local,metersPerSecond!~
+            # basicMaths Local,fomoValue,~!Local,fomoValue!~,/,10
+            basicMaths Local,fomoValue,~!Local,metersPerSecond!~,/,200
             if ~!Local,distanceInMeters!~,<,0,
                 basicMaths Local,fomoValue,~!Local,fomoValue!~,*,-1
 
