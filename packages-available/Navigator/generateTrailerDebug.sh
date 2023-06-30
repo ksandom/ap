@@ -15,6 +15,7 @@ function listVariables
 
 echo "    # Generated with ./generateTrailerDebug.sh"
 echo "    isolate "
+echo '        setNested ["AP","state","~!Local,instanceName!~","trailerDebug","linearStats",~!Local,linearStats!~]'
 while read varName; do
     case $varName in
         "bOffset")
