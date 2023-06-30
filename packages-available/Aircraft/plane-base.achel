@@ -1,5 +1,7 @@
 # Some base settings that every plane should apply. ~ AP,base,rules,plane,aircraft
 
+# These are intentended as sensible defaults. When setting up a specific aircraft, please override any of these settings in the configuration for that aircraft.
+
 parameters {"instanceName":"default"}
 
 massSet ["AP,state,~!Local,instanceName!~"],
