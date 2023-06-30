@@ -264,13 +264,13 @@ if ~!Local,ready!~,==,1,
     # Calculate FOMO from headingOffset.
     absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
     set Local,fomoValue,0
-    if ~!Local,hdDstPolarity!~,==,1,
-        if ~!Local,closer!~,!=,1,
-            # basicMaths Local,fomoValue,~!Local,absoluteHeadingOffset!~,*,~!Local,metersPerSecond!~
-            # basicMaths Local,fomoValue,~!Local,fomoValue!~,/,10
-            basicMaths Local,fomoValue,~!Local,metersPerSecond!~,/,200
-            if ~!Local,distanceInMeters!~,<,0,
-                basicMaths Local,fomoValue,~!Local,fomoValue!~,*,-1
+    pass if ~!Local,hdDstPolarity!~,==,1,
+    if ~!Local,closer!~,!=,1,
+        # basicMaths Local,fomoValue,~!Local,absoluteHeadingOffset!~,*,~!Local,metersPerSecond!~
+        # basicMaths Local,fomoValue,~!Local,fomoValue!~,/,10
+        basicMaths Local,fomoValue,~!Local,metersPerSecond!~,/,200
+        if ~!Local,distanceInMeters!~,<,0,
+            basicMaths Local,fomoValue,~!Local,fomoValue!~,*,-1
 
     # Calculate nudge from distance if we aren't getting closer to the goal.
     set Local,nudge,0
@@ -358,6 +358,8 @@ if ~!Local,ready!~,==,1,
 
     # Generated with ./generateTrailerDebug.sh
     isolate
+        setNested ["AP","state","~!Local,instanceName!~","trailerDebug","linearStats",~!Local,linearStats!~]
+
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absDistanceInMeters,~!Local,absDistanceInMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absoluteHeadingOffset,~!Local,absoluteHeadingOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedBarAngle,~!Local,adjustedBarAngle!~
