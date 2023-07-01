@@ -3,6 +3,25 @@ parameters instanceName
 
 set Local,ready,1
 
+function samePoles,
+    parameters Category,variable,value1,value2
+
+    set Local,result1,0
+    set Local,result2,0
+
+    if ~!Local,value1!~,<,0,
+        set Local,result1,1
+
+    if ~!Local,value2!~,<,0,
+        set Local,result2,1
+
+    set ~!Local,Category!~,~!Local,variable!~,0
+    if ~!Local,result1!~,==,~!Local,result2!~,
+        set ~!Local,Category!~,~!Local,variable!~,1
+
+    makeAvailable ~!Local,Category!~,~!Local,variable!~
+
+
 if ~!AP,state,~!Local,instanceName!~,longitude-deg!~,==,,
     set Local,ready,0
 
@@ -284,6 +303,21 @@ if ~!Local,ready!~,==,1,
 
         basicMaths Local,nudge,~!Local,nudge!~,/,10
 
+    # Calculate calm to reduce oscillations, while encouraging finding the line.
+    set Local,calm,0
+    if ~!Local,closer!~,==,1,
+        getAPVar ~!Local,instanceName!~,calmMinSpeed,Local,calmMinSpeed
+        if ~!Local,metersPerSecond!~,>,~!Local,calmMinSpeed!~,
+            getAPVar ~!Local,instanceName!~,calmMaxSpeed,Local,calmMaxSpeed
+            if ~!Local,metersPerSecond!~,>=,~!Local,calmMaxSpeed!~,
+                set Local,calm,-1
+            else
+                getAPVar ~!Local,instanceName!~,calmBand,Local,calmBand
+                basicMaths Local,calmInRange,~!Local,metersPerSecond!~,-,~!Local,calmMinSpeed!~
+                basicMaths Local,calm,~!Local,calmInRange!~,/,~!Local,calmBand!~
+                basicMaths Local,calm,~!Local,calm!~,*,-1
+
+
 
     # Assert that we are in the right trailerProfile.
     getAPVar ~!Local,instanceName!~,trailerProfileStart,Local,trailerProfileStart
@@ -331,11 +365,36 @@ if ~!Local,ready!~,==,1,
     applyRangeAndMultiplier Local,adjustedFomo,,~!Local,fomoValue!~,,~!Local,strengthFomo!~
     applyRangeAndMultiplier Local,adjustedNudge,,~!Local,nudge!~,,~!Local,strengthNudge!~
 
+    # Apply calm.
+    function applyCalm,
+        parameters Cat,var,distanceInMeters,calm,value
+
+        # Is this input adding speed to our progress?
+        samePoles Local,samePoles,~!Local,distanceInMeters!~,~!Local,value!~
+        if ~!Local,samePoles!~,!=,1,
+            basicMaths Local,result,~!Local,value!~,*,~!Local,calm!~
+            set ~!Local,Cat!~,~!Local,var!~,~!Local,result!~
+            debug 1,~!Color,green!~got here 0000a~!Color,default!~ poles=~!Local,samePoles!~ var=~!Local,Cat!~,~!Local,var!~ d=~!Local,distanceInMeters!~ c=~!Local,calm!~ v=~!Local,value!~ ==> "~!~!Local,Cat!~,~!Local,var!~!~"
+        else
+            set ~!Local,Cat!~,~!Local,var!~,0
+
+
+        makeAvailable ~!Local,Cat!~,~!Local,var!~
+
+    applyCalm Local,adjustedCalmTrailer,~!Local,distanceInMeters!~,~!Local,calm!~,~!Local,adjustedTrailer!~
+    applyCalm Local,adjustedCalmHeading,~!Local,distanceInMeters!~,~!Local,calm!~,~!Local,adjustedHeading!~
+    applyCalm Local,adjustedCalmBarAngle,~!Local,distanceInMeters!~,~!Local,calm!~,~!Local,adjustedBarAngle!~
+
+    # Combine values.
     basicMaths Local,finalAim,~!Local,adjustedTrailer!~,+,~!Local,adjustedHeading!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedBarAngle!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedOvershoot!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedFomo!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedNudge!~
+
+    basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedCalmTrailer!~
+    basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedCalmHeading!~
+    basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedCalmBarAngle!~
 
 
     # Make it available to the AP.
@@ -359,10 +418,12 @@ if ~!Local,ready!~,==,1,
     # Generated with ./generateTrailerDebug.sh
     isolate
         setNested ["AP","state","~!Local,instanceName!~","trailerDebug","linearStats",~!Local,linearStats!~]
-
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absDistanceInMeters,~!Local,absDistanceInMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absoluteHeadingOffset,~!Local,absoluteHeadingOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedBarAngle,~!Local,adjustedBarAngle!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedCalmBarAngle,~!Local,adjustedCalmBarAngle!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedCalmHeading,~!Local,adjustedCalmHeading!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedCalmTrailer,~!Local,adjustedCalmTrailer!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedFomo,~!Local,adjustedFomo!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedHeading,~!Local,adjustedHeading!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedNudge,~!Local,adjustedNudge!~
@@ -382,8 +443,14 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bMeters,~!Local,bMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bOffset-x,~!Local,bOffset,x!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bOffset-y,~!Local,bOffset,y!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bogusCount,~!Local,bogusCount!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,branch,~!Local,branch!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,bSquared,~!Local,bSquared!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,calm,~!Local,calm!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,calmBand,~!Local,calmBand!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,calmInRange,~!Local,calmInRange!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,calmMaxSpeed,~!Local,calmMaxSpeed!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,calmMinSpeed,~!Local,calmMinSpeed!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeDistance,~!Local,closeDistance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeHeadingDiffRadians,~!Local,closeHeadingDiffRadians!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closer,~!Local,closer!~
@@ -395,9 +462,11 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,deviance,~!Local,deviance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiff,~!Local,distanceDiff!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiffThreshold,~!Local,distanceDiffThreshold!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceInMeters,~!Local,distanceInMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceSide,~!Local,distanceSide!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceThreshold,~!Local,distanceThreshold!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,effectiveCount,~!Local,effectiveCount!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,farDistance,~!Local,farDistance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,farHeadingDiffRadians,~!Local,farHeadingDiffRadians!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,finalAim,~!Local,finalAim!~
@@ -407,9 +476,12 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffsetDesenitised,~!Local,headingOffsetDesenitised!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingSide,~!Local,headingSide!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistance,~!Local,lastDistance!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastNow,~!Local,lastNow!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxBarLength,~!Local,maxBarLength!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxPointsToSkip,~!Local,maxPointsToSkip!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,metersPerSecond,~!Local,metersPerSecond!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,minOvershootSeconds,~!Local,minOvershootSeconds!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,minSeconds,~!Local,minSeconds!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,mute,~!Local,mute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,now,~!Local,now!~
@@ -421,6 +493,8 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,originY,~!Local,originY!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootCounterAngle,~!Local,overshootCounterAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootMultiplier,~!Local,overshootMultiplier!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootOffset,~!Local,overshootOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootSeconds,~!Local,overshootSeconds!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootWhy,~!Local,overshootWhy!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,planeToLineAngle,~!Local,planeToLineAngle!~
@@ -431,6 +505,9 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,proximityMultiplier,~!Local,proximityMultiplier!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,rawAimAngle,~!Local,rawAimAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,ready,~!Local,ready!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,result1,~!Local,result1!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,result2,~!Local,result2!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,samePoles,~!Local,samePoles!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,shouldDoOvershoot,~!Local,shouldDoOvershoot!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,speed,~!Local,speed!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,stepsRemaining,~!Local,stepsRemaining!~

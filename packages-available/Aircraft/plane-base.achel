@@ -49,6 +49,16 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
     setNested ~!Me,stuff!~,maxBarLength,80000
 
 
+    # The minimum speed in meters per second that we want to achieve before reducing effort toward the line.
+    setNested ~!Me,stuff!~,calmMinSpeed,10
+
+    # The maximum speed in meters per second that we want to achieve before all effort is removed.
+    setNested ~!Me,stuff!~,calmMaxSpeed,20
+
+
+    # When we are making progress towards the line. What percentage (0-1) of effort do we take away. calmMinSpeed=0, calmMaxSpeed=1.
+    setNested ~!Me,stuff!~,strengthCalm,1
+
     # Based the distance from the line.
     setNested ~!Me,stuff!~,strengthTrailer,1.2
 
@@ -88,6 +98,10 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,overshootOffset,-0.65
     setNested ~!Me,stuff!~,maxBarLength,20000
 
+    setNested ~!Me,stuff!~,calmMinSpeed,20
+    setNested ~!Me,stuff!~,calmMaxSpeed,30
+
+    setNested ~!Me,stuff!~,strengthCalm,1
     setNested ~!Me,stuff!~,strengthTrailer,1
     setNested ~!Me,stuff!~,strengthHeading,0.2
     setNested ~!Me,stuff!~,strengthBarAngle,0
@@ -111,6 +125,10 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,overshootOffset,0.2
     setNested ~!Me,stuff!~,maxBarLength,40000
 
+    setNested ~!Me,stuff!~,calmMinSpeed,0.5
+    setNested ~!Me,stuff!~,calmMaxSpeed,5
+
+    setNested ~!Me,stuff!~,strengthCalm,1
     setNested ~!Me,stuff!~,strengthTrailer,0.2
     setNested ~!Me,stuff!~,strengthHeading,0
     setNested ~!Me,stuff!~,strengthBarAngle,0.0
@@ -134,6 +152,10 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseHoldLine"],
     setNested ~!Me,stuff!~,overshootOffset,0.2
     setNested ~!Me,stuff!~,maxBarLength,40000
 
+    setNested ~!Me,stuff!~,calmMinSpeed,0.1
+    setNested ~!Me,stuff!~,calmMaxSpeed,1
+
+    setNested ~!Me,stuff!~,strengthCalm,1
     setNested ~!Me,stuff!~,strengthTrailer,0.12
     setNested ~!Me,stuff!~,strengthHeading,0
     setNested ~!Me,stuff!~,strengthBarAngle,0.0
