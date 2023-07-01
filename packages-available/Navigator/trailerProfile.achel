@@ -62,13 +62,13 @@ if ~!Local,shouldChangeProfile!~,==,1,
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,calmMinSpeed
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,calmMaxSpeed
 
-    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthCalm
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthTrailer
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthHeading
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthBarAngle
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthOvershoot
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthFomo
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthNudge
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthSpeed
 
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeHeadingDiffDegrees,closeHeadingDiffRadians
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeDistance
