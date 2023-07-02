@@ -42,9 +42,11 @@ function meanValue,
 
 
 if ~!AP,state,~!Local,instanceName!~,longitude-deg!~,==,,
+    debug 1,No location for ~!Local,instanceName!~.
     set Local,ready,0
 
 if ~!AP,state,~!Local,instanceName!~,destination,longitude!~,==,,
+    debug 1,No destination for ~!Local,instanceName!~.
     set Local,ready,0
 
 if ~!Local,ready!~,==,1,
@@ -77,6 +79,7 @@ if ~!Local,ready!~,==,1,
 
     # Calculate how long we have been close to the track.
     degreesToMeters Local,distanceInMeters,~!Local,linearStats,distanceFromLine!~
+    setAPVarWithContext ~!Local,instanceName!~,track,distanceInMeters,~!Local,distanceInMeters!~
     absolute Local,absDistanceInMeters,~!Local,distanceInMeters!~
     microNow Local,now
     set Local,timeMultiplier,1
@@ -362,6 +365,16 @@ if ~!Local,ready!~,==,1,
                 basicMaths Local,speed,~!Local,speed!~,*,-1
 
 
+    # Calculate longMean to centre our oscillations.
+    if ~!Local,mute!~,==,0,
+        getAPVar ~!Local,instanceName!~,strengthLongMean,Local,strengthLongMean
+        if ~!Local,strengthLongMean!~,!=,0,
+            getAPVar ~!Local,instanceName!~,longMeanIterations,Local,longMeanIterations
+            meanValue ~!Local,instanceName!~,distanceInMeters,distanceLongMean,~!Local,longMeanIterations!~
+            basicMaths Local,longMeanOffset,~!Local,distanceLongMean!~,/,50
+        else
+            setAPVarWithContext ~!Local,instanceName!~,track,distanceLongMean,
+
 
     # Assert that we are in the right trailerProfile.
     getAPVar ~!Local,instanceName!~,trailerProfileStart,Local,trailerProfileStart
@@ -410,6 +423,7 @@ if ~!Local,ready!~,==,1,
     applyRangeAndMultiplier Local,adjustedFomo,,~!Local,fomoValue!~,,~!Local,strengthFomo!~
     applyRangeAndMultiplier Local,adjustedNudge,,~!Local,nudge!~,,~!Local,strengthNudge!~
     applyRangeAndMultiplier Local,adjustedSpeed,,~!Local,speed!~,,~!Local,strengthSpeed!~
+    applyRangeAndMultiplier Local,adjustedLongMeanOffset,,~!Local,longMeanOffset!~,,~!Local,strengthLongMean!~
 
     # Apply calm.
     function applyCalm,
@@ -439,6 +453,7 @@ if ~!Local,ready!~,==,1,
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedFomo!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedNudge!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedSpeed!~
+    basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedLongMeanOffset!~
 
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedCalmTrailer!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedCalmHeading!~

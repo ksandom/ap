@@ -48,6 +48,9 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
     # The length of the virtual bar between the plane and the aim point on the line to track.
     setNested ~!Me,stuff!~,maxBarLength,80000
 
+    # Used to center our wiggles around the line. This setting governs how many iterations go into the mean.
+    setNested ~!Me,stuff!~,longMeanIterations,200
+
 
     # The minimum speed in meters per second that we want to achieve before reducing effort toward the line.
     setNested ~!Me,stuff!~,calmMinSpeed,10
@@ -77,6 +80,9 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
     # While calm removes the contributing input going closer to the line. Speed pumps the brakes at any time.
     setNested ~!Me,stuff!~,strengthSpeed,0.1
 
+    # How strongly to center outselve oscillations on the line.
+    setNested ~!Me,stuff!~,strengthLongMean,0
+
 
     # When the headingDiff and distance from the line are both greater than these. Apply this profile.
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,2
@@ -98,6 +104,8 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,overshootOffset,-0.65
     setNested ~!Me,stuff!~,maxBarLength,20000
 
+    setNested ~!Me,stuff!~,longMeanIterations,200
+
     setNested ~!Me,stuff!~,calmMinSpeed,20
     setNested ~!Me,stuff!~,calmMaxSpeed,30
 
@@ -108,6 +116,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,strengthFomo,0.2
     setNested ~!Me,stuff!~,strengthNudge,0
     setNested ~!Me,stuff!~,strengthSpeed,0
+    setNested ~!Me,stuff!~,strengthLongMean,0
 
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,2
     setNested ~!Me,stuff!~,farDistance,120
@@ -125,6 +134,8 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,overshootOffset,0.3
     setNested ~!Me,stuff!~,maxBarLength,40000
 
+    setNested ~!Me,stuff!~,longMeanIterations,200
+
     setNested ~!Me,stuff!~,calmMinSpeed,0.5
     setNested ~!Me,stuff!~,calmMaxSpeed,1
 
@@ -135,6 +146,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,strengthFomo,0.2
     setNested ~!Me,stuff!~,strengthNudge,0.001
     setNested ~!Me,stuff!~,strengthSpeed,0
+    setNested ~!Me,stuff!~,strengthLongMean,0.05
 
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,15
     setNested ~!Me,stuff!~,farDistance,600
@@ -153,6 +165,8 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseHoldLine"],
     setNested ~!Me,stuff!~,overshootOffset,0.3
     setNested ~!Me,stuff!~,maxBarLength,40000
 
+    setNested ~!Me,stuff!~,longMeanIterations,200
+
     setNested ~!Me,stuff!~,calmMinSpeed,0.1
     setNested ~!Me,stuff!~,calmMaxSpeed,1
 
@@ -163,6 +177,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseHoldLine"],
     setNested ~!Me,stuff!~,strengthFomo,0.4
     setNested ~!Me,stuff!~,strengthNudge,0.001
     setNested ~!Me,stuff!~,strengthSpeed,0
+    setNested ~!Me,stuff!~,strengthLongMean,0
 
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,3
     setNested ~!Me,stuff!~,farDistance,200

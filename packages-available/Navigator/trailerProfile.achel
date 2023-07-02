@@ -59,6 +59,8 @@ if ~!Local,shouldChangeProfile!~,==,1,
 
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,maxBarLength
 
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,longMeanIterations
+
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,calmMinSpeed
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,calmMaxSpeed
 
@@ -69,6 +71,7 @@ if ~!Local,shouldChangeProfile!~,==,1,
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthFomo
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthNudge
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthSpeed
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthLongMean
 
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeHeadingDiffDegrees,closeHeadingDiffRadians
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeDistance
