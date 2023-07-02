@@ -402,6 +402,7 @@ if ~!Local,ready!~,==,1,
     applyCalm Local,adjustedCalmTrailer,~!Local,distanceInMeters!~,~!Local,calm!~,~!Local,adjustedTrailer!~
     applyCalm Local,adjustedCalmHeading,~!Local,distanceInMeters!~,~!Local,calm!~,~!Local,adjustedHeading!~
     applyCalm Local,adjustedCalmBarAngle,~!Local,distanceInMeters!~,~!Local,calm!~,~!Local,adjustedBarAngle!~
+    applyCalm Local,adjustedCalmNudge,~!Local,distanceInMeters!~,~!Local,calm!~,~!Local,adjustedNudge!~
 
     # Combine values.
     basicMaths Local,finalAim,~!Local,adjustedTrailer!~,+,~!Local,adjustedHeading!~
@@ -414,6 +415,7 @@ if ~!Local,ready!~,==,1,
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedCalmTrailer!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedCalmHeading!~
     basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedCalmBarAngle!~
+    basicMaths Local,finalAim,~!Local,finalAim!~,+,~!Local,adjustedCalmNudge!~
 
 
     # Make it available to the AP.
