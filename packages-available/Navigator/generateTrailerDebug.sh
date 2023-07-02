@@ -13,6 +13,13 @@ function listVariables
     echo "branch"
 }
 
+function doMean
+{
+    varName="$1"
+    doLine "${varName}" "${varName}"
+    doLine "${varName}Smoothed" "${varName}Smoothed"
+}
+
 echo "    # Generated with ./generateTrailerDebug.sh"
 echo "    isolate "
 echo '        setNested ["AP","state","~!Local,instanceName!~","trailerDebug","linearStats",~!Local,linearStats!~]'
@@ -25,8 +32,11 @@ while read varName; do
         "linearStats")
             true
         ;;
+        "metersPerSecond")
+            doMean "$varName"
+        ;;
         *)
             doLine "$varName" "$varName"
         ;;
     esac
-done < <(listVariables | sort -u)
+done < <(listVariables | grep -v '\(,apVar\|Local\)' | sort -u)

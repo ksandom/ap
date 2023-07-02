@@ -21,6 +21,25 @@ function samePoles,
 
     makeAvailable ~!Local,Category!~,~!Local,variable!~
 
+function meanValue,
+    parameters instanceName,apVarIn,apVarOut,psuedoMeanLevel
+
+    getAPVarWithContext ~!Local,instanceName!~,track,~!Local,apVarIn!~,Local,in
+    getAPVarWithContext ~!Local,instanceName!~,track,~!Local,apVarOut!~,Local,out
+
+    if ~!Local,out!~,==,,
+        set Local,out,~!Local,in!~
+    else
+        basicMaths Local,multiplier,~!Local,psuedoMeanLevel!~,-,1
+        basicMaths Local,simulatedTotal,~!Local,out!~,*,~!Local,multiplier!~
+        basicMaths Local,newTotal,~!Local,simulatedTotal!~,+,~!Local,in!~
+        basicMaths Local,out,~!Local,newTotal!~,/,~!Local,psuedoMeanLevel!~
+
+    setAPVarWithContext ~!Local,instanceName!~,track,~!Local,apVarOut!~,~!Local,out!~
+    set Local,~!Local,apVarOut!~,~!Local,out!~
+
+    makeAvailable Local,~!Local,apVarOut!~
+
 
 if ~!AP,state,~!Local,instanceName!~,longitude-deg!~,==,,
     set Local,ready,0
@@ -227,7 +246,13 @@ if ~!Local,ready!~,==,1,
     getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
     basicMaths Local,nowChange,~!Local,now!~,-,~!Local,lastNow!~
     basicMaths Local,metersPerSecond,~!Local,distanceDiffAbsolute!~,/,~!Local,nowChange!~
-    basicMaths Local,overshootSeconds,~!Local,absDistanceInMeters!~,/,~!Local,metersPerSecond!~
+
+    setAPVarWithContext ~!Local,instanceName!~,track,metersPerSecond,~!Local,metersPerSecond!~
+    if ~!Local,mute!~,==,0,
+        meanValue ~!Local,instanceName!~,metersPerSecond,metersPerSecondSmoothed,3
+        basicMaths Local,overshootSeconds,~!Local,absDistanceInMeters!~,/,~!Local,metersPerSecondSmoothed!~
+    else
+        set Local,shouldDoOvershoot,0
 
     # Do the overshoot.
     if ~!Local,shouldDoOvershoot!~,==,1,
@@ -240,7 +265,7 @@ if ~!Local,ready!~,==,1,
         if ~!Local,minOvershootSeconds!~,<,2,
             set Local,minOvershootSeconds,2
 
-        basicMaths Local,overshootCounterAngle,~!Local,metersPerSecond!~,/,~!Local,minOvershootSeconds!~
+        basicMaths Local,overshootCounterAngle,~!Local,metersPerSecondSmoothed!~,/,~!Local,minOvershootSeconds!~
 
         # Change the shape.
         getAPVar ~!Local,instanceName!~,overshootMultiplier,Local,overshootMultiplier
@@ -258,7 +283,7 @@ if ~!Local,ready!~,==,1,
 
 
 
-        debug 1,Overshoot oA=~!Local,overshootCounterAngle!~  dC=~!Local,distanceDiff!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecond!~ oss=~!Local,overshootSeconds!~
+        debug 1,Overshoot oA=~!Local,overshootCounterAngle!~  dC=~!Local,distanceDiff!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecondSmoothed!~ oss=~!Local,overshootSeconds!~
 
         # Did we overshoot?
         set Local,before,0
@@ -285,9 +310,12 @@ if ~!Local,ready!~,==,1,
     set Local,fomoValue,0
     pass if ~!Local,hdDstPolarity!~,==,1,
     if ~!Local,closer!~,!=,1,
-        # basicMaths Local,fomoValue,~!Local,absoluteHeadingOffset!~,*,~!Local,metersPerSecond!~
+        # basicMaths Local,fomoValue,~!Local,absoluteHeadingOffset!~,*,~!Local,metersPerSecondSmoothed!~
         # basicMaths Local,fomoValue,~!Local,fomoValue!~,/,10
-        basicMaths Local,fomoValue,~!Local,metersPerSecond!~,/,200
+        # basicMaths Local,fomoValue,~!Local,metersPerSecondSmoothed!~,*,~!Local,absDistanceInMeters!~
+        # basicMaths Local,fomoValue,~!Local,fomoValue!~,/,10000
+        basicMaths Local,fomoValue,~!Local,metersPerSecondSmoothed!~,/,200
+
         if ~!Local,distanceInMeters!~,<,0,
             basicMaths Local,fomoValue,~!Local,fomoValue!~,*,-1
 
@@ -312,22 +340,22 @@ if ~!Local,ready!~,==,1,
     getAPVar ~!Local,instanceName!~,calmBand,Local,calmBand
 
     if ~!Local,closer!~,==,1,
-        if ~!Local,metersPerSecond!~,>,~!Local,calmMinSpeed!~,
-            if ~!Local,metersPerSecond!~,>=,~!Local,calmMaxSpeed!~,
+        if ~!Local,metersPerSecondSmoothed!~,>,~!Local,calmMinSpeed!~,
+            if ~!Local,metersPerSecondSmoothed!~,>=,~!Local,calmMaxSpeed!~,
                 set Local,calm,-1
             else
-                basicMaths Local,calmInRange,~!Local,metersPerSecond!~,-,~!Local,calmMinSpeed!~
+                basicMaths Local,calmInRange,~!Local,metersPerSecondSmoothed!~,-,~!Local,calmMinSpeed!~
                 basicMaths Local,calm,~!Local,calmInRange!~,/,~!Local,calmBand!~
                 basicMaths Local,calm,~!Local,calm!~,*,-1
 
     # Calculate speed. - Pump the brakes when we are manoeuvring too fast.
     # Re-use the calm settings.
     set Local,speed,0
-    if ~!Local,metersPerSecond!~,>,~!Local,calmMinSpeed!~,
-        if ~!Local,metersPerSecond!~,>=,~!Local,calmMaxSpeed!~,
+    if ~!Local,metersPerSecondSmoothed!~,>,~!Local,calmMinSpeed!~,
+        if ~!Local,metersPerSecondSmoothed!~,>=,~!Local,calmMaxSpeed!~,
             set Local,speed,1
         else
-            basicMaths Local,speedInRange,~!Local,metersPerSecond!~,-,~!Local,calmMinSpeed!~
+            basicMaths Local,speedInRange,~!Local,metersPerSecondSmoothed!~,-,~!Local,calmMinSpeed!~
             basicMaths Local,speed,~!Local,speedInRange!~,/,~!Local,calmBand!~
 
             if ~!Local,distanceDiff!~,<,0,
@@ -444,6 +472,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedBarAngle,~!Local,adjustedBarAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedCalmBarAngle,~!Local,adjustedCalmBarAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedCalmHeading,~!Local,adjustedCalmHeading!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedCalmNudge,~!Local,adjustedCalmNudge!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedCalmTrailer,~!Local,adjustedCalmTrailer!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedFomo,~!Local,adjustedFomo!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedHeading,~!Local,adjustedHeading!~
@@ -497,15 +526,19 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffset,~!Local,headingOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffsetDesenitised,~!Local,headingOffsetDesenitised!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingSide,~!Local,headingSide!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,in,~!Local,in!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistance,~!Local,lastDistance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastNow,~!Local,lastNow!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxBarLength,~!Local,maxBarLength!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxPointsToSkip,~!Local,maxPointsToSkip!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,metersPerSecond,~!Local,metersPerSecond!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,metersPerSecondSmoothed,~!Local,metersPerSecondSmoothed!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,minOvershootSeconds,~!Local,minOvershootSeconds!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,minSeconds,~!Local,minSeconds!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,multiplier,~!Local,multiplier!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,mute,~!Local,mute!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,newTotal,~!Local,newTotal!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,now,~!Local,now!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,nowChange,~!Local,nowChange!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,nudge,~!Local,nudge!~
@@ -513,6 +546,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,orientationDegrees,~!Local,orientationDegrees!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,originX,~!Local,originX!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,originY,~!Local,originY!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,out,~!Local,out!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootCounterAngle,~!Local,overshootCounterAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootHeadingThresholdRadians,~!Local,overshootHeadingThresholdRadians!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootMultiplier,~!Local,overshootMultiplier!~
@@ -532,6 +566,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,result2,~!Local,result2!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,samePoles,~!Local,samePoles!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,shouldDoOvershoot,~!Local,shouldDoOvershoot!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,simulatedTotal,~!Local,simulatedTotal!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,speed,~!Local,speed!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,speedInRange,~!Local,speedInRange!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,stepsRemaining,~!Local,stepsRemaining!~
