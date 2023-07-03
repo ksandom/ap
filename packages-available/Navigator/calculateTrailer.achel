@@ -77,10 +77,57 @@ if ~!Local,ready!~,==,1,
     # Get speed.
     getAPVar ~!Local,instanceName!~,airspeed-kt,Local,speed
 
-    # Calculate how long we have been close to the track.
+
+    # Detect bogus data.
     degreesToMeters Local,distanceInMeters,~!Local,linearStats,distanceFromLine!~
     setAPVarWithContext ~!Local,instanceName!~,track,distanceInMeters,~!Local,distanceInMeters!~
-    absolute Local,absDistanceInMeters,~!Local,distanceInMeters!~
+    meanValue ~!Local,instanceName!~,distanceInMeters,distanceInMetersStableDraft,3
+    absolute Local,absDistanceInMeters,~!Local,distanceInMetersStableDraft!~
+
+    getAPVarWithContext ~!Local,instanceName!~,track,lastDistance,Local,lastDistance
+    set Local,mute,0
+    if ~!Local,lastDistance!~,==,,
+        debug 1,No overshoot history. Setting it up now.
+        set Local,lastDistance,~!Local,distanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,lastDistance!~
+        setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+        set Local,mute,1
+
+    basicMaths Local,distanceDiff,~!Local,distanceInMetersStableDraft!~,-,~!Local,lastDistance!~
+    absolute Local,distanceDiffAbsolute,~!Local,distanceDiff!~
+    getAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,Local,lastDistanceDiffAbsolute
+    if ~!Local,lastDistanceDiffAbsolute!~,==,,
+        set Local,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+        setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~
+        setAPVarWithContext ~!Local,instanceName!~,track,bogusCount,0
+    else
+        getAPVarWithContext ~!Local,instanceName!~,track,bogusCount,Local,bogusCount
+        basicMaths Local,bogusCount,~!Local,bogusCount!~,+,1
+        basicMaths Local,effectiveCount,~!Local,bogusCount!~,+,1
+        basicMaths Local,distanceDiffThreshold,~!Local,lastDistanceDiffAbsolute!~,*,~!Local,effectiveCount!~
+
+        if ~!Local,distanceDiffAbsolute!~,>,~!Local,distanceDiffThreshold!~,
+            getAPVar ~!Local,instanceName!~,maxPointsToSkip,Local,maxPointsToSkip
+            if ~!Local,bogusCount!~,<=,~!Local,maxPointsToSkip!~,
+                debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~). Skipping this point.
+                set Local,shouldDoOvershoot,0
+                set Local,overshootWhy,Bogus data (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~).
+                set Local,mute,1
+            else
+                debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~). But we have exceeded (~!Local,bogusCount!~) maxPointsToSkip (~!Local,maxPointsToSkip!~,). So letting this point past.
+                set Local,bogusCount,0
+                setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+                set Local,distanceInMetersStable,~!Local,distanceInMetersStableDraft!~
+        else
+            set Local,bogusCount,0
+            setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+            set Local,distanceInMetersStable,~!Local,distanceInMetersStableDraft!~
+        setAPVarWithContext ~!Local,instanceName!~,track,bogusCount,~!Local,bogusCount!~
+
+        basicMaths Local,stepsRemaining,~!Local,absDistanceInMeters!~,/,~!Local,distanceDiffAbsolute!~
+
+
+    # Calculate how long we have been close to the track.
     microNow Local,now
     set Local,timeMultiplier,1
     set Local,proximityMultiplier,1
@@ -116,7 +163,7 @@ if ~!Local,ready!~,==,1,
 
     # Calculate aiming point along the track in meters (so the differences don't get lost in rounding errors).
     basicMaths Local,cSquared,~!Local,barLength!~,^,2
-    basicMaths Local,aSquared,~!Local,distanceInMeters!~,^,2
+    basicMaths Local,aSquared,~!Local,distanceInMetersStable!~,^,2
     basicMaths Local,bSquared,~!Local,cSquared!~,-,~!Local,aSquared!~
     basicMaths Local,bMeters,~!Local,bSquared!~,^,0.5
     metersToDegrees Local,b,~!Local,bMeters!~
@@ -145,7 +192,7 @@ if ~!Local,ready!~,==,1,
 
     # Figure out if heading and distance have the same polarity.
     set Local,distanceSide,-1
-    if ~!Local,distanceInMeters!~,>,0,
+    if ~!Local,distanceInMetersStable!~,>,0,
         set Local,distanceSide,1
 
     set Local,headingSide,-1
@@ -180,70 +227,29 @@ if ~!Local,ready!~,==,1,
         set Local,overshootWhy,angleThreshold: ~!Local,planeToLineAngleAbs!~ < ~!Local,overshootHeadingThresholdRadians!~
 
     # Test: If the new distance is in the direction of closer to the line from the perspective of the old distance.
-    getAPVarWithContext ~!Local,instanceName!~,track,lastDistance,Local,lastDistance
-    set Local,mute,0
-    if ~!Local,lastDistance!~,==,,
-        debug 1,No overshoot history. Setting it up now.
-        set Local,lastDistance,~!Local,distanceInMeters!~
-        setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,lastDistance!~
-        setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
-        set Local,mute,1
-
-    if ~!Local,distanceInMeters!~,==,~!Local,lastDistance!~,
+    if ~!Local,distanceInMetersStable!~,==,~!Local,lastDistance!~,
         set Local,shouldDoOvershoot,0
-        set Local,overshootWhy,noChange: ~!Local,distanceInMeters!~
+        set Local,overshootWhy,noChange: ~!Local,distanceInMetersStable!~
 
     set Local,closer,0
     if ~!Local,lastDistance!~,<,0,
-        if ~!Local,distanceInMeters!~,>,~!Local,lastDistance!~,
-            if ~!Local,distanceInMeters!~,<,0,
+        if ~!Local,distanceInMetersStable!~,>,~!Local,lastDistance!~,
+            if ~!Local,distanceInMetersStable!~,<,0,
                 set Local,closer,1
     if ~!Local,lastDistance!~,>=,0,
-        if ~!Local,distanceInMeters!~,<,~!Local,lastDistance!~,
-            if ~!Local,distanceInMeters!~,>,0,
+        if ~!Local,distanceInMetersStable!~,<,~!Local,lastDistance!~,
+            if ~!Local,distanceInMetersStable!~,>,0,
                 set Local,closer,1
 
     # Don't apply overshoot if we aren't getting closer to the line.
     if ~!Local,closer!~,==,0,
         set Local,shouldDoOvershoot,0
-        set Local,overshootWhy,notCloser: ~!Local,distanceInMeters!~ vs ~!Local,lastDistance!~
+        set Local,overshootWhy,notCloser: ~!Local,distanceInMetersStable!~ vs ~!Local,lastDistance!~
 
     # Overshoot should only apply when we are facing the same direction as travel.
     if ~!Local,hdDstPolarity!~,==,1,
         set Local,shouldDoOvershoot,0
         set Local,overshootWhy,heading and distance don't have the same polarity.
-
-    # Detect bogus data.
-    basicMaths Local,distanceDiff,~!Local,distanceInMeters!~,-,~!Local,lastDistance!~
-    absolute Local,distanceDiffAbsolute,~!Local,distanceDiff!~
-    getAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,Local,lastDistanceDiffAbsolute
-    if ~!Local,lastDistanceDiffAbsolute!~,==,,
-        set Local,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
-        setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~
-        setAPVarWithContext ~!Local,instanceName!~,track,bogusCount,0
-    else
-        getAPVarWithContext ~!Local,instanceName!~,track,bogusCount,Local,bogusCount
-        basicMaths Local,bogusCount,~!Local,bogusCount!~,+,1
-        basicMaths Local,effectiveCount,~!Local,bogusCount!~,+,1
-        basicMaths Local,distanceDiffThreshold,~!Local,lastDistanceDiffAbsolute!~,*,~!Local,effectiveCount!~
-
-        if ~!Local,distanceDiffAbsolute!~,>,~!Local,distanceDiffThreshold!~,
-            getAPVar ~!Local,instanceName!~,maxPointsToSkip,Local,maxPointsToSkip
-            if ~!Local,bogusCount!~,<=,~!Local,maxPointsToSkip!~,
-                debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~). Skipping this point.
-                set Local,shouldDoOvershoot,0
-                set Local,overshootWhy,Bogus data (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~).
-                set Local,mute,1
-            else
-                debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~). But we have exceeded (~!Local,bogusCount!~) maxPointsToSkip (~!Local,maxPointsToSkip!~,). So letting this point past.
-                set Local,bogusCount,0
-                setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
-        else
-            set Local,bogusCount,0
-            setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
-        setAPVarWithContext ~!Local,instanceName!~,track,bogusCount,~!Local,bogusCount!~
-
-        basicMaths Local,stepsRemaining,~!Local,absDistanceInMeters!~,/,~!Local,distanceDiffAbsolute!~
 
     # Some calculations to be shared.
     getAPVarWithContext ~!Local,instanceName!~,track,lastNow,Local,lastNow
@@ -281,7 +287,7 @@ if ~!Local,ready!~,==,1,
             set Local,overshootCounterAngle,0
 
         # Apply polarity based on the polarity of the distance.
-        if ~!Local,distanceInMeters!~,>,0,
+        if ~!Local,distanceInMetersStable!~,>,0,
             basicMaths Local,overshootCounterAngle,~!Local,overshootCounterAngle!~,*,-1
 
 
@@ -293,7 +299,7 @@ if ~!Local,ready!~,==,1,
         set Local,after,0
         if ~!Local,lastDistance!~,<,0,
             set Local,before,1
-        if ~!Local,distanceInMeters!~,<,0,
+        if ~!Local,distanceInMetersStable!~,<,0,
             set Local,after,1
 
         if ~!Local,before!~,!=,~!Local,after!~,
@@ -304,7 +310,7 @@ if ~!Local,ready!~,==,1,
         set Local,overshootCounterAngle,0
 
     if ~!Local,mute!~,==,0,
-        setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,distanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,distanceInMetersStable!~
         setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
 
 
@@ -319,7 +325,7 @@ if ~!Local,ready!~,==,1,
         # basicMaths Local,fomoValue,~!Local,fomoValue!~,/,10000
         basicMaths Local,fomoValue,~!Local,metersPerSecondSmoothed!~,/,200
 
-        if ~!Local,distanceInMeters!~,<,0,
+        if ~!Local,distanceInMetersStable!~,<,0,
             basicMaths Local,fomoValue,~!Local,fomoValue!~,*,-1
 
 
@@ -330,7 +336,7 @@ if ~!Local,ready!~,==,1,
         if ~!Local,nudge!~,>,10,
             set Local,nudge,10
 
-        if ~!Local,distanceInMeters!~,<,0,
+        if ~!Local,distanceInMetersStable!~,<,0,
             basicMaths Local,nudge,~!Local,nudge!~,*,-1
 
         basicMaths Local,nudge,~!Local,nudge!~,/,10
@@ -427,24 +433,24 @@ if ~!Local,ready!~,==,1,
 
     # Apply calm.
     function applyCalm,
-        parameters Cat,var,distanceInMeters,calm,value
+        parameters Cat,var,distance,calm,value
 
         # Is this input adding speed to our progress?
-        samePoles Local,samePoles,~!Local,distanceInMeters!~,~!Local,value!~
+        samePoles Local,samePoles,~!Local,distance!~,~!Local,value!~
         if ~!Local,samePoles!~,!=,1,
             basicMaths Local,result,~!Local,value!~,*,~!Local,calm!~
             set ~!Local,Cat!~,~!Local,var!~,~!Local,result!~
-            # debug 1,~!Color,green!~got here 0000a~!Color,default!~ poles=~!Local,samePoles!~ var=~!Local,Cat!~,~!Local,var!~ d=~!Local,distanceInMeters!~ c=~!Local,calm!~ v=~!Local,value!~ ==> "~!~!Local,Cat!~,~!Local,var!~!~"
+            # debug 1,~!Color,green!~got here 0000a~!Color,default!~ poles=~!Local,samePoles!~ var=~!Local,Cat!~,~!Local,var!~ d=~!Local,distance!~ c=~!Local,calm!~ v=~!Local,value!~ ==> "~!~!Local,Cat!~,~!Local,var!~!~"
         else
             set ~!Local,Cat!~,~!Local,var!~,0
 
 
         makeAvailable ~!Local,Cat!~,~!Local,var!~
 
-    applyCalm Local,adjustedCalmTrailer,~!Local,distanceInMeters!~,~!Local,calm!~,~!Local,adjustedTrailer!~
-    applyCalm Local,adjustedCalmHeading,~!Local,distanceInMeters!~,~!Local,calm!~,~!Local,adjustedHeading!~
-    applyCalm Local,adjustedCalmBarAngle,~!Local,distanceInMeters!~,~!Local,calm!~,~!Local,adjustedBarAngle!~
-    applyCalm Local,adjustedCalmNudge,~!Local,distanceInMeters!~,~!Local,calm!~,~!Local,adjustedNudge!~
+    applyCalm Local,adjustedCalmTrailer,~!Local,distanceInMetersStable!~,~!Local,calm!~,~!Local,adjustedTrailer!~
+    applyCalm Local,adjustedCalmHeading,~!Local,distanceInMetersStable!~,~!Local,calm!~,~!Local,adjustedHeading!~
+    applyCalm Local,adjustedCalmBarAngle,~!Local,distanceInMetersStable!~,~!Local,calm!~,~!Local,adjustedBarAngle!~
+    applyCalm Local,adjustedCalmNudge,~!Local,distanceInMetersStable!~,~!Local,calm!~,~!Local,adjustedNudge!~
 
     # Combine values.
     basicMaths Local,finalAim,~!Local,adjustedTrailer!~,+,~!Local,adjustedHeading!~
@@ -474,10 +480,10 @@ if ~!Local,ready!~,==,1,
     setAPVarWithContext ~!Local,instanceName!~,track,aimLat,~!Local,aimY!~
 
 
-    # debug 1,bOffset=~!Local,bOffset!~  lA=~!Local,linearStats,extra,lineAngle!~  b=~!Local,b!~(~!Local,bMeters!~)  bSquared=~!Local,bSquared!~  cSquared=~!Local,cSquared!~  aSquared=~!Local,aSquared!~  distanceInMeters=~!Local,distanceInMeters!~  barLength=~!Local,barLength!~(~!Local,barLengthDegrees!~)
-    debug 2,d=~!Local,distanceInMeters!~(~!Local,linearStats,distanceFromLine!~) effort=~!Local,aimAngle-deg!~ s=~!Local,speed!~ barLength=~!Local,barLength!~ aim=~!Local,aimY!~,~!Local,aimX!~ closeTime=~!Local,closeTime!~=~!Local,now!~,-,~!Local,closeSince!~ multipliers=~!Local,timeMultiplier!~,~!Local,proximityMultiplier!~
+    # debug 1,bOffset=~!Local,bOffset!~  lA=~!Local,linearStats,extra,lineAngle!~  b=~!Local,b!~(~!Local,bMeters!~)  bSquared=~!Local,bSquared!~  cSquared=~!Local,cSquared!~  aSquared=~!Local,aSquared!~  distanceInMetersStable=~!Local,distanceInMetersStable!~  barLength=~!Local,barLength!~(~!Local,barLengthDegrees!~)
+    debug 2,d=~!Local,distanceInMetersStable!~(~!Local,linearStats,distanceFromLine!~) effort=~!Local,aimAngle-deg!~ s=~!Local,speed!~ barLength=~!Local,barLength!~ aim=~!Local,aimY!~,~!Local,aimX!~ closeTime=~!Local,closeTime!~=~!Local,now!~,-,~!Local,closeSince!~ multipliers=~!Local,timeMultiplier!~,~!Local,proximityMultiplier!~
 
-    debug 2,effort=~!Local,aimAngle-deg!~  aimAngle=~!Local,aimAngleWithOvershoot!~=~!Local,aimAngle!~,-,~!Local,overshootCounterAngle!~  d=~!Local,distanceInMeters!~  angles: r=~!Local,rawAimAngle!~ h/o=~!Local,orientation!~
+    debug 2,effort=~!Local,aimAngle-deg!~  aimAngle=~!Local,aimAngleWithOvershoot!~=~!Local,aimAngle!~,-,~!Local,overshootCounterAngle!~  d=~!Local,distanceInMetersStable!~  angles: r=~!Local,rawAimAngle!~ h/o=~!Local,orientation!~
 
     # Generated with ./generateTrailerDebug.sh
     isolate
@@ -491,6 +497,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedCalmTrailer,~!Local,adjustedCalmTrailer!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedFomo,~!Local,adjustedFomo!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedHeading,~!Local,adjustedHeading!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedLongMeanOffset,~!Local,adjustedLongMeanOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedNudge,~!Local,adjustedNudge!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedOvershoot,~!Local,adjustedOvershoot!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedSpeed,~!Local,adjustedSpeed!~
@@ -530,6 +537,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiffThreshold,~!Local,distanceDiffThreshold!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceInMeters,~!Local,distanceInMeters!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceInMetersStable,~!Local,distanceInMetersStable!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceSide,~!Local,distanceSide!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceThreshold,~!Local,distanceThreshold!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,effectiveCount,~!Local,effectiveCount!~
@@ -545,6 +553,8 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistance,~!Local,lastDistance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastNow,~!Local,lastNow!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,longMeanIterations,~!Local,longMeanIterations!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,longMeanOffset,~!Local,longMeanOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxBarLength,~!Local,maxBarLength!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxPointsToSkip,~!Local,maxPointsToSkip!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,metersPerSecond,~!Local,metersPerSecond!~
@@ -588,6 +598,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthBarAngle,~!Local,strengthBarAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthFomo,~!Local,strengthFomo!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthHeading,~!Local,strengthHeading!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthLongMean,~!Local,strengthLongMean!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthNudge,~!Local,strengthNudge!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthOvershoot,~!Local,strengthOvershoot!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthSpeed,~!Local,strengthSpeed!~
