@@ -122,16 +122,16 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,farDistance,120
     setNested ~!Me,stuff!~,trailerProfileFar,na
 
-    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,4
-    setNested ~!Me,stuff!~,closeDistance,500
+    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,24
+    setNested ~!Me,stuff!~,closeDistance,1000
     setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseSteadyLine
 
     setNested ~!Me,stuff!~,minSeconds,0
 
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,0
-    setNested ~!Me,stuff!~,overshootMultiplier,0.4
-    setNested ~!Me,stuff!~,overshootOffset,0.4
+    setNested ~!Me,stuff!~,overshootMultiplier,0.5
+    setNested ~!Me,stuff!~,overshootOffset,0
     setNested ~!Me,stuff!~,maxBarLength,40000
 
     setNested ~!Me,stuff!~,longMeanIterations,200
@@ -139,14 +139,14 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,calmMinSpeed,0.5
     setNested ~!Me,stuff!~,calmMaxSpeed,1
 
-    setNested ~!Me,stuff!~,strengthTrailer,1
+    setNested ~!Me,stuff!~,strengthTrailer,0.5
     setNested ~!Me,stuff!~,strengthHeading,0
     setNested ~!Me,stuff!~,strengthBarAngle,0.0
-    setNested ~!Me,stuff!~,strengthOvershoot,0.02
-    setNested ~!Me,stuff!~,strengthFomo,0.3
+    setNested ~!Me,stuff!~,strengthOvershoot,0.04
+    setNested ~!Me,stuff!~,strengthFomo,0.4
     setNested ~!Me,stuff!~,strengthNudge,0.001
     setNested ~!Me,stuff!~,strengthSpeed,0
-    setNested ~!Me,stuff!~,strengthLongMean,0.001
+    setNested ~!Me,stuff!~,strengthLongMean,0
 
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,15
     setNested ~!Me,stuff!~,farDistance,600
