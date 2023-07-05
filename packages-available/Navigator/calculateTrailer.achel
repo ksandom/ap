@@ -40,6 +40,97 @@ function meanValue,
 
     makeAvailable Local,~!Local,apVarOut!~
 
+# TODO Sin:
+# * Implement settings per overshoot, FOMO.
+#   * beginVar
+#   * beginOffset
+#   * envVar
+#   * endOffset
+# * Implement other settings.
+#   * allowSin
+#   * globalOffset
+# * Implement lookup:
+#   * useSin - If we don't have enough data. Don't use sin.
+#   * shouldDoSin - Do we meet the condition.
+
+function sinGet,
+    parameters instanceName,profile
+
+    getAPVarWithContext ~!Local,instanceName!~,~!Local,srcProfile!~,startTime,Local,startTime
+    getAPVarWithContext ~!Local,instanceName!~,~!Local,srcProfile!~,peakTime,Local,peakTime
+    getAPVarWithContext ~!Local,instanceName!~,~!Local,srcProfile!~,endTime,Local,endTime
+    getAPVarWithContext ~!Local,instanceName!~,~!Local,srcProfile!~,peakValue,Local,peakValue
+
+    makeAvailable Local,startTime
+    makeAvailable Local,peakTime
+    makeAvailable Local,endTime
+    makeAvailable Local,peakValue
+
+function sinMigrate,
+    parameters instanceName,srcProfile,dstProfile
+
+    sinGet ~!Local,instanceName!~,~!Local,srcProfile!~
+
+    setAPVarWithContext ~!Local,instanceName!~,~!Local,dstProfile!~,startTime,~!Local,startTime!~
+    setAPVarWithContext ~!Local,instanceName!~,~!Local,dstProfile!~,peakTime,~!Local,peakTime!~
+    setAPVarWithContext ~!Local,instanceName!~,~!Local,dstProfile!~,endTime,~!Local,endTime!~
+    setAPVarWithContext ~!Local,instanceName!~,~!Local,dstProfile!~,peakValue,~!Local,peakValue!~
+
+function sinRecord,
+    parameters instanceName,distance,absDistance
+
+    # Which pole are we in now?
+    if ~!Local,distance!~,<,0,
+        set Local,pole,N
+    else
+        set Local,pole,P
+
+    # Manage the lastPole.
+    getAPVarWithContext ~!Local,instanceName!~,sinGeneral,lastPole,Local,lastPole
+    setAPVarWithContext ~!Local,instanceName!~,sinGeneral,lastPole,~!Local,pole!~
+
+    # Pre-requisites.
+    set Local,currentProfile,sin~!Local,pole!~
+    microNow Local,now
+
+    # If we have changed pole, migrate the current profile to previous, and perform calculations for later.
+    if ~!Local,pole!~,!=,~!Local,lastPole!~,
+        set Local,previousProfile,~!Local,currentProfile!~Previous
+        setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,endTime,~!Local,now!~
+        sinMigrate ~!Local,instanceName!~,~!Local,currentProfile!~,~!Local,previousProfile!~
+        unset AP,state,~!Local,instanceName!~,sin~!Local,pole!~
+
+        sinGet ~!Local,instanceName!~,~!Local,previousProfile!~
+        basicMaths Local,peakSecond,~!Local,peakTime!~,-,~!Local,startTime!~
+        basicMaths Local,endSecond,~!Local,endTime!~,-,~!Local,startTime!~
+
+        setAPVarWithContext ~!Local,instanceName!~,~!Local,previousProfile!~,peakSecond,~!Local,peakSecond!~
+        setAPVarWithContext ~!Local,instanceName!~,~!Local,previousProfile!~,endSecond,~!Local,endSecond!~
+
+        setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,startTime,~!Local,now!~
+        setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,havePeaked,0
+        mark ~!Local,instanceName!~,Crossed ~!Local,lastPole!~ -> ~!Local,pole!~
+
+    # Make sure we have a valid peak value to work with.
+    getAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,peakValue,Local,peakValue
+    if ~!Local,peakValue!~,==,,
+        set Local,peakValue,0
+
+    # Update the peak value if the new value is larger.
+    if ~!Local,absDistance!~,>,~!Local,peakValue!~,
+        setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,peakTime,~!Local,now!~
+        setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,peakValue,~!Local,absDistance!~
+        set Local,peakValue,~!Local,absDistance!~
+
+    # Track whether we have peaked.
+    getAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,havePeaked,Local,havePeaked
+
+    if ~!Local,havePeaked!~,==,0,
+        if ~!Local,absDistance!~,<,~!Local,peakValue!~,
+            setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,havePeaked,1
+            mark ~!Local,instanceName!~,Peaked ~!Local,pole!~ ~!Local,peakValue!~
+
+
 
 if ~!AP,state,~!Local,instanceName!~,longitude-deg!~,==,,
     debug 1,No location for ~!Local,instanceName!~.
@@ -126,6 +217,8 @@ if ~!Local,ready!~,==,1,
 
         basicMaths Local,stepsRemaining,~!Local,absDistanceInMeters!~,/,~!Local,distanceDiffAbsolute!~
 
+    if ~!Local,mute!~,==,0,
+        sinRecord ~!Local,instanceName!~,~!Local,distanceInMetersStable!~,~!Local,absDistanceInMeters!~
 
     # Calculate how long we have been close to the track.
     microNow Local,now
@@ -404,11 +497,15 @@ if ~!Local,ready!~,==,1,
 
         set Local,trailerProfileToApply,na
         if ~!Local,profileSelector!~,==,close,
-            getAPVar ~!Local,instanceName!~,trailerProfileClose,Local,trailerProfileToApply
-            # debug 1,trailerProfile close because:  ho(~!Local,absoluteHeadingOffset!~) < ~!Local,closeHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) < ~!Local,closeDistance!~
+            getAPVar ~!Local,instanceName!~,farShouldReset,Local,farShouldReset
+            if ~!Local,farShouldReset!~,==,1,
+                getAPVar ~!Local,instanceName!~,trailerProfileClose,Local,trailerProfileToApply
+                # debug 1,trailerProfile close because:  ho(~!Local,absoluteHeadingOffset!~) < ~!Local,closeHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) < ~!Local,closeDistance!~
         if ~!Local,profileSelector!~,==,far,
-            getAPVar ~!Local,instanceName!~,trailerProfileFar,Local,trailerProfileToApply
-            # debug 1,trailerProfile far because:  ho(~!Local,absoluteHeadingOffset!~) > ~!Local,farHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) > ~!Local,farDistance!~
+            getAPVar ~!Local,instanceName!~,closeShouldReset,Local,closeShouldReset
+            if ~!Local,closeShouldReset!~,==,1,
+                getAPVar ~!Local,instanceName!~,trailerProfileFar,Local,trailerProfileToApply
+                # debug 1,trailerProfile far because:  ho(~!Local,absoluteHeadingOffset!~) > ~!Local,farHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) > ~!Local,farDistance!~
 
         trailerProfile ~!Local,instanceName!~,~!Local,trailerProfileToApply!~
 

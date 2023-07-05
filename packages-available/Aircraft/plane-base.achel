@@ -85,11 +85,13 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
 
 
     # When the headingDiff and distance from the line are both greater than these. Apply this profile.
+    setNested ~!Me,stuff!~,farShouldReset,0
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,2
     setNested ~!Me,stuff!~,farDistance,2
     setNested ~!Me,stuff!~,trailerProfileFar,na
 
     # When the headingDiff and distance from the line are both less than these. Apply this profile.
+    setNested ~!Me,stuff!~,closeShouldReset,0
     setNested ~!Me,stuff!~,closeHeadingDiffDegrees,2
     setNested ~!Me,stuff!~,closeDistance,2
     setNested ~!Me,stuff!~,trailerProfileClose,na
@@ -118,10 +120,12 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,strengthSpeed,0
     setNested ~!Me,stuff!~,strengthLongMean,0
 
+    setNested ~!Me,stuff!~,farShouldReset,0
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,2
     setNested ~!Me,stuff!~,farDistance,120
     setNested ~!Me,stuff!~,trailerProfileFar,na
 
+    setNested ~!Me,stuff!~,closeShouldReset,1
     setNested ~!Me,stuff!~,closeHeadingDiffDegrees,24
     setNested ~!Me,stuff!~,closeDistance,1000
     setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseSteadyLine
@@ -148,10 +152,12 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,strengthSpeed,0
     setNested ~!Me,stuff!~,strengthLongMean,0
 
+    setNested ~!Me,stuff!~,farShouldReset,1
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,15
     setNested ~!Me,stuff!~,farDistance,600
     setNested ~!Me,stuff!~,trailerProfileFar,trailerCruiseFindLine
 
+    setNested ~!Me,stuff!~,closeShouldReset,0
     setNested ~!Me,stuff!~,closeHeadingDiffDegrees,2
     setNested ~!Me,stuff!~,closeDistance,100
     # setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseHoldLine
@@ -179,10 +185,12 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseHoldLine"],
     setNested ~!Me,stuff!~,strengthSpeed,0
     setNested ~!Me,stuff!~,strengthLongMean,0
 
+    setNested ~!Me,stuff!~,farShouldReset,0
     setNested ~!Me,stuff!~,farHeadingDiffDegrees,3
     setNested ~!Me,stuff!~,farDistance,200
     setNested ~!Me,stuff!~,trailerProfileFar,trailerCruiseSteadyLine
 
+    setNested ~!Me,stuff!~,closeShouldReset,0
     setNested ~!Me,stuff!~,closeHeadingDiffDegrees,3
     setNested ~!Me,stuff!~,closeDistance,200
     setNested ~!Me,stuff!~,trailerProfileClose,na
