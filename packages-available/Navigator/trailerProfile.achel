@@ -1,6 +1,6 @@
 # Choose the profile to use for the SandomTrailer algorithm. --trailerProfile=instanceName,profileName ~ navigation,trailer
 
-parameters {"instanceName":"default","profileName":"trailerCruiseFindLine"}
+parameters {"instanceName":"default","profileName":"trailerCruiseFindLine","shouldReset":"0"}
 
 
 # Test that the profile has changed.
@@ -93,5 +93,9 @@ if ~!Local,shouldChangeProfile!~,==,1,
     # Track when it was made active.
     microNow Local,now
     setAPVar ~!Local,instanceName!~,trailerProfileStart,~!Local,now!~
+
+    # Reset if requested.
+    if ~!Local,shouldReset!~,==,1,
+        resetTrailer ~!Local,instanceName!~
 
 

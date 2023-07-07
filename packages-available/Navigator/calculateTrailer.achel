@@ -109,7 +109,7 @@ function sinRecord,
 
         setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,startTime,~!Local,now!~
         setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,havePeaked,0
-        mark ~!Local,instanceName!~,Crossed ~!Local,lastPole!~ -> ~!Local,pole!~
+        mark ~!Local,instanceName!~,~!Local,lastPole!~ -> ~!Local,pole!~
 
     # Make sure we have a valid peak value to work with.
     getAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,peakValue,Local,peakValue
@@ -121,6 +121,7 @@ function sinRecord,
         setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,peakTime,~!Local,now!~
         setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,peakValue,~!Local,absDistance!~
         set Local,peakValue,~!Local,absDistance!~
+        setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,havePeaked,0
 
     # Track whether we have peaked.
     getAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,havePeaked,Local,havePeaked
@@ -128,7 +129,8 @@ function sinRecord,
     if ~!Local,havePeaked!~,==,0,
         if ~!Local,absDistance!~,<,~!Local,peakValue!~,
             setAPVarWithContext ~!Local,instanceName!~,~!Local,currentProfile!~,havePeaked,1
-            mark ~!Local,instanceName!~,Peaked ~!Local,pole!~ ~!Local,peakValue!~
+            round Local,roundedPeak,~!Local,peakValue!~,1
+            mark ~!Local,instanceName!~,~!Local,pole!~/~!Local,roundedPeak!~
 
 
 
@@ -195,7 +197,8 @@ if ~!Local,ready!~,==,1,
         getAPVarWithContext ~!Local,instanceName!~,track,bogusCount,Local,bogusCount
         basicMaths Local,bogusCount,~!Local,bogusCount!~,+,1
         basicMaths Local,effectiveCount,~!Local,bogusCount!~,+,1
-        basicMaths Local,distanceDiffThreshold,~!Local,lastDistanceDiffAbsolute!~,*,~!Local,effectiveCount!~
+        basicMaths Local,diffWithMargin,~!Local,lastDistanceDiffAbsolute!~,+,3
+        basicMaths Local,distanceDiffThreshold,~!Local,diffWithMargin!~,*,~!Local,effectiveCount!~
 
         if ~!Local,distanceDiffAbsolute!~,>,~!Local,distanceDiffThreshold!~,
             getAPVar ~!Local,instanceName!~,maxPointsToSkip,Local,maxPointsToSkip
@@ -496,18 +499,19 @@ if ~!Local,ready!~,==,1,
                 set Local,profileSelector,far
 
         set Local,trailerProfileToApply,na
+        set Local,shouldReset,0
         if ~!Local,profileSelector!~,==,close,
-            getAPVar ~!Local,instanceName!~,farShouldReset,Local,farShouldReset
-            if ~!Local,farShouldReset!~,==,1,
-                getAPVar ~!Local,instanceName!~,trailerProfileClose,Local,trailerProfileToApply
-                # debug 1,trailerProfile close because:  ho(~!Local,absoluteHeadingOffset!~) < ~!Local,closeHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) < ~!Local,closeDistance!~
-        if ~!Local,profileSelector!~,==,far,
-            getAPVar ~!Local,instanceName!~,closeShouldReset,Local,closeShouldReset
-            if ~!Local,closeShouldReset!~,==,1,
-                getAPVar ~!Local,instanceName!~,trailerProfileFar,Local,trailerProfileToApply
-                # debug 1,trailerProfile far because:  ho(~!Local,absoluteHeadingOffset!~) > ~!Local,farHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) > ~!Local,farDistance!~
+            getAPVar ~!Local,instanceName!~,farShouldReset,Local,shouldReset
 
-        trailerProfile ~!Local,instanceName!~,~!Local,trailerProfileToApply!~
+            getAPVar ~!Local,instanceName!~,trailerProfileClose,Local,trailerProfileToApply
+            # debug 1,trailerProfile close because:  ho(~!Local,absoluteHeadingOffset!~) < ~!Local,closeHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) < ~!Local,closeDistance!~
+        if ~!Local,profileSelector!~,==,far,
+            getAPVar ~!Local,instanceName!~,closeShouldReset,Local,shouldReset
+
+            getAPVar ~!Local,instanceName!~,trailerProfileFar,Local,trailerProfileToApply
+            # debug 1,trailerProfile far because:  ho(~!Local,absoluteHeadingOffset!~) > ~!Local,farHeadingDiffRadians!~  and  d(~!Local,absDistanceInMeters!~) > ~!Local,farDistance!~
+
+        trailerProfile ~!Local,instanceName!~,~!Local,trailerProfileToApply!~,~!Local,shouldReset!~
 
 
     # Apply weights.
