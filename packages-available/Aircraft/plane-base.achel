@@ -114,7 +114,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,strengthTrailer,1
     setNested ~!Me,stuff!~,strengthHeading,0.2
     setNested ~!Me,stuff!~,strengthBarAngle,0
-    setNested ~!Me,stuff!~,strengthOvershoot,0.1
+    setNested ~!Me,stuff!~,strengthOvershoot,0.2
     setNested ~!Me,stuff!~,strengthFomo,0.2
     setNested ~!Me,stuff!~,strengthNudge,0
     setNested ~!Me,stuff!~,strengthSpeed,0
@@ -126,11 +126,11 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,trailerProfileFar,na
 
     setNested ~!Me,stuff!~,closeShouldReset,1
-    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,24
-    setNested ~!Me,stuff!~,closeDistance,1000
+    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,5
+    setNested ~!Me,stuff!~,closeDistance,600
     setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseSteadyLine
 
-    setNested ~!Me,stuff!~,minSeconds,0
+    setNested ~!Me,stuff!~,minSeconds,4
 
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,0
