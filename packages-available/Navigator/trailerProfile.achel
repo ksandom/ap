@@ -84,6 +84,8 @@ if ~!Local,shouldChangeProfile!~,==,1,
 
     copyVar ~!Local,instanceName!~,~!Local,profileName!~,minSeconds
 
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,useCleanStream
+
     # Calculate the calmBand.
     generateCalm ~!Local,instanceName!~
 
@@ -94,7 +96,10 @@ if ~!Local,shouldChangeProfile!~,==,1,
     microNow Local,now
     setAPVar ~!Local,instanceName!~,trailerProfileStart,~!Local,now!~
 
-    # Reset if requested.
+    # Reset CleanStream.
+    unset CleanDistance,~!Local,instanceName!~
+
+    # Reset trailerProfile if requested.
     if ~!Local,shouldReset!~,==,1,
         resetTrailer ~!Local,instanceName!~
 

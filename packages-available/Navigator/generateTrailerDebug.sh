@@ -23,6 +23,9 @@ function doMean
 echo "    # Generated with ./generateTrailerDebug.sh"
 echo "    isolate "
 echo '        setNested ["AP","state","~!Local,instanceName!~","trailerDebug","linearStats",~!Local,linearStats!~]'
+echo '        if ~!CleanDistance,~!Local,instanceName!~,mute!~,!=,,
+            setNested ["AP","state","~!Local,instanceName!~","trailerDebug","cleanDistanceStats",~!CleanDistance,~!Local,instanceName!~!~]'
+
 while read varName; do
     case $varName in
         "bOffset")

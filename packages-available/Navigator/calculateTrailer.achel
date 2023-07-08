@@ -174,53 +174,70 @@ if ~!Local,ready!~,==,1,
     # Detect bogus data.
     degreesToMeters Local,distanceInMeters,~!Local,linearStats,distanceFromLine!~
     setAPVarWithContext ~!Local,instanceName!~,track,distanceInMeters,~!Local,distanceInMeters!~
-    meanValue ~!Local,instanceName!~,distanceInMeters,distanceInMetersStableDraft,3
-    absolute Local,absDistanceInMeters,~!Local,distanceInMetersStableDraft!~
 
-    getAPVarWithContext ~!Local,instanceName!~,track,lastDistance,Local,lastDistance
     set Local,mute,0
-    if ~!Local,lastDistance!~,==,,
-        debug 1,No overshoot history. Setting it up now.
-        set Local,lastDistance,~!Local,distanceInMeters!~
-        setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,lastDistance!~
-        setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
-        set Local,mute,1
-
-    basicMaths Local,distanceDiff,~!Local,distanceInMetersStableDraft!~,-,~!Local,lastDistance!~
-    absolute Local,distanceDiffAbsolute,~!Local,distanceDiff!~
-    getAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,Local,lastDistanceDiffAbsolute
-    if ~!Local,lastDistanceDiffAbsolute!~,==,,
-        set Local,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
-        setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~
-        setAPVarWithContext ~!Local,instanceName!~,track,bogusCount,0
+    getAPVar ~!Local,instanceName!~,useCleanStream,Local,useCleanStream
+    if ~!Local,useCleanStream!~,==,1,
+        cleanStream CleanDistance,~!Local,instanceName!~,~!Local,distanceInMeters!~,40,10,1
+        set Local,distanceInMetersStableDraft,~!CleanDistance,~!Local,instanceName!~,dataOut!~
+        set Local,mute,~!CleanDistance,~!Local,instanceName!~,mute!~
+        setAPVarWithContext ~!Local,instanceName!~,track,distanceInMetersStableDraft,~!Local,distanceInMetersStableDraft!~
     else
-        getAPVarWithContext ~!Local,instanceName!~,track,bogusCount,Local,bogusCount
-        basicMaths Local,bogusCount,~!Local,bogusCount!~,+,1
-        basicMaths Local,effectiveCount,~!Local,bogusCount!~,+,1
-        basicMaths Local,diffWithMargin,~!Local,lastDistanceDiffAbsolute!~,+,3
-        basicMaths Local,distanceDiffThreshold,~!Local,diffWithMargin!~,*,~!Local,effectiveCount!~
-
-        if ~!Local,distanceDiffAbsolute!~,>,~!Local,distanceDiffThreshold!~,
-            getAPVar ~!Local,instanceName!~,maxPointsToSkip,Local,maxPointsToSkip
-            if ~!Local,bogusCount!~,<=,~!Local,maxPointsToSkip!~,
-                debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~). Skipping this point.
-                set Local,shouldDoOvershoot,0
-                set Local,overshootWhy,Bogus data (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~).
-                set Local,mute,1
-            else
-                debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~). But we have exceeded (~!Local,bogusCount!~) maxPointsToSkip (~!Local,maxPointsToSkip!~,). So letting this point past.
-                set Local,bogusCount,0
-                setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
-                set Local,distanceInMetersStable,~!Local,distanceInMetersStableDraft!~
-        else
-            set Local,bogusCount,0
-            setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
-            set Local,distanceInMetersStable,~!Local,distanceInMetersStableDraft!~
-        setAPVarWithContext ~!Local,instanceName!~,track,bogusCount,~!Local,bogusCount!~
-
-        basicMaths Local,stepsRemaining,~!Local,absDistanceInMeters!~,/,~!Local,distanceDiffAbsolute!~
+        meanValue ~!Local,instanceName!~,distanceInMeters,distanceInMetersStableDraft,3
+        # set Local,distanceInMetersStableDraft,~!Local,distanceInMeters!~
+        # setAPVarWithContext ~!Local,instanceName!~,track,distanceInMetersStableDraft,~!Local,distanceInMetersStableDraft!~
 
     if ~!Local,mute!~,==,0,
+        absolute Local,absDistanceInMeters,~!Local,distanceInMetersStableDraft!~
+
+        getAPVarWithContext ~!Local,instanceName!~,track,lastDistance,Local,lastDistance
+        if ~!Local,lastDistance!~,==,,
+            debug 1,No overshoot history. Setting it up now.
+            set Local,lastDistance,~!Local,distanceInMeters!~
+            setAPVarWithContext ~!Local,instanceName!~,track,lastDistance,~!Local,lastDistance!~
+            setAPVarWithContext ~!Local,instanceName!~,track,lastNow,~!Local,now!~
+            set Local,mute,1
+
+        basicMaths Local,distanceDiff,~!Local,distanceInMetersStableDraft!~,-,~!Local,lastDistance!~
+        absolute Local,distanceDiffAbsolute,~!Local,distanceDiff!~
+        getAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,Local,lastDistanceDiffAbsolute
+        if ~!Local,lastDistanceDiffAbsolute!~,==,,
+            set Local,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+            setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~
+            setAPVarWithContext ~!Local,instanceName!~,track,bogusCount,0
+        else
+            getAPVarWithContext ~!Local,instanceName!~,track,bogusCount,Local,bogusCount
+            basicMaths Local,bogusCount,~!Local,bogusCount!~,+,1
+            basicMaths Local,effectiveCount,~!Local,bogusCount!~,+,1
+            basicMaths Local,diffWithMargin,~!Local,lastDistanceDiffAbsolute!~,+,3
+            basicMaths Local,distanceDiffThreshold,~!Local,diffWithMargin!~,*,~!Local,effectiveCount!~
+
+            if ~!Local,useCleanStream!~,!=,1,
+                if ~!Local,distanceDiffAbsolute!~,>,~!Local,distanceDiffThreshold!~,
+                    getAPVar ~!Local,instanceName!~,maxPointsToSkip,Local,maxPointsToSkip
+                    if ~!Local,bogusCount!~,<=,~!Local,maxPointsToSkip!~,
+                        debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~). Skipping this point.
+                        set Local,shouldDoOvershoot,0
+                        set Local,overshootWhy,Bogus data (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~).
+                        set Local,mute,1
+                    else
+                        debug 1,Bogus data detected (~!Local,distanceDiffAbsolute!~>~!Local,distanceDiffThreshold!~). But we have exceeded (~!Local,bogusCount!~) maxPointsToSkip (~!Local,maxPointsToSkip!~,). So letting this point past.
+                        set Local,bogusCount,0
+                        setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+                        set Local,distanceInMetersStable,~!Local,distanceInMetersStableDraft!~
+                else
+                    set Local,bogusCount,0
+                    setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+                    set Local,distanceInMetersStable,~!Local,distanceInMetersStableDraft!~
+
+            if ~!Local,useCleanStream!~,==,1,
+                setAPVarWithContext ~!Local,instanceName!~,track,lastDistanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
+                set Local,distanceInMetersStable,~!Local,distanceInMetersStableDraft!~
+
+            setAPVarWithContext ~!Local,instanceName!~,track,bogusCount,~!Local,bogusCount!~
+
+            basicMaths Local,stepsRemaining,~!Local,absDistanceInMeters!~,/,~!Local,distanceDiffAbsolute!~
+
         sinRecord ~!Local,instanceName!~,~!Local,distanceInMetersStable!~,~!Local,absDistanceInMeters!~
 
     # Calculate how long we have been close to the track.
@@ -589,6 +606,8 @@ if ~!Local,ready!~,==,1,
     # Generated with ./generateTrailerDebug.sh
     isolate
         setNested ["AP","state","~!Local,instanceName!~","trailerDebug","linearStats",~!Local,linearStats!~]
+        if ~!CleanDistance,~!Local,instanceName!~,mute!~,!=,,
+            setNested ["AP","state","~!Local,instanceName!~","trailerDebug","cleanDistanceStats",~!CleanDistance,~!Local,instanceName!~!~]
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absDistanceInMeters,~!Local,absDistanceInMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absoluteHeadingOffset,~!Local,absoluteHeadingOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedBarAngle,~!Local,adjustedBarAngle!~
@@ -631,21 +650,27 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeSince,~!Local,closeSince!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeTime,~!Local,closeTime!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,cSquared,~!Local,cSquared!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,currentProfile,~!Local,currentProfile!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,destinationX,~!Local,destinationX!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,destinationY,~!Local,destinationY!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,deviance,~!Local,deviance!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,diffWithMargin,~!Local,diffWithMargin!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiff,~!Local,distanceDiff!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiffAbsolute,~!Local,distanceDiffAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceDiffThreshold,~!Local,distanceDiffThreshold!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceInMeters,~!Local,distanceInMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceInMetersStable,~!Local,distanceInMetersStable!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceInMetersStableDraft,~!Local,distanceInMetersStableDraft!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceSide,~!Local,distanceSide!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,distanceThreshold,~!Local,distanceThreshold!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,effectiveCount,~!Local,effectiveCount!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,endSecond,~!Local,endSecond!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,endTime,~!Local,endTime!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,farDistance,~!Local,farDistance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,farHeadingDiffRadians,~!Local,farHeadingDiffRadians!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,finalAim,~!Local,finalAim!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,fomoValue,~!Local,fomoValue!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,havePeaked,~!Local,havePeaked!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,hdDstPolarity,~!Local,hdDstPolarity!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffset,~!Local,headingOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffsetDesenitised,~!Local,headingOffsetDesenitised!~
@@ -654,6 +679,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistance,~!Local,lastDistance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastNow,~!Local,lastNow!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastPole,~!Local,lastPole!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,longMeanIterations,~!Local,longMeanIterations!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,longMeanOffset,~!Local,longMeanOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,maxBarLength,~!Local,maxBarLength!~
@@ -679,10 +705,15 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootOffset,~!Local,overshootOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootSeconds,~!Local,overshootSeconds!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,overshootWhy,~!Local,overshootWhy!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,peakSecond,~!Local,peakSecond!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,peakTime,~!Local,peakTime!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,peakValue,~!Local,peakValue!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,planeToLineAngle,~!Local,planeToLineAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,planeToLineAngleAbs,~!Local,planeToLineAngleAbs!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,pointX,~!Local,pointX!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,pointY,~!Local,pointY!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,pole,~!Local,pole!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,previousProfile,~!Local,previousProfile!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,profileSelector,~!Local,profileSelector!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,proximityMultiplier,~!Local,proximityMultiplier!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,rawAimAngle,~!Local,rawAimAngle!~
@@ -690,11 +721,14 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,result,~!Local,result!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,result1,~!Local,result1!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,result2,~!Local,result2!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,roundedPeak,~!Local,roundedPeak!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,samePoles,~!Local,samePoles!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,shouldDoOvershoot,~!Local,shouldDoOvershoot!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,shouldReset,~!Local,shouldReset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,simulatedTotal,~!Local,simulatedTotal!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,speed,~!Local,speed!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,speedInRange,~!Local,speedInRange!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,startTime,~!Local,startTime!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,stepsRemaining,~!Local,stepsRemaining!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthBarAngle,~!Local,strengthBarAngle!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,strengthFomo,~!Local,strengthFomo!~

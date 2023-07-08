@@ -1,0 +1,156 @@
+# Perform one iteration (one data-point) to clean a stream of data. --cleanStream=Category,variable,dataIn,meanSize,offset,multiplier ~ data
+
+parameters {"Category":"CleanStream","variable":"stream1","dataIn":"0","meanSize":"100","offset":"22","multiplier":"1"}
+
+function assertVarSetup,
+    parameters Cat,var,subVar,defaultValue
+
+    set Local,varToAssert,~!Local,Cat!~,~!Local,var!~,~!Local,subVar!~
+    if ~!~!Local,varToAssert!~!~,==,,
+        setNested ~!Local,varToAssert!~,~!Local,defaultValue!~
+
+    if ~!~!Local,varToAssert!~!~,==,0,
+        setNested ~!Local,varToAssert!~,~!Local,defaultValue!~
+
+function shuntVar,
+    parameters Cat,var,fromVarValue,toVarValue
+
+    set Local,fromVar,~!Local,Cat!~,~!Local,var!~,~!Local,fromVarValue!~
+    set Local,toVar,~!Local,Cat!~,~!Local,var!~,~!Local,toVarValue!~
+
+    setNested ~!Local,toVar!~,~!~!Local,fromVar!~!~
+
+function doTheDiffDiff,
+    parameters Caty,vary,outputVarName,currentValue,oldValue
+    # Does all of the diffing for us.
+
+    assertVarSetup ~!Local,Caty!~,~!Local,vary!~,~!Local,outputVarName!~-0,0
+    assertVarSetup ~!Local,Caty!~,~!Local,vary!~,~!Local,outputVarName!~1Layer0,0
+    assertVarSetup ~!Local,Caty!~,~!Local,vary!~,~!Local,outputVarName!~-1,0
+
+    shuntVar ~!Local,Caty!~,~!Local,vary!~,~!Local,outputVarName!~-0,~!Local,outputVarName!~-1
+
+    absolute Local,absCurrentValue,~!Local,currentValue!~
+    absolute Local,absOldValue,~!Local,oldValue!~
+
+    diff Local,diffLayer0,~!Local,absOldValue!~,~!Local,absCurrentValue!~
+    absolute Local,absDiffLayer0,~!Local,diffLayer0!~
+
+    set Local,hostVary,~!Local,Caty!~,~!Local,vary!~
+    diff Local,diffLayer1,~!~!Local,hostVary!~,~!Local,outputVarName!~1Layer0!~,~!Local,absDiffLayer0!~
+    absolute Local,absDiffLayer1,~!Local,diffLayer1!~
+
+    setNested ~!Local,hostVary!~,~!Local,outputVarName!~-0,~!Local,absDiffLayer1!~
+    setNested ~!Local,hostVary!~,~!Local,outputVarName!~1Layer0,~!Local,absDiffLayer0!~
+
+    debug 2,doTheDiffDiff: in=~!Local,currentValue!~ , ~!Local,oldValue!~   out=~!~!Local,hostVary!~,~!Local,outputVarName!~-0!~ , ~!~!Local,hostVary!~,~!Local,outputVarName!~-1!~   hv=~!Local,hostVary!~ ~!Local,outputVarName!~    dl0=~!Local,diffLayer0!~ (~!Local,absDiffLayer0!~)   dl1=~!Local,diffLayer1!~ (~!Local,absDiffLayer1!~)
+
+
+# Convenience.
+set Local,hostVar,~!Local,Category!~,~!Local,variable!~
+
+
+# Make sure that we are in a state to do the work.
+assertVarSetup ~!Local,hostVar!~,dIn0,~!Local,dataIn!~
+assertVarSetup ~!Local,hostVar!~,dIn1,~!Local,dataIn!~
+assertVarSetup ~!Local,hostVar!~,dIn2,~!Local,dataIn!~
+assertVarSetup ~!Local,hostVar!~,dIn3,~!Local,dataIn!~
+
+# assertVarSetup ~!Local,hostVar!~,absDiffFirst0,0
+# assertVarSetup ~!Local,hostVar!~,absDiffFirst1,0
+
+assertVarSetup ~!Local,hostVar!~,trigger2-0,0
+assertVarSetup ~!Local,hostVar!~,trigger2-1,0
+
+
+# Shunt history.
+shuntVar ~!Local,hostVar!~,dIn2,dIn3
+shuntVar ~!Local,hostVar!~,dIn1,dIn2
+shuntVar ~!Local,hostVar!~,dIn0,dIn1
+setNested ~!Local,hostVar!~,dIn0,~!Local,dataIn!~
+
+# shuntVar ~!Local,hostVar!~,absDiffFirst0,absDiffFirst1
+
+shuntVar ~!Local,hostVar!~,trigger2-0,trigger2-1
+
+~!Local,outputVarName!~
+# Calculate diffs.
+doTheDiffDiff ~!Local,hostVar!~,diffDiffFirst,~!~!Local,hostVar!~,dIn1!~,~!~!Local,hostVar!~,dIn0!~
+doTheDiffDiff ~!Local,hostVar!~,diffDiffSecond,~!~!Local,hostVar!~,dIn2!~,~!~!Local,hostVar!~,dIn0!~
+doTheDiffDiff ~!Local,hostVar!~,diffDiffThird,~!~!Local,hostVar!~,dIn3!~,~!~!Local,hostVar!~,dIn0!~
+
+pass
+    diff Local,diffFirst,~!~!Local,hostVar!~,dIn1!~,~!~!Local,hostVar!~,dIn0!~
+    diff Local,diffSecond,~!~!Local,hostVar!~,dIn2!~,~!~!Local,hostVar!~,dIn0!~
+    diff Local,diffThird,~!~!Local,hostVar!~,dIn3!~,~!~!Local,hostVar!~,dIn0!~
+
+    absolute Local,absDiffFirst,~!Local,diffFirst!~
+    absolute Local,absDiffSecond,~!Local,diffSecond!~
+    absolute Local,absDiffThird,~!Local,diffThird!~
+
+    setNested ~!Local,hostVar!~,absDiffFirst0,~!Local,absDiffFirst!~
+
+    # TODO Do I need these?
+    setNested ~!Local,hostVar!~,absDiffSecond0,~!Local,absDiffSecond!~
+    setNested ~!Local,hostVar!~,absDiffThird0,~!Local,absDiffThird!~
+
+    diff Local,diffDiff,~!~!Local,hostVar!~,absDiffFirst1!~,~!~!Local,hostVar!~,absDiffFirst0!~
+    absolute Local,absDiffDiff,~!Local,diffDiff!~
+    setNested ~!Local,hostVar!~,absDiffDiff,~!Local,absDiffDiff!~
+
+
+# Get the moving mean seeded.
+assertVarSetup ~!Local,hostVar!~,pseudoMovingMean,~!~!Local,hostVar!~,diffDiffFirst-0!~
+pass if ~!~!Local,hostVar!~,pseudoMovingMean!~,==,0,
+    setNested ~!Local,hostVar!~,pseudoMovingMean,~!Local,absDiffDiff!~
+
+
+# Update mean.
+set Me,pseudoMovingMean,~!~!Local,hostVar!~,pseudoMovingMean!~
+pseudoMovingMean Me,pseudoMovingMean,~!Me,pseudoMovingMean!~,~!~!Local,hostVar!~,diffDiffFirst-0!~,~!Local,meanSize!~
+setNested ~!Local,hostVar!~,pseudoMovingMean,~!Me,pseudoMovingMean!~
+debug 2,updateMean: ~!Local,hostVar!~,pseudoMovingMean,~!Me,pseudoMovingMean!~    Me,pseudoMovingMean,~!Me,pseudoMovingMean!~,~!~!Local,hostVar!~,diffDiffFirst-0!~,~!Local,meanSize!~
+
+# Calculate threshold.
+basicMaths Local,threshold,~!~!Local,hostVar!~,pseudoMovingMean!~,+,~!Local,offset!~
+basicMaths Local,threshold,~!Local,threshold!~,+,~!Local,multiplier!~
+setNested ~!Local,hostVar!~,threshold,~!Local,threshold!~
+
+
+# Do tests.
+setNested ~!Local,hostVar!~,mute,0
+setNested ~!Local,hostVar!~,trigger1,0
+setNested ~!Local,hostVar!~,trigger2-0,0
+setNested ~!Local,hostVar!~,trigger3,0
+
+if ~!~!Local,hostVar!~,diffDiffFirst-0!~,>,~!Local,threshold!~,
+    if ~!~!Local,hostVar!~,diffDiffSecond-0!~,>,~!Local,threshold!~,
+        setNested ~!Local,hostVar!~,trigger1,1
+        setNested ~!Local,hostVar!~,mute,1
+
+    if ~!~!Local,hostVar!~,diffDiffThird-0!~,>,~!Local,threshold!~,
+        setNested ~!Local,hostVar!~,trigger2-0,1
+        setNested ~!Local,hostVar!~,mute,1
+
+    if ~!~!Local,hostVar!~,trigger2-1!~,==,1,
+        if ~!~!Local,hostVar!~,diffDiffThird-0!~,>,~!Local,threshold!~,
+            setNested ~!Local,hostVar!~,trigger3,1
+            setNested ~!Local,hostVar!~,mute,1
+
+pass if ~!Local,absDiffDiff!~,>,~!Local,threshold!~,
+    setNested ~!Local,hostVar!~,trigger1,1
+    setNested ~!Local,hostVar!~,mute,1
+
+
+# Send output.
+if ~!~!Local,hostVar!~,mute!~,==,0,
+    set Local,muteColor,green
+    setNested ~!Local,hostVar!~,dataOut,~!Local,dataIn!~
+else
+    set Local,muteColor,red
+    setNested ~!Local,hostVar!~,dataOut,
+
+# Make it work with Local and Me variables. Although this probably doesn't make sense with most use-cases.
+makeAvailable ~!Local,hostVar!~
+
+debug 1,CleanStream: ~!Color,~!Local,muteColor!~!~mute=~!~!Local,hostVar!~,mute!~~!Color,default!~   d=~!~!Local,hostVar!~,diffDiffFirst-0!~,~!~!Local,hostVar!~,diffDiffSecond-0!~,~!~!Local,hostVar!~,diffDiffThird-0!~ > thsh=~!Local,threshold!~   trig=~!~!Local,hostVar!~,trigger1!~,~!~!Local,hostVar!~,trigger2-0!~,~!~!Local,hostVar!~,trigger3!~   o=~!Local,offset!~ m=~!Local,multiplier!~
