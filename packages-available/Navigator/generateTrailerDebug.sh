@@ -20,11 +20,14 @@ function doMean
     doLine "${varName}Smoothed" "${varName}Smoothed"
 }
 
+clear
+
 echo "    # Generated with ./generateTrailerDebug.sh"
 echo "    isolate "
 echo '        setNested ["AP","state","~!Local,instanceName!~","trailerDebug","linearStats",~!Local,linearStats!~]'
 echo '        if ~!CleanDistance,~!Local,instanceName!~,mute!~,!=,,
-            setNested ["AP","state","~!Local,instanceName!~","trailerDebug","cleanDistanceStats",~!CleanDistance,~!Local,instanceName!~!~]'
+            setNested ["AP","state","~!Local,instanceName!~","trailerDebug","cleanDistanceStats",~!CleanDistance,~!Local,instanceName!~!~]
+            setNested ["AP","state","~!Local,instanceName!~","trailerDebug","cleanDistanceStatsDraft",~!CleanDistance,~!Local,instanceName!~-draft!~]'
 
 while read varName; do
     case $varName in

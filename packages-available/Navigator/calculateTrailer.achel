@@ -608,6 +608,7 @@ if ~!Local,ready!~,==,1,
         setNested ["AP","state","~!Local,instanceName!~","trailerDebug","linearStats",~!Local,linearStats!~]
         if ~!CleanDistance,~!Local,instanceName!~,mute!~,!=,,
             setNested ["AP","state","~!Local,instanceName!~","trailerDebug","cleanDistanceStats",~!CleanDistance,~!Local,instanceName!~!~]
+            setNested ["AP","state","~!Local,instanceName!~","trailerDebug","cleanDistanceStatsDraft",~!CleanDistance,~!Local,instanceName!~-draft!~]
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absDistanceInMeters,~!Local,absDistanceInMeters!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,absoluteHeadingOffset,~!Local,absoluteHeadingOffset!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,adjustedBarAngle,~!Local,adjustedBarAngle!~
@@ -744,3 +745,4 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,timeMultiplier,~!Local,timeMultiplier!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,trailerProfileStart,~!Local,trailerProfileStart!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,trailerProfileToApply,~!Local,trailerProfileToApply!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,useCleanStream,~!Local,useCleanStream!~

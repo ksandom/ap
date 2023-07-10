@@ -1,6 +1,6 @@
 # Perform one iteration (one data-point) to clean a stream of data. --cleanStream=Category,variable,dataIn,meanSize,offset,multiplier,meanSeed ~ data
 
-parameters {"Category":"CleanStream","variable":"stream1","dataIn":"0","meanSize":"100","offset":"22","multiplier":"1","meanSeed":"1"}
+parameters {"Category":"CleanStream","variable":"stream1","dataIn":"0","meanSize":"100","offset":"22","multiplier":"1","meanSeed":"1","maxMutesInARow":"10"}
 
 function assertVarSetup,
     parameters Cat,var,subVar,defaultValue
@@ -45,113 +45,148 @@ function doTheDiffDiff,
 
     debug 2,doTheDiffDiff: in=~!Local,currentValue!~ , ~!Local,oldValue!~   out=~!~!Local,hostVary!~,~!Local,outputVarName!~-0!~ , ~!~!Local,hostVary!~,~!Local,outputVarName!~-1!~   hv=~!Local,hostVary!~ ~!Local,outputVarName!~    dl0=~!Local,diffLayer0!~ (~!Local,absDiffLayer0!~)   dl1=~!Local,diffLayer1!~ (~!Local,absDiffLayer1!~)
 
+function copyState,
+    parameters Category,fromVar,toVar
+
+    copy ["~!Local,Category!~,~!Local,fromVar!~","~!Local,Category!~,~!Local,toVar!~"]
+
 
 # Convenience.
+set Local,draftVariable,~!Local,variable!~-draft
 set Local,hostVar,~!Local,Category!~,~!Local,variable!~
+set Local,draftHostVar,~!Local,Category!~,~!Local,draftVariable!~
+
+copyState ~!Local,Category!~,~!Local,variable!~,~!Local,draftVariable!~
+
+
+# Track failures.
+assertVarSetup ~!Local,draftHostVar!~,mutesInARow,0
 
 
 # Make sure that we are in a state to do the work.
-assertVarSetup ~!Local,hostVar!~,dIn0,~!Local,dataIn!~
-assertVarSetup ~!Local,hostVar!~,dIn1,~!Local,dataIn!~
-assertVarSetup ~!Local,hostVar!~,dIn2,~!Local,dataIn!~
-assertVarSetup ~!Local,hostVar!~,dIn3,~!Local,dataIn!~
+assertVarSetup ~!Local,draftHostVar!~,dIn0,~!Local,dataIn!~
+assertVarSetup ~!Local,draftHostVar!~,dIn1,~!Local,dataIn!~
+assertVarSetup ~!Local,draftHostVar!~,dIn2,~!Local,dataIn!~
+assertVarSetup ~!Local,draftHostVar!~,dIn3,~!Local,dataIn!~
 
-# assertVarSetup ~!Local,hostVar!~,absDiffFirst0,0
-# assertVarSetup ~!Local,hostVar!~,absDiffFirst1,0
+# assertVarSetup ~!Local,draftHostVar!~,absDiffFirst0,0
+# assertVarSetup ~!Local,draftHostVar!~,absDiffFirst1,0
 
-assertVarSetup ~!Local,hostVar!~,trigger2-0,0
-assertVarSetup ~!Local,hostVar!~,trigger2-1,0
+assertVarSetup ~!Local,draftHostVar!~,trigger2-0,0
+assertVarSetup ~!Local,draftHostVar!~,trigger2-1,0
 
 
 # Shunt history.
-shuntVar ~!Local,hostVar!~,dIn2,dIn3
-shuntVar ~!Local,hostVar!~,dIn1,dIn2
-shuntVar ~!Local,hostVar!~,dIn0,dIn1
-setNested ~!Local,hostVar!~,dIn0,~!Local,dataIn!~
+shuntVar ~!Local,draftHostVar!~,dIn2,dIn3
+shuntVar ~!Local,draftHostVar!~,dIn1,dIn2
+shuntVar ~!Local,draftHostVar!~,dIn0,dIn1
+setNested ~!Local,draftHostVar!~,dIn0,~!Local,dataIn!~
 
-# shuntVar ~!Local,hostVar!~,absDiffFirst0,absDiffFirst1
+# shuntVar ~!Local,draftHostVar!~,absDiffFirst0,absDiffFirst1
 
-shuntVar ~!Local,hostVar!~,trigger2-0,trigger2-1
+shuntVar ~!Local,draftHostVar!~,trigger2-0,trigger2-1
 
 ~!Local,outputVarName!~
 # Calculate diffs.
-doTheDiffDiff ~!Local,hostVar!~,diffDiffFirst,~!~!Local,hostVar!~,dIn1!~,~!~!Local,hostVar!~,dIn0!~
-doTheDiffDiff ~!Local,hostVar!~,diffDiffSecond,~!~!Local,hostVar!~,dIn2!~,~!~!Local,hostVar!~,dIn0!~
-doTheDiffDiff ~!Local,hostVar!~,diffDiffThird,~!~!Local,hostVar!~,dIn3!~,~!~!Local,hostVar!~,dIn0!~
+doTheDiffDiff ~!Local,draftHostVar!~,diffDiffFirst,~!~!Local,draftHostVar!~,dIn1!~,~!~!Local,draftHostVar!~,dIn0!~
+doTheDiffDiff ~!Local,draftHostVar!~,diffDiffSecond,~!~!Local,draftHostVar!~,dIn2!~,~!~!Local,draftHostVar!~,dIn0!~
+doTheDiffDiff ~!Local,draftHostVar!~,diffDiffThird,~!~!Local,draftHostVar!~,dIn3!~,~!~!Local,draftHostVar!~,dIn0!~
 
 pass
-    diff Local,diffFirst,~!~!Local,hostVar!~,dIn1!~,~!~!Local,hostVar!~,dIn0!~
-    diff Local,diffSecond,~!~!Local,hostVar!~,dIn2!~,~!~!Local,hostVar!~,dIn0!~
-    diff Local,diffThird,~!~!Local,hostVar!~,dIn3!~,~!~!Local,hostVar!~,dIn0!~
+    diff Local,diffFirst,~!~!Local,draftHostVar!~,dIn1!~,~!~!Local,draftHostVar!~,dIn0!~
+    diff Local,diffSecond,~!~!Local,draftHostVar!~,dIn2!~,~!~!Local,draftHostVar!~,dIn0!~
+    diff Local,diffThird,~!~!Local,draftHostVar!~,dIn3!~,~!~!Local,draftHostVar!~,dIn0!~
 
     absolute Local,absDiffFirst,~!Local,diffFirst!~
     absolute Local,absDiffSecond,~!Local,diffSecond!~
     absolute Local,absDiffThird,~!Local,diffThird!~
 
-    setNested ~!Local,hostVar!~,absDiffFirst0,~!Local,absDiffFirst!~
+    setNested ~!Local,draftHostVar!~,absDiffFirst0,~!Local,absDiffFirst!~
 
     # TODO Do I need these?
-    setNested ~!Local,hostVar!~,absDiffSecond0,~!Local,absDiffSecond!~
-    setNested ~!Local,hostVar!~,absDiffThird0,~!Local,absDiffThird!~
+    setNested ~!Local,draftHostVar!~,absDiffSecond0,~!Local,absDiffSecond!~
+    setNested ~!Local,draftHostVar!~,absDiffThird0,~!Local,absDiffThird!~
 
-    diff Local,diffDiff,~!~!Local,hostVar!~,absDiffFirst1!~,~!~!Local,hostVar!~,absDiffFirst0!~
+    diff Local,diffDiff,~!~!Local,draftHostVar!~,absDiffFirst1!~,~!~!Local,draftHostVar!~,absDiffFirst0!~
     absolute Local,absDiffDiff,~!Local,diffDiff!~
-    setNested ~!Local,hostVar!~,absDiffDiff,~!Local,absDiffDiff!~
+    setNested ~!Local,draftHostVar!~,absDiffDiff,~!Local,absDiffDiff!~
 
 
 # Get the moving mean seeded.
-assertVarSetup ~!Local,hostVar!~,pseudoMovingMean,~!Local,meanSeed!~
-pass if ~!~!Local,hostVar!~,pseudoMovingMean!~,==,0,
-    setNested ~!Local,hostVar!~,pseudoMovingMean,~!Local,meanSeed!~
+assertVarSetup ~!Local,draftHostVar!~,pseudoMovingMean,~!Local,copyStatemeanSeed!~
+pass if ~!~!Local,draftHostVar!~,pseudoMovingMean!~,==,0,
+    setNested ~!Local,draftHostVar!~,pseudoMovingMean,~!Local,meanSeed!~
 
 
 # Update mean.
-set Me,pseudoMovingMean,~!~!Local,hostVar!~,pseudoMovingMean!~
-pseudoMovingMean Me,pseudoMovingMean,~!Me,pseudoMovingMean!~,~!~!Local,hostVar!~,diffDiffFirst-0!~,~!Local,meanSize!~
+set Me,pseudoMovingMean,~!~!Local,draftHostVar!~,pseudoMovingMean!~
+pseudoMovingMean Me,pseudoMovingMean,~!Me,pseudoMovingMean!~,~!~!Local,draftHostVar!~,diffDiffFirst-0!~,~!Local,meanSize!~
+
 
 # Calculate threshold.
 basicMaths Local,threshold,~!Me,pseudoMovingMean!~,+,~!Local,offset!~
 basicMaths Local,threshold,~!Local,threshold!~,+,~!Local,multiplier!~
-setNested ~!Local,hostVar!~,threshold,~!Local,threshold!~
+
+if ~!~!Local,draftHostVar!~,mutesInARow!~,>,0,
+    basicMaths Local,extraMultiplier,~!~!Local,draftHostVar!~,mutesInARow!~,+,1
+    basicMaths Local,threshold,~!Local,threshold!~,*,~!Local,extraMultiplier!~
+
+    # Give us some more wiggle room for unknown changes. Eg maybe we were only moving a small amount when we stopped listening, and now things are changing quickly.
+    basicMaths Local,threshold,~!Local,threshold!~,*,~!Local,extraMultiplier!~
+
+setNested ~!Local,draftHostVar!~,threshold,~!Local,threshold!~
 
 
 # Do tests.
-setNested ~!Local,hostVar!~,mute,0
-setNested ~!Local,hostVar!~,trigger1,0
-setNested ~!Local,hostVar!~,trigger2-0,0
-setNested ~!Local,hostVar!~,trigger3,0
+setNested ~!Local,draftHostVar!~,mute,0
+setNested ~!Local,draftHostVar!~,trigger1,0
+setNested ~!Local,draftHostVar!~,trigger2-0,0
+setNested ~!Local,draftHostVar!~,trigger3,0
 
-if ~!~!Local,hostVar!~,diffDiffFirst-0!~,>,~!Local,threshold!~,
-    if ~!~!Local,hostVar!~,diffDiffSecond-0!~,>,~!Local,threshold!~,
-        setNested ~!Local,hostVar!~,trigger1,1
-        setNested ~!Local,hostVar!~,mute,1
+if ~!~!Local,draftHostVar!~,diffDiffFirst-0!~,>,~!Local,threshold!~,
+    if ~!~!Local,draftHostVar!~,diffDiffSecond-0!~,>,~!Local,threshold!~,
+        setNested ~!Local,draftHostVar!~,trigger1,1
+        setNested ~!Local,draftHostVar!~,mute,1
 
-    if ~!~!Local,hostVar!~,diffDiffThird-0!~,>,~!Local,threshold!~,
-        setNested ~!Local,hostVar!~,trigger2-0,1
-        setNested ~!Local,hostVar!~,mute,1
+    if ~!~!Local,draftHostVar!~,diffDiffThird-0!~,>,~!Local,threshold!~,
+        setNested ~!Local,draftHostVar!~,trigger2-0,1
+        setNested ~!Local,draftHostVar!~,mute,1
 
-    if ~!~!Local,hostVar!~,trigger2-1!~,==,1,
-        if ~!~!Local,hostVar!~,diffDiffThird-0!~,>,~!Local,threshold!~,
-            setNested ~!Local,hostVar!~,trigger3,1
-            setNested ~!Local,hostVar!~,mute,1
+    if ~!~!Local,draftHostVar!~,trigger2-1!~,==,1,
+        if ~!~!Local,draftHostVar!~,diffDiffThird-0!~,>,~!Local,threshold!~,
+            setNested ~!Local,draftHostVar!~,trigger3,1
+            setNested ~!Local,draftHostVar!~,mute,1
 
 pass if ~!Local,absDiffDiff!~,>,~!Local,threshold!~,
-    setNested ~!Local,hostVar!~,trigger1,1
-    setNested ~!Local,hostVar!~,mute,1
+    setNested ~!Local,draftHostVar!~,trigger1,1
+    setNested ~!Local,draftHostVar!~,mute,1
 
 
 # Send output.
-if ~!~!Local,hostVar!~,mute!~,==,0,
-    set Local,muteColor,green
-    setNested ~!Local,hostVar!~,dataOut,~!Local,dataIn!~
+if ~!~!Local,draftHostVar!~,mutesInARow!~,>,~!Local,maxMutesInARow!~,
+    debug 1,~!Color,brightRed!~WARNING~!Color,default!~: Hit max (~!Local,maxMutesInARow!~) mutes in a row (~!~!Local,draftHostVar!~,mutesInARow!~). Un-muting.
+    setNested ~!Local,draftHostVar!~,mutesInARow,0
+    setNested ~!Local,draftHostVar!~,mute,0
 
-    # Only persist the pseudoMovingMean if the data is deemed good.
-    setNested ~!Local,hostVar!~,pseudoMovingMean,~!Me,pseudoMovingMean!~
+if ~!~!Local,draftHostVar!~,mute!~,!=,1,
+    set Local,muteColor,green
+    setNested ~!Local,draftHostVar!~,dataOut,~!Local,dataIn!~
+
+    # Only persist the data if the data is deemed good.
+    setNested ~!Local,draftHostVar!~,pseudoMovingMean,~!Me,pseudoMovingMean!~
+    setNested ~!Local,draftHostVar!~,mutesInARow,0
+
+    copyState ~!Local,Category!~,~!Local,draftVariable!~,~!Local,variable!~
 else
     set Local,muteColor,red
     setNested ~!Local,hostVar!~,dataOut,
-
+    setNested ~!Local,hostVar!~,mute,1
+    basicMaths Local,mutesInARow,~!~!Local,draftHostVar!~,mutesInARow!~,+,1
+    setNested ~!Local,draftHostVar!~,mutesInARow,~!Local,mutesInARow!~
+    setNested ~!Local,hostVar!~,mutesInARow,~!Local,mutesInARow!~
 # Make it work with Local and Me variables. Although this probably doesn't make sense with most use-cases.
 makeAvailable ~!Local,hostVar!~
 
-debug 1,CleanStream: ~!Color,~!Local,muteColor!~!~mute=~!~!Local,hostVar!~,mute!~~!Color,default!~   d=~!~!Local,hostVar!~,diffDiffFirst-0!~,~!~!Local,hostVar!~,diffDiffSecond-0!~,~!~!Local,hostVar!~,diffDiffThird-0!~ > thsh=~!Local,threshold!~   trig=~!~!Local,hostVar!~,trigger1!~,~!~!Local,hostVar!~,trigger2-0!~,~!~!Local,hostVar!~,trigger3!~   o=~!Local,offset!~ m=~!Local,multiplier!~
+unset ~!Local,draftHostVar!~
+
+debug 1,CleanStream: ~!Color,~!Local,muteColor!~!~mute=~!~!Local,draftHostVar!~,mute!~~!Color,default!~   d=~!~!Local,hostVar!~,diffDiffFirst-0!~,~!~!Local,hostVar!~,diffDiffSecond-0!~,~!~!Local,hostVar!~,diffDiffThird-0!~ > thsh=~!Local,threshold!~   trig=~!~!Local,hostVar!~,trigger1!~,~!~!Local,hostVar!~,trigger2-0!~,~!~!Local,hostVar!~,trigger3!~   o=~!Local,offset!~ m=~!Local,multiplier!~
