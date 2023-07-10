@@ -178,7 +178,7 @@ if ~!Local,ready!~,==,1,
     set Local,mute,0
     getAPVar ~!Local,instanceName!~,useCleanStream,Local,useCleanStream
     if ~!Local,useCleanStream!~,==,1,
-        cleanStream CleanDistance,~!Local,instanceName!~,~!Local,distanceInMeters!~,40,10,1
+        cleanStream CleanDistance,~!Local,instanceName!~,~!Local,distanceInMeters!~,40,5,1
         set Local,distanceInMetersStableDraft,~!CleanDistance,~!Local,instanceName!~,dataOut!~
         set Local,mute,~!CleanDistance,~!Local,instanceName!~,mute!~
         setAPVarWithContext ~!Local,instanceName!~,track,distanceInMetersStableDraft,~!Local,distanceInMetersStableDraft!~

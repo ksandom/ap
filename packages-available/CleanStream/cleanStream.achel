@@ -1,6 +1,6 @@
-# Perform one iteration (one data-point) to clean a stream of data. --cleanStream=Category,variable,dataIn,meanSize,offset,multiplier ~ data
+# Perform one iteration (one data-point) to clean a stream of data. --cleanStream=Category,variable,dataIn,meanSize,offset,multiplier,meanSeed ~ data
 
-parameters {"Category":"CleanStream","variable":"stream1","dataIn":"0","meanSize":"100","offset":"22","multiplier":"1"}
+parameters {"Category":"CleanStream","variable":"stream1","dataIn":"0","meanSize":"100","offset":"22","multiplier":"1","meanSeed":"1"}
 
 function assertVarSetup,
     parameters Cat,var,subVar,defaultValue
@@ -100,9 +100,9 @@ pass
 
 
 # Get the moving mean seeded.
-assertVarSetup ~!Local,hostVar!~,pseudoMovingMean,~!~!Local,hostVar!~,diffDiffFirst-0!~
+assertVarSetup ~!Local,hostVar!~,pseudoMovingMean,~!Local,meanSeed!~
 pass if ~!~!Local,hostVar!~,pseudoMovingMean!~,==,0,
-    setNested ~!Local,hostVar!~,pseudoMovingMean,~!Local,absDiffDiff!~
+    setNested ~!Local,hostVar!~,pseudoMovingMean,~!Local,meanSeed!~
 
 
 # Update mean.

@@ -45,6 +45,7 @@ cleanStream Category,variable,dataIn,meanSize,offset,multiplier
     * meanSize - optional (default: 100)
     * offset - optional (default: 22)
     * multiplier - optional (default: 1)
+    * meanSeed - optional (default: 5)
 
 ### Tuning
 
@@ -55,6 +56,7 @@ cleanStream Category,variable,dataIn,meanSize,offset,multiplier
 * The orange line is the same as the blue line, but with the `multiplier` and `offset` applied.
     * `multiplier` will raise the line up, but it will also make the peaks and troughs larger as well.
     * `offset` shifts the whole line.
+    * `meanSeed` gives the pseudo moving mean a starting point. This needs to be a realistic good value. Previously I used the first real value. But if the first value was bad, it would take a while to settle to a correct level.
 
 Some guidelines:
 
