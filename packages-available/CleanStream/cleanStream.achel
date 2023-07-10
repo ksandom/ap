@@ -108,11 +108,9 @@ pass if ~!~!Local,hostVar!~,pseudoMovingMean!~,==,0,
 # Update mean.
 set Me,pseudoMovingMean,~!~!Local,hostVar!~,pseudoMovingMean!~
 pseudoMovingMean Me,pseudoMovingMean,~!Me,pseudoMovingMean!~,~!~!Local,hostVar!~,diffDiffFirst-0!~,~!Local,meanSize!~
-setNested ~!Local,hostVar!~,pseudoMovingMean,~!Me,pseudoMovingMean!~
-debug 2,updateMean: ~!Local,hostVar!~,pseudoMovingMean,~!Me,pseudoMovingMean!~    Me,pseudoMovingMean,~!Me,pseudoMovingMean!~,~!~!Local,hostVar!~,diffDiffFirst-0!~,~!Local,meanSize!~
 
 # Calculate threshold.
-basicMaths Local,threshold,~!~!Local,hostVar!~,pseudoMovingMean!~,+,~!Local,offset!~
+basicMaths Local,threshold,~!Me,pseudoMovingMean!~,+,~!Local,offset!~
 basicMaths Local,threshold,~!Local,threshold!~,+,~!Local,multiplier!~
 setNested ~!Local,hostVar!~,threshold,~!Local,threshold!~
 
@@ -146,6 +144,9 @@ pass if ~!Local,absDiffDiff!~,>,~!Local,threshold!~,
 if ~!~!Local,hostVar!~,mute!~,==,0,
     set Local,muteColor,green
     setNested ~!Local,hostVar!~,dataOut,~!Local,dataIn!~
+
+    # Only persist the pseudoMovingMean if the data is deemed good.
+    setNested ~!Local,hostVar!~,pseudoMovingMean,~!Me,pseudoMovingMean!~
 else
     set Local,muteColor,red
     setNested ~!Local,hostVar!~,dataOut,
