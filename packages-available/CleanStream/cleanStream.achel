@@ -163,10 +163,10 @@ else
     basicMaths Local,mutesInARow,~!~!Local,draftHostVar!~,mutesInARow!~,+,1
     setNested ~!Local,draftHostVar!~,mutesInARow,~!Local,mutesInARow!~
     setNested ~!Local,hostVar!~,mutesInARow,~!Local,mutesInARow!~
+
 # Make it work with Local and Me variables. Although this probably doesn't make sense with most use-cases.
 makeAvailable ~!Local,hostVar!~
+makeAvailable ~!Local,draftHostVar!~
 
 
 debug 1,CleanStream: ~!Color,~!Local,muteColor!~!~mute=~!~!Local,draftHostVar!~,mute!~~!Color,default!~   d=~!~!Local,draftHostVar!~,diffDiffFirst-0!~,~!~!Local,draftHostVar!~,diffDiffSecond-0!~,~!~!Local,draftHostVar!~,diffDiffThird-0!~ > thsh=~!Local,threshold!~   trig=~!~!Local,draftHostVar!~,trigger1!~,~!~!Local,draftHostVar!~,trigger2-0!~,~!~!Local,draftHostVar!~,trigger3!~   o=~!Local,offset!~ m=~!Local,multiplier!~
-
-unset ~!Local,draftHostVar!~
