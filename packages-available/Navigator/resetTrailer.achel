@@ -4,3 +4,7 @@ parameters {"instanceName":"default"}
 
 debug 1,Reset trailer for ~!Local,instanceName!~
 unset AP,state,~!Local,instanceName!~,track
+
+# Reset CleanStream.
+unset CleanDistance,~!Local,instanceName!~
+unset CleanDistance,~!Local,instanceName!~-draft

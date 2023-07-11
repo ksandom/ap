@@ -98,6 +98,7 @@ if ~!Local,shouldChangeProfile!~,==,1,
 
     # Reset CleanStream.
     unset CleanDistance,~!Local,instanceName!~
+    unset CleanDistance,~!Local,instanceName!~-draft
 
     # Reset trailerProfile if requested.
     if ~!Local,shouldReset!~,==,1,
