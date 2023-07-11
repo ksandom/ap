@@ -317,6 +317,45 @@ if ~!Local,ready!~,==,1,
         set Local,hdDstPolarity,1
 
 
+    # Test: If the new distance is in the direction of closer to the line from the perspective of the old distance.
+
+    # The numbers that these are compared to are integers that increment with each iteration starting at 0. So to say that we should have been getting closer for at least 2 iterations prior to this one would mean that closerThreshold should be set to 2. Conversely the same for further away would be to set fartherThreshold to -2.
+    set Local,closerThreshold,1
+    set Local,fartherThreshold,-1
+
+    if ~!Local,distanceInMetersStable!~,==,~!Local,lastDistance!~,
+        set Local,shouldDoOvershoot,0
+        set Local,overshootWhy,noChange: ~!Local,distanceInMetersStable!~
+
+    getAPVarWithContext ~!Local,instanceName!~,track,closer,Local,closer
+    if ~!Local,closer!~,==,,
+        set Local,closer,0
+
+    set Local,isCloser,0
+    if ~!Local,lastDistance!~,<,0,
+        if ~!Local,distanceInMetersStable!~,>,~!Local,lastDistance!~,
+            if ~!Local,distanceInMetersStable!~,<,0,
+                set Local,isCloser,1
+    if ~!Local,lastDistance!~,>=,0,
+        if ~!Local,distanceInMetersStable!~,<,~!Local,lastDistance!~,
+            if ~!Local,distanceInMetersStable!~,>,0,
+                set Local,isCloser,1
+
+    if ~!Local,isCloser!~,==,1,
+        if ~!Local,closer!~,<,0,
+            set Local,closer,0
+        else
+            basicMaths Local,closer,~!Local,closer!~,+,1
+
+    if ~!Local,isCloser!~,==,0,
+        if ~!Local,closer!~,>,0,
+            set Local,closer,0
+        else
+            basicMaths Local,closer,~!Local,closer!~,-,1
+
+    setAPVarWithContext ~!Local,instanceName!~,track,closer,~!Local,closer!~
+
+
     # New overshoot code.
     # If heading diff is greater than threshold.
     #   If the new distance is in the direction of closer to the line from the perspective of the old distance.
@@ -330,34 +369,20 @@ if ~!Local,ready!~,==,1,
 
     # Overshoot.
     # If heading diff is greater than threshold.
-    set Local,shouldDoOvershoot,1
+    set Local,shouldDoOvershoot,0
     set Local,overshootWhy,na
+
+    # Only apply overshoot if we are getting closer to the line.
+    if ~!Local,closer!~,>,~!Local,closerThreshold!~,
+        set Local,shouldDoOvershoot,1
+        set Local,overshootWhy,notCloser: ~!Local,distanceInMetersStable!~ vs ~!Local,lastDistance!~
+
     getAPVar ~!Local,instanceName!~,overshootHeadingThresholdRadians,Local,overshootHeadingThresholdRadians
     angleDiffRadians Local,planeToLineAngle,~!Local,linearStats,extra,lineAngle!~,~!Local,orientation!~
     absolute Local,planeToLineAngleAbs,~!Local,planeToLineAngle!~
     if ~!Local,planeToLineAngleAbs!~,<,~!Local,overshootHeadingThresholdRadians!~,
         set Local,shouldDoOvershoot,0
         set Local,overshootWhy,angleThreshold: ~!Local,planeToLineAngleAbs!~ < ~!Local,overshootHeadingThresholdRadians!~
-
-    # Test: If the new distance is in the direction of closer to the line from the perspective of the old distance.
-    if ~!Local,distanceInMetersStable!~,==,~!Local,lastDistance!~,
-        set Local,shouldDoOvershoot,0
-        set Local,overshootWhy,noChange: ~!Local,distanceInMetersStable!~
-
-    set Local,closer,0
-    if ~!Local,lastDistance!~,<,0,
-        if ~!Local,distanceInMetersStable!~,>,~!Local,lastDistance!~,
-            if ~!Local,distanceInMetersStable!~,<,0,
-                set Local,closer,1
-    if ~!Local,lastDistance!~,>=,0,
-        if ~!Local,distanceInMetersStable!~,<,~!Local,lastDistance!~,
-            if ~!Local,distanceInMetersStable!~,>,0,
-                set Local,closer,1
-
-    # Don't apply overshoot if we aren't getting closer to the line.
-    if ~!Local,closer!~,==,0,
-        set Local,shouldDoOvershoot,0
-        set Local,overshootWhy,notCloser: ~!Local,distanceInMetersStable!~ vs ~!Local,lastDistance!~
 
     # Overshoot should only apply when we are facing the same direction as travel.
     if ~!Local,hdDstPolarity!~,==,1,
@@ -430,12 +455,7 @@ if ~!Local,ready!~,==,1,
     # Calculate FOMO from headingOffset.
     absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
     set Local,fomoValue,0
-    pass if ~!Local,hdDstPolarity!~,==,1,
-    if ~!Local,closer!~,!=,1,
-        # basicMaths Local,fomoValue,~!Local,absoluteHeadingOffset!~,*,~!Local,metersPerSecondSmoothed!~
-        # basicMaths Local,fomoValue,~!Local,fomoValue!~,/,10
-        # basicMaths Local,fomoValue,~!Local,metersPerSecondSmoothed!~,*,~!Local,absDistanceInMeters!~
-        # basicMaths Local,fomoValue,~!Local,fomoValue!~,/,10000
+    if ~!Local,closer!~,<,~!Local,fartherThreshold!~,
         basicMaths Local,fomoValue,~!Local,metersPerSecondSmoothed!~,/,200
 
         if ~!Local,distanceInMetersStable!~,<,0,
@@ -444,7 +464,7 @@ if ~!Local,ready!~,==,1,
 
     # Calculate nudge from distance if we aren't getting closer to the goal.
     set Local,nudge,0
-    if ~!Local,closer!~,!=,1,
+    if ~!Local,closer!~,<,~!Local,fartherThreshold!~,
         set Local,nudge,~!Local,absDistanceInMeters!~
         if ~!Local,nudge!~,>,10,
             set Local,nudge,10
@@ -461,7 +481,7 @@ if ~!Local,ready!~,==,1,
     getAPVar ~!Local,instanceName!~,calmMaxSpeed,Local,calmMaxSpeed
     getAPVar ~!Local,instanceName!~,calmBand,Local,calmBand
 
-    if ~!Local,closer!~,==,1,
+    if ~!Local,closer!~,>,~!Local,closerThreshold!~,
         if ~!Local,metersPerSecondSmoothed!~,>,~!Local,calmMinSpeed!~,
             if ~!Local,metersPerSecondSmoothed!~,>=,~!Local,calmMaxSpeed!~,
                 set Local,calm,-1
