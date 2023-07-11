@@ -144,7 +144,6 @@ if ~!~!Local,draftHostVar!~,diffDiffFirst-0!~,>,~!Local,threshold!~,
 # Send output.
 if ~!~!Local,draftHostVar!~,mutesInARow!~,>,~!Local,maxMutesInARow!~,
     debug 1,~!Color,brightRed!~WARNING~!Color,default!~: Hit max (~!Local,maxMutesInARow!~) mutes in a row (~!~!Local,draftHostVar!~,mutesInARow!~). Un-muting.
-    # setNested ~!Local,draftHostVar!~,mutesInARow,0
     setNested ~!Local,draftHostVar!~,mute,0
 
 if ~!~!Local,draftHostVar!~,mute!~,!=,1,
