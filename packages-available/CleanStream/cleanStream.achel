@@ -88,34 +88,16 @@ shuntVar ~!Local,draftHostVar!~,trigger2-0,trigger2-1
 
 ~!Local,outputVarName!~
 # Calculate diffs.
+# Against the first most recent data point.
 doTheDiffDiff ~!Local,draftHostVar!~,diffDiffFirst,~!~!Local,draftHostVar!~,dIn1!~,~!~!Local,draftHostVar!~,dIn0!~
+# Against the second most recent data point.
 doTheDiffDiff ~!Local,draftHostVar!~,diffDiffSecond,~!~!Local,draftHostVar!~,dIn2!~,~!~!Local,draftHostVar!~,dIn0!~
+# Against the third most recent data point.
 doTheDiffDiff ~!Local,draftHostVar!~,diffDiffThird,~!~!Local,draftHostVar!~,dIn3!~,~!~!Local,draftHostVar!~,dIn0!~
-
-pass
-    diff Local,diffFirst,~!~!Local,draftHostVar!~,dIn1!~,~!~!Local,draftHostVar!~,dIn0!~
-    diff Local,diffSecond,~!~!Local,draftHostVar!~,dIn2!~,~!~!Local,draftHostVar!~,dIn0!~
-    diff Local,diffThird,~!~!Local,draftHostVar!~,dIn3!~,~!~!Local,draftHostVar!~,dIn0!~
-
-    absolute Local,absDiffFirst,~!Local,diffFirst!~
-    absolute Local,absDiffSecond,~!Local,diffSecond!~
-    absolute Local,absDiffThird,~!Local,diffThird!~
-
-    setNested ~!Local,draftHostVar!~,absDiffFirst0,~!Local,absDiffFirst!~
-
-    # TODO Do I need these?
-    setNested ~!Local,draftHostVar!~,absDiffSecond0,~!Local,absDiffSecond!~
-    setNested ~!Local,draftHostVar!~,absDiffThird0,~!Local,absDiffThird!~
-
-    diff Local,diffDiff,~!~!Local,draftHostVar!~,absDiffFirst1!~,~!~!Local,draftHostVar!~,absDiffFirst0!~
-    absolute Local,absDiffDiff,~!Local,diffDiff!~
-    setNested ~!Local,draftHostVar!~,absDiffDiff,~!Local,absDiffDiff!~
 
 
 # Get the moving mean seeded.
 assertVarSetup ~!Local,draftHostVar!~,pseudoMovingMean,~!Local,copyStatemeanSeed!~
-pass if ~!~!Local,draftHostVar!~,pseudoMovingMean!~,==,0,
-    setNested ~!Local,draftHostVar!~,pseudoMovingMean,~!Local,meanSeed!~
 
 
 # Update mean.
@@ -150,6 +132,7 @@ if ~!~!Local,draftHostVar!~,diffDiffFirst-0!~,>,~!Local,threshold!~,
 
     if ~!~!Local,draftHostVar!~,diffDiffThird-0!~,>,~!Local,threshold!~,
         setNested ~!Local,draftHostVar!~,trigger2-0,1
+        setNested ~!Local,hostVar!~,trigger2-0,1
         setNested ~!Local,draftHostVar!~,mute,1
 
     if ~!~!Local,draftHostVar!~,trigger2-1!~,==,1,
@@ -157,15 +140,11 @@ if ~!~!Local,draftHostVar!~,diffDiffFirst-0!~,>,~!Local,threshold!~,
             setNested ~!Local,draftHostVar!~,trigger3,1
             setNested ~!Local,draftHostVar!~,mute,1
 
-pass if ~!Local,absDiffDiff!~,>,~!Local,threshold!~,
-    setNested ~!Local,draftHostVar!~,trigger1,1
-    setNested ~!Local,draftHostVar!~,mute,1
-
 
 # Send output.
 if ~!~!Local,draftHostVar!~,mutesInARow!~,>,~!Local,maxMutesInARow!~,
     debug 1,~!Color,brightRed!~WARNING~!Color,default!~: Hit max (~!Local,maxMutesInARow!~) mutes in a row (~!~!Local,draftHostVar!~,mutesInARow!~). Un-muting.
-    setNested ~!Local,draftHostVar!~,mutesInARow,0
+    # setNested ~!Local,draftHostVar!~,mutesInARow,0
     setNested ~!Local,draftHostVar!~,mute,0
 
 if ~!~!Local,draftHostVar!~,mute!~,!=,1,
@@ -187,6 +166,7 @@ else
 # Make it work with Local and Me variables. Although this probably doesn't make sense with most use-cases.
 makeAvailable ~!Local,hostVar!~
 
-unset ~!Local,draftHostVar!~
 
-debug 1,CleanStream: ~!Color,~!Local,muteColor!~!~mute=~!~!Local,draftHostVar!~,mute!~~!Color,default!~   d=~!~!Local,hostVar!~,diffDiffFirst-0!~,~!~!Local,hostVar!~,diffDiffSecond-0!~,~!~!Local,hostVar!~,diffDiffThird-0!~ > thsh=~!Local,threshold!~   trig=~!~!Local,hostVar!~,trigger1!~,~!~!Local,hostVar!~,trigger2-0!~,~!~!Local,hostVar!~,trigger3!~   o=~!Local,offset!~ m=~!Local,multiplier!~
+debug 1,CleanStream: ~!Color,~!Local,muteColor!~!~mute=~!~!Local,draftHostVar!~,mute!~~!Color,default!~   d=~!~!Local,draftHostVar!~,diffDiffFirst-0!~,~!~!Local,draftHostVar!~,diffDiffSecond-0!~,~!~!Local,draftHostVar!~,diffDiffThird-0!~ > thsh=~!Local,threshold!~   trig=~!~!Local,draftHostVar!~,trigger1!~,~!~!Local,draftHostVar!~,trigger2-0!~,~!~!Local,draftHostVar!~,trigger3!~   o=~!Local,offset!~ m=~!Local,multiplier!~
+
+unset ~!Local,draftHostVar!~
