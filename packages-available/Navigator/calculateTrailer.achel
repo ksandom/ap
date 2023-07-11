@@ -311,12 +311,16 @@ if ~!Local,ready!~,==,1,
         if ~!Local,distanceInMetersStable!~,>,0,
             set Local,distanceSide,1
 
-        set Local,headingSide,-1
-        if ~!Local,headingOffset!~,>,0,
+        set Local,changeSide,-1
+        if ~!Local,distanceDiff!~,>,0,
+            set Local,changeSide,1
+
+        # set Local,headingSide,-1
+        pass if ~!Local,headingOffset!~,>,0,
             set Local,headingSide,1
 
         set Local,hdDstPolarity,0
-        if ~!Local,distanceSide!~,==,~!Local,headingSide!~,
+        if ~!Local,distanceSide!~,==,~!Local,changeSide!~,
             set Local,hdDstPolarity,1
 
 
@@ -453,7 +457,7 @@ if ~!Local,ready!~,==,1,
 
 
         # Calculate FOMO from headingOffset.
-        absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
+        # absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
         set Local,fomoValue,0
         if ~!Local,closer!~,<,~!Local,fartherThreshold!~,
             basicMaths Local,fomoValue,~!Local,metersPerSecondSmoothed!~,/,200
