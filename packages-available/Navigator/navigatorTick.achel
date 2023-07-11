@@ -18,7 +18,8 @@ isolate
 				if ~!Navigator,instanceName!~,!=,,
 					calculateDeviance ~!Navigator,instanceName!~
 
-					# TODO Apply this only when it's needed (most of the time, but not always.)
-					calculateLineState ~!Navigator,instanceName!~
+					getAPVar ~!Navigator,instanceName!~,trackingType,Local,trackingType
+					if ~!Local,trackingType!~,!=,arc,
+						calculateLineState ~!Navigator,instanceName!~
 
 				triggerEvent Navegator,ticked,~!Navigator,instanceName!~

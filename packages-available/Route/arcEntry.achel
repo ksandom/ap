@@ -9,3 +9,5 @@ registerOnceForEvent Timer,arc,calculateArcState,~!Local,instanceName!~
 setNested AP,state,~!Local,instanceName!~,arc,radius-desired,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~
 setNested AP,state,~!Local,instanceName!~,arc,zero,0
 setAPState followArcSustain,~!Local,instanceName!~
+
+setAPVar ~!Local,instanceName!~,trackingType,arc
