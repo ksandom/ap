@@ -86,7 +86,6 @@ setNested ~!Local,draftHostVar!~,dIn0,~!Local,dataIn!~
 
 shuntVar ~!Local,draftHostVar!~,trigger2-0,trigger2-1
 
-~!Local,outputVarName!~
 # Calculate diffs.
 # Against the first most recent data point.
 doTheDiffDiff ~!Local,draftHostVar!~,diffDiffFirst,~!~!Local,draftHostVar!~,dIn1!~,~!~!Local,draftHostVar!~,dIn0!~
