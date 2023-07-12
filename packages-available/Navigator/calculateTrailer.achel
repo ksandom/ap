@@ -307,9 +307,11 @@ if ~!Local,ready!~,==,1,
 
 
         # Figure out if heading and distance have the same polarity.
+        getAPVarWithContext ~!Local,instanceName!~,track,distancePolarity,Local,lastDistancePolarity
         set Local,distanceSide,-1
         if ~!Local,distanceInMetersStable!~,>,0,
             set Local,distanceSide,1
+        setAPVarWithContext ~!Local,instanceName!~,track,distancePolarity,~!Local,distanceSide!~
 
         set Local,changeSide,-1
         if ~!Local,distanceDiff!~,>,0,
@@ -340,26 +342,29 @@ if ~!Local,ready!~,==,1,
             set Local,closer,0
 
         set Local,isCloser,0
-        if ~!Local,lastDistance!~,<,0,
-            if ~!Local,distanceInMetersStable!~,>,~!Local,lastDistance!~,
-                if ~!Local,distanceInMetersStable!~,<,0,
-                    set Local,isCloser,1
-        if ~!Local,lastDistance!~,>=,0,
-            if ~!Local,distanceInMetersStable!~,<,~!Local,lastDistance!~,
-                if ~!Local,distanceInMetersStable!~,>,0,
-                    set Local,isCloser,1
+        if ~!Local,lastDistancePolarity!~,!=,~!Local,distanceSide!~,
+            set Local,closer,0
+        else
+            if ~!Local,lastDistance!~,<,0,
+                if ~!Local,distanceInMetersStable!~,>,~!Local,lastDistance!~,
+                    if ~!Local,distanceInMetersStable!~,<,0,
+                        set Local,isCloser,1
+            if ~!Local,lastDistance!~,>=,0,
+                if ~!Local,distanceInMetersStable!~,<,~!Local,lastDistance!~,
+                    if ~!Local,distanceInMetersStable!~,>,0,
+                        set Local,isCloser,1
 
-        if ~!Local,isCloser!~,==,1,
-            if ~!Local,closer!~,<,0,
-                set Local,closer,0
-            else
-                basicMaths Local,closer,~!Local,closer!~,+,1
+            if ~!Local,isCloser!~,==,1,
+                if ~!Local,closer!~,<,0,
+                    set Local,closer,0
+                else
+                    basicMaths Local,closer,~!Local,closer!~,+,1
 
-        if ~!Local,isCloser!~,==,0,
-            if ~!Local,closer!~,>,0,
-                set Local,closer,0
-            else
-                basicMaths Local,closer,~!Local,closer!~,-,1
+            if ~!Local,isCloser!~,==,0,
+                if ~!Local,closer!~,>,0,
+                    set Local,closer,0
+                else
+                    basicMaths Local,closer,~!Local,closer!~,-,1
 
         setAPVarWithContext ~!Local,instanceName!~,track,closer,~!Local,closer!~
 
