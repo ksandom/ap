@@ -46,7 +46,6 @@ setNested AP,events,finalApproach,
     # TODO Replace this with a dynamic altitude.
     altitude ~!Local,instanceName!~,200
 
-    # TODO setAPState for dynamic altitude.
     # TODO trailerProfile for holding the line in landing configuration?
 
     # Set up for glide slope.
@@ -60,7 +59,7 @@ setNested AP,events,finalApproach,
 
     registerForEvent Navigator,ticked,~!AP,events,calculateAltitude!~
 
-    # TODO Altitude events. (flaps, gear)
+    setAPState finalApproach,~!Local,instanceName!~
 
 registerForEvent Flight,finalApproach,~!AP,events,finalApproach!~
 debug 1,plotApproach: Registered ~!AP,events,finalApproach!~ to Flight,finalApproach
