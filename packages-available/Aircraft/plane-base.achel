@@ -101,13 +101,13 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
 
 
     # Use CleanStream to remove bad data.
-    setNested ~!Me,stuff!~,useCleanStream,1
+    setNested ~!Me,stuff!~,useCleanStream,0
 
 # Cruise settings.
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,5
-    setNested ~!Me,stuff!~,overshootMultiplier,0.7
-    setNested ~!Me,stuff!~,overshootOffset,-0.1
+    setNested ~!Me,stuff!~,overshootMultiplier,0.6
+    setNested ~!Me,stuff!~,overshootOffset,-0.2
     setNested ~!Me,stuff!~,maxBarLength,20000
 
     setNested ~!Me,stuff!~,longMeanIterations,200
@@ -118,7 +118,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,strengthTrailer,1
     setNested ~!Me,stuff!~,strengthHeading,0.2
     setNested ~!Me,stuff!~,strengthBarAngle,0
-    setNested ~!Me,stuff!~,strengthOvershoot,0.4
+    setNested ~!Me,stuff!~,strengthOvershoot,0.3
     setNested ~!Me,stuff!~,strengthFomo,1
     setNested ~!Me,stuff!~,strengthNudge,0
     setNested ~!Me,stuff!~,strengthSpeed,0
@@ -152,8 +152,8 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,strengthTrailer,0.5
     setNested ~!Me,stuff!~,strengthHeading,0
     setNested ~!Me,stuff!~,strengthBarAngle,0.0
-    setNested ~!Me,stuff!~,strengthOvershoot,0.02
-    setNested ~!Me,stuff!~,strengthFomo,0.4
+    setNested ~!Me,stuff!~,strengthOvershoot,0.03
+    setNested ~!Me,stuff!~,strengthFomo,0.5
     setNested ~!Me,stuff!~,strengthNudge,0.001
     setNested ~!Me,stuff!~,strengthSpeed,0
     setNested ~!Me,stuff!~,strengthLongMean,0
