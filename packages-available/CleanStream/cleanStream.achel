@@ -97,7 +97,7 @@ doTheDiffDiff ~!Local,draftHostVar!~,diffDiffThird,~!~!Local,draftHostVar!~,dIn3
 
 
 # Get the moving mean seeded.
-assertVarSetup ~!Local,draftHostVar!~,pseudoMovingMean,~!Local,copyStatemeanSeed!~
+assertVarSetup ~!Local,draftHostVar!~,pseudoMovingMean,~!Local,meanSeed!~
 
 
 # Update mean.
