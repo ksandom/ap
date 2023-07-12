@@ -3,6 +3,9 @@ parameters {"instanceName":"default"}
 
 set Tmp,instanceName,~!Local,instanceName!~
 
+# TODO This is a circular dependency that will matter as soon as I try to do anything other than the 777.
+plane-base ~!Local,instanceName!~
+
 # TODO double check out the events are called (I can't remember). If they don't convey the instanceName (which I think they don't), it can be set in this macro as the value being passed, and also being amended to the event name so that there isn't clash.
 
 
@@ -467,41 +470,41 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,finalApproach,altitudeEvents"],
 	setNested ["~!Me,stuff!~,input,events,gearUp,eventName","AP,gearDown"]
 	setNested ["~!Me,stuff!~,input,events,gearUp,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 1."]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps1"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+	setNested ["~!Me,stuff!~,input,events,flaps1,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps1,description","Flaps 1."]
+	setNested ["~!Me,stuff!~,input,events,flaps1,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,flaps1,eventName","AP,flaps1"]
+	setNested ["~!Me,stuff!~,input,events,flaps1,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 5."]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps5"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+	setNested ["~!Me,stuff!~,input,events,flaps5,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps5,description","Flaps 5."]
+	setNested ["~!Me,stuff!~,input,events,flaps5,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,flaps5,eventName","AP,flaps5"]
+	setNested ["~!Me,stuff!~,input,events,flaps5,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 15."]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps15"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+	setNested ["~!Me,stuff!~,input,events,flaps15,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps15,description","Flaps 15."]
+	setNested ["~!Me,stuff!~,input,events,flaps15,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,flaps15,eventName","AP,flaps15"]
+	setNested ["~!Me,stuff!~,input,events,flaps15,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 20."]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps25"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+	setNested ["~!Me,stuff!~,input,events,flaps20,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps20,description","Flaps 20."]
+	setNested ["~!Me,stuff!~,input,events,flaps20,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,flaps20,eventName","AP,flaps25"]
+	setNested ["~!Me,stuff!~,input,events,flaps20,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 25."]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps25"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+	setNested ["~!Me,stuff!~,input,events,flaps25,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps25,description","Flaps 25."]
+	setNested ["~!Me,stuff!~,input,events,flaps25,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,flaps25,eventName","AP,flaps25"]
+	setNested ["~!Me,stuff!~,input,events,flaps25,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 30."]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps30"]
-	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+	setNested ["~!Me,stuff!~,input,events,flaps30,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps30,description","Flaps 30."]
+	setNested ["~!Me,stuff!~,input,events,flaps30,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,flaps30,eventName","AP,flaps30"]
+	setNested ["~!Me,stuff!~,input,events,flaps30,debugLevel","1"]
 
 
 
