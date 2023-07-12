@@ -76,6 +76,9 @@ if ~!Local,numberOfResults!~,==,1,
 	addWaypoint ~!Local,instanceName!~,~!Local,runwayEnd,lon!~,~!Local,runwayEnd,lat!~,Flight,runwayEnd,~!Local,instanceName!~
 
 
+	# Set up landing events.
+	setUpLandingEvents ~!Local,instanceName!~
+
 	# TODO Calculate distance to begin descent, from 3 degrees and current altitude.
 	#   TODO ALT Control descent.
 	#   TODO ALT Pitch up slightly.

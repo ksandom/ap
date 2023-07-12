@@ -25,6 +25,25 @@ massSet ["AP,state,~!Local,instanceName!~"],
     # Manoeuvrability.
     setNested ~!Me,stuff!~,trailerCruiseTurningRadiusKM,10
 
+    # Flaps.
+    setNested ~!Me,stuff!~,flapsMap,0,0
+    setNested ~!Me,stuff!~,flapsMap,1,0.033
+    setNested ~!Me,stuff!~,flapsMap,5,0.166
+    setNested ~!Me,stuff!~,flapsMap,15,0.5
+    setNested ~!Me,stuff!~,flapsMap,20,0.666
+    setNested ~!Me,stuff!~,flapsMap,25,0.833
+    setNested ~!Me,stuff!~,flapsMap,30,1
+
+    setNested ~!Me,stuff!~,flapsAltitudes,1,4000
+    setNested ~!Me,stuff!~,flapsAltitudes,5,3500
+    setNested ~!Me,stuff!~,flapsAltitudes,15,3000
+    setNested ~!Me,stuff!~,flapsAltitudes,20,2000
+    setNested ~!Me,stuff!~,flapsAltitudes,25,1500
+    setNested ~!Me,stuff!~,flapsAltitudes,30,1000
+
+    # Gear.
+    setNested ~!Me,stuff!~,gear,down,1500
+
     # Points cleaning.
     setNested ~!Me,stuff!~,pointsCleaningAngleToleranceDegrees,3
     degreesToRadians Local,pointsCleaningAngleToleranceRadians,~!~!Me,stuff!~,pointsCleaningAngleToleranceDegrees!~

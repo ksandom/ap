@@ -1,7 +1,6 @@
 # Set the altitude goal. --altitude=[instanceName],altitude
 
-set Tmp,instanceName,~!Global,altitude-0!~
-setIfNothing Tmp,instanceName,default
+parameters {"instanceName":"default","altitude":"1000","debugLevel":"1"}
 
-debug 1,altitude: Setting altitude-goal for ~!Tmp,instanceName!~ to ~!Global,altitude-1!~
-setNested AP,state,~!Tmp,instanceName!~,altitude-goal,~!Global,altitude-1!~
+debug ~!Local,debugLevel!~,altitude: Setting altitude-goal for ~!Local,instanceName!~ to ~!Local,altitude!~
+setNested AP,state,~!Local,instanceName!~,altitude-goal,~!Local,altitude!~

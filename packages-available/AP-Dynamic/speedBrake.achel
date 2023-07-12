@@ -1,0 +1,7 @@
+# Deploy the speed brake, or not. 0=not deployed. 1=deployed. --speedBrake=instanceName,brakeLevel ~ dynamic
+
+parameters {"instanceName":"default","brakeLevel":"0"}
+
+debug 1,Speedbrake ~!Local,flapsLevel!~ for ~!Local,instanceName!~.
+
+deliver clientSocket,~!Local,instanceName!~,set /controls/flight/speedbrake-level ~!Local,brakeLevel!~

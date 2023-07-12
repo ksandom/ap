@@ -1,5 +1,4 @@
 # Reduce the flaps. ~ AP
 #onDefine registerForEvent AP,flapsUp,hcFlapsUp
 
-deliver clientSocket,default,set /controls/flight/flaps 0
-deliver clientSocket,default,set /controls/flight/slats 0
+flaps ,0

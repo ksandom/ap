@@ -1,0 +1,47 @@
+# Set the flaps level for the aircraft. These levels are configued in the flapsMap as part of the aircraft config. --flaps=instanceName,flapsLevel ~ dynamic
+
+parameters {"instanceName":"default","flapsLevel":"0"}
+
+debug 1,Flaps ~!Local,flapsLevel!~ for ~!Local,instanceName!~.
+
+getAPVarWithContext ~!Local,instanceName!~,flapsMap,~!Local,flapsLevel!~,Local,flapsValue
+
+deliver clientSocket,~!Local,instanceName!~,set /controls/flight/flaps ~!Local,flapsValue!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/flight/slats ~!Local,flapsValue!~
+
+function flaps1,
+    parameters instanceName
+
+    flaps ~!Local,instanceName!~,1
+
+function flaps5,
+    parameters instanceName
+
+    flaps ~!Local,instanceName!~,5
+
+function flaps15,
+    parameters instanceName
+
+    flaps ~!Local,instanceName!~,15
+
+function flaps20,
+    parameters instanceName
+
+    flaps ~!Local,instanceName!~,20
+
+function flaps25,
+    parameters instanceName
+
+    flaps ~!Local,instanceName!~,25
+
+function flaps30,
+    parameters instanceName
+
+    flaps ~!Local,instanceName!~,30
+
+registerOnceForEvent AP,flaps1,flaps1,~!Local,instanceName!~
+registerOnceForEvent AP,flaps5,flaps5,~!Local,instanceName!~
+registerOnceForEvent AP,flaps15,flaps15,~!Local,instanceName!~
+registerOnceForEvent AP,flaps20,flaps20,~!Local,instanceName!~
+registerOnceForEvent AP,flaps25,flaps25,~!Local,instanceName!~
+registerOnceForEvent AP,flaps30,flaps30,~!Local,instanceName!~

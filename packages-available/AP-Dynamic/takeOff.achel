@@ -13,9 +13,8 @@ trailerProfile ~!Local,instanceName!~,trailerTakeOff
 resetTrailer ~!Local,instanceName!~
 
 # Prepare the plane for flight
-deliver clientSocket,~!Local,instanceName!~,set /controls/flight/flaps 0.3
-deliver clientSocket,~!Local,instanceName!~,set /controls/flight/slats 0.2
-deliver clientSocket,~!Local,instanceName!~,set /controls/flight/speedbrake-level 0
+flaps ~!Local,instanceName!~,5
+speedBrake ~!Local,instanceName!~,0
 
 # Set up the navigation. This will need to be replaced with something more intellegent once I'm ready to add proper routes.
 currentRunwayEnd ~!Local,instanceName!~
@@ -28,9 +27,7 @@ deliver ["balance","_control", "reset"]
 
 
 # Allow the take off to begin
-deliver clientSocket,~!Local,instanceName!~,set /controls/gear/brake-parking 0
-deliver clientSocket,~!Local,instanceName!~,set /controls/gear/brake-left 0
-deliver clientSocket,~!Local,instanceName!~,set /controls/gear/brake-right 0
+brake ~!Local,instanceName!~,0
 
 # Prepare AP for take off
 setNested AP,state,~!Local,instanceName!~,pitch-goal,0

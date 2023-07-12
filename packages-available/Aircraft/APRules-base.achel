@@ -433,6 +433,78 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,followArcSustain,yaw"],
 	setNested ~!Me,stuff!~,output,max,1
 
 
+
+# Final approach.
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "finalApproach", ~!AP,stateRules,~!Tmp,instanceName!~,sustain!~]
+massSet ["AP,stateRules,~!Tmp,instanceName!~,finalApproach,altitude"],
+	setNested ~!Me,stuff!~,output,min,-1
+	setNested ~!Me,stuff!~,output,center,0
+	# TODO Try this again.
+	# setNested ~!Me,stuff!~,output,max,1
+	setNested ~!Me,stuff!~,output,max,1
+	setNested ~!Me,stuff!~,output,multiplier,1
+
+massSet ["AP,stateRules,~!Tmp,instanceName!~,finalApproach,altitudeEvents"],
+	setNested ["~!Me,stuff!~,input,min","-1"]
+	setNested ["~!Me,stuff!~,input,center","0"]
+	setNested ["~!Me,stuff!~,input,max","100000"]
+	setNested ["~!Me,stuff!~,input,multiplier","1"]
+
+	setNested ["~!Me,stuff!~,output,min","-1"]
+	setNested ["~!Me,stuff!~,output,center","0"]
+	setNested ["~!Me,stuff!~,output,max","1"]
+	setNested ["~!Me,stuff!~,output,multiplier","1"]
+
+	# TODO These need to be abstracted out
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,altitude-agl-ft"]
+	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,~!Tmp,instanceName!~,takeOffClimb,altitudeEvents,input,center"]
+	setNested ["~!Me,stuff!~,destination,variable",""]
+	setNested ["~!Me,stuff!~,destination,textOutput",""]
+
+	setNested ["~!Me,stuff!~,input,events,gearUp,testValue","~!"AP,state,~!Tmp,instanceName!~,gear,down!~"]
+	setNested ["~!Me,stuff!~,input,events,gearUp,description","Time to lower the gear."]
+	setNested ["~!Me,stuff!~,input,events,gearUp,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,gearUp,eventName","AP,gearDown"]
+	setNested ["~!Me,stuff!~,input,events,gearUp,debugLevel","1"]
+
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 1."]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps1"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 5."]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps5"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 15."]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps15"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 20."]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps25"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 25."]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps25"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,testValue","~!"AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,description","Flaps 30."]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,eventName","AP,flaps30"]
+	setNested ["~!Me,stuff!~,input,events,reduceFlaps,debugLevel","1"]
+
+
+
 # Speed controlled
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "speedControlled", ~!AP,stateRules,base,baseAltitude!~]
 

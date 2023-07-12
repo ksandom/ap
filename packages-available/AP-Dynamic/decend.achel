@@ -1,5 +1,5 @@
 # Begin decent. --decend=[instanceName] ~ ap,dynamic
-#onDefine registerForEvent Flight,beginDecent,decend
+# #onDefine registerForEvent Flight,beginDecent,decend
 parameters {"instanceName":"default"}
 
 debug 1,Begin decent for ~!Local,instanceName!~
