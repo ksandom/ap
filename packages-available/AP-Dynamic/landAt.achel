@@ -34,7 +34,7 @@ if ~!Local,numberOfResults!~,==,1,
 
 	calculateRunwayAngles ~!Local,instanceName!~
 
-	calcFinalApproachDistance ~!Local,instanceName!~
+	calcFinalApproachDistance ~!Local,instanceName!~,~!Local,approachAngleInDegrees!~
 	calcFinalApproachPos ~!Local,instanceName!~
 	calcApproachDistance ~!Local,instanceName!~
 	calcApproachEntryFromFinalApproach ~!Local,instanceName!~,Tmp,approachEntry

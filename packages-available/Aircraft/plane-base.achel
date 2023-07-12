@@ -131,10 +131,10 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
 
     setNested ~!Me,stuff!~,closeShouldReset,1
     setNested ~!Me,stuff!~,closeHeadingDiffDegrees,5
-    setNested ~!Me,stuff!~,closeDistance,600
+    setNested ~!Me,stuff!~,closeDistance,400
     setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseSteadyLine
 
-    setNested ~!Me,stuff!~,minSeconds,4
+    setNested ~!Me,stuff!~,minSeconds,30
 
     setNested ~!Me,stuff!~,useCleanStream,0
 
