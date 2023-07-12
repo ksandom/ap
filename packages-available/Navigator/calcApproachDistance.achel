@@ -1,6 +1,6 @@
 # Calculate the approach distance. ~ navidator,abstracted
 
-parameters {"instanceName":"default"}
+parameters {"instanceName":"default","approachAngleInDegrees":"3"}
 
 apToMe ~!Local,instanceName!~,cruiseAltitude
 apToMe ~!Local,instanceName!~,safeAltitude
@@ -10,7 +10,7 @@ apToMeWithContext ~!Local,instanceName!~,routePlanning,inverseRunwayAngle
 # Take cruiseAltitude-safeAltitude as opposite. Project adjacent as approachDistance using 3 degrees.
 basicMaths Me,approachEntryVirtualAltitude,~!Me,cruiseAltitude!~,-,~!Me,safeAltitude!~
 
-degreesToRadians Me,approachEntryAngle,3
+degreesToRadians Me,approachEntryAngle,~!Local,approachAngleInDegrees!~
 rightTriangleGetAdjacentFromAngleAndOpposite Me,approachEntryDistance,~!Me,approachEntryAngle!~,~!Me,safeAltitude!~
 
 # TODO This is a hack. Add handeling of feet

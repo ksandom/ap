@@ -1,11 +1,11 @@
 # Calculate the final approach position. ~ navigator,abstracted
 # Abstracted from plotApproach.
-parameters {"instanceName":"default"}
+parameters {"instanceName":"default","finalApproachAngleInDegrees":"3"}
 
 apToMe ~!Local,instanceName!~,safeAltitude
 
-# Take safeAltitude as opposite. Project adjacent as finalApproachDistance using 2.5 degrees.
-degreesToRadians Me,finalApproachAngle,2.5
+# Take safeAltitude as opposite. Project adjacent as finalApproachDistance using 3 degrees.
+degreesToRadians Me,finalApproachAngle,~!Local,finalApproachAngleInDegrees!~
 rightTriangleGetAdjacentFromAngleAndOpposite Me,finalApproachDistance,~!Me,finalApproachAngle!~,~!Me,safeAltitude!~
 
 setNested Me,testThing,asd
