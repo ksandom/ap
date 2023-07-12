@@ -615,12 +615,9 @@ if ~!Local,ready!~,==,1,
 
         radiansToDegrees Local,aimAngle-deg,~!Local,finalAim!~
 
-    # Make it available to the AP.
-    if ~!Local,mute!~,!=,1,
+        # Make it available to the AP.
         setAPVarWithContext ~!Local,instanceName!~,track,aimAngle,~!Local,finalAim!~
         setAPVarWithContext ~!Local,instanceName!~,track,aimAngle-deg,~!Local,aimAngle-deg!~
-    else
-        debug 1,Trailer muted for this iteration to allow everything to stablise after reset.
 
     # For use in the map.
     setAPVarWithContext ~!Local,instanceName!~,track,aimLon,~!Local,aimX!~
