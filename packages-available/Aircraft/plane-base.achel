@@ -120,7 +120,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
 
 
     # Use CleanStream to remove bad data.
-    setNested ~!Me,stuff!~,useCleanStream,0
+    setNested ~!Me,stuff!~,useCleanStream,1
 
 # Cruise settings.
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],

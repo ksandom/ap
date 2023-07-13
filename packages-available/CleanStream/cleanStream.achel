@@ -1,6 +1,6 @@
 # Perform one iteration (one data-point) to clean a stream of data. --cleanStream=Category,variable,dataIn,meanSize,offset,multiplier,meanSeed ~ data
 
-parameters {"Category":"CleanStream","variable":"stream1","dataIn":"0","meanSize":"100","offset":"22","multiplier":"1","meanSeed":"1","maxMutesInARow":"10"}
+parameters {"Category":"CleanStream","variable":"stream1","dataIn":"0","meanSize":"100","offset":"22","multiplier":"1","meanSeed":"1","maxMutesInARow":"5"}
 
 function assertVarSetup,
     parameters Cat,var,subVar,defaultValue
@@ -20,9 +20,26 @@ function shuntVar,
 
     setNested ~!Local,toVar!~,~!~!Local,fromVar!~!~
 
+function applyTimeBase,
+    parameters Cat2,var2,val2,time2
+
+    if ~!Local,time2!~,==,0,
+        set ~!Local,Cat2!~,~!Local,var2!~,0
+    else
+        basicMaths ~!Local,Cat2!~,~!Local,var2!~,~!Local,val2!~,/,~!Local,time2!~
+
+    makeAvailable ~!Local,Cat2!~,~!Local,var2!~
+
 function doTheDiffDiff,
-    parameters Caty,vary,outputVarName,currentValue,oldValue
+    parameters Caty,vary,outputVarName,currentValue,oldValue,currentNow,oldNow
     # Does all of the diffing for us.
+    set Local,hostVary,~!Local,Caty!~,~!Local,vary!~
+
+    diff Local,timeDiff,~!Local,currentNow!~,~!Local,oldNow!~
+    absolute Local,timeDiff,~!Local,timeDiff!~
+
+    # Keep the time for debugging.
+    setNested ~!Local,hostVary!~,~!Local,outputVarName!~-timeDiff,~!Local,timeDiff!~
 
     assertVarSetup ~!Local,Caty!~,~!Local,vary!~,~!Local,outputVarName!~-0,0
     assertVarSetup ~!Local,Caty!~,~!Local,vary!~,~!Local,outputVarName!~1Layer0,0
@@ -35,10 +52,11 @@ function doTheDiffDiff,
 
     diff Local,diffLayer0,~!Local,absOldValue!~,~!Local,absCurrentValue!~
     absolute Local,absDiffLayer0,~!Local,diffLayer0!~
+    applyTimeBase Local,absDiffLayer0,~!Local,absDiffLayer0!~,~!Local,timeDiff!~
 
-    set Local,hostVary,~!Local,Caty!~,~!Local,vary!~
     diff Local,diffLayer1,~!~!Local,hostVary!~,~!Local,outputVarName!~1Layer0!~,~!Local,absDiffLayer0!~
     absolute Local,absDiffLayer1,~!Local,diffLayer1!~
+    applyTimeBase Local,absDiffLayer1,~!Local,absDiffLayer1!~,~!Local,timeDiff!~
 
     setNested ~!Local,hostVary!~,~!Local,outputVarName!~-0,~!Local,absDiffLayer1!~
     setNested ~!Local,hostVary!~,~!Local,outputVarName!~1Layer0,~!Local,absDiffLayer0!~
@@ -75,6 +93,12 @@ assertVarSetup ~!Local,draftHostVar!~,dIn3,~!Local,dataIn!~
 assertVarSetup ~!Local,draftHostVar!~,trigger2-0,0
 assertVarSetup ~!Local,draftHostVar!~,trigger2-1,0
 
+microNow Local,now
+assertVarSetup ~!Local,draftHostVar!~,now0,~!Local,now!~
+assertVarSetup ~!Local,draftHostVar!~,now1,~!Local,now!~
+assertVarSetup ~!Local,draftHostVar!~,now2,~!Local,now!~
+assertVarSetup ~!Local,draftHostVar!~,now3,~!Local,now!~
+
 
 # Shunt history.
 shuntVar ~!Local,draftHostVar!~,dIn2,dIn3
@@ -82,17 +106,22 @@ shuntVar ~!Local,draftHostVar!~,dIn1,dIn2
 shuntVar ~!Local,draftHostVar!~,dIn0,dIn1
 setNested ~!Local,draftHostVar!~,dIn0,~!Local,dataIn!~
 
+shuntVar ~!Local,draftHostVar!~,now2,now3
+shuntVar ~!Local,draftHostVar!~,now1,now2
+shuntVar ~!Local,draftHostVar!~,now0,now1
+setNested ~!Local,draftHostVar!~,now0,~!Local,now!~
+
 # shuntVar ~!Local,draftHostVar!~,absDiffFirst0,absDiffFirst1
 
 shuntVar ~!Local,draftHostVar!~,trigger2-0,trigger2-1
 
 # Calculate diffs.
 # Against the first most recent data point.
-doTheDiffDiff ~!Local,draftHostVar!~,diffDiffFirst,~!~!Local,draftHostVar!~,dIn1!~,~!~!Local,draftHostVar!~,dIn0!~
+doTheDiffDiff ~!Local,draftHostVar!~,diffDiffFirst,~!~!Local,draftHostVar!~,dIn1!~,~!~!Local,draftHostVar!~,dIn0!~,~!~!Local,draftHostVar!~,now1!~,~!~!Local,draftHostVar!~,now0!~
 # Against the second most recent data point.
-doTheDiffDiff ~!Local,draftHostVar!~,diffDiffSecond,~!~!Local,draftHostVar!~,dIn2!~,~!~!Local,draftHostVar!~,dIn0!~
+doTheDiffDiff ~!Local,draftHostVar!~,diffDiffSecond,~!~!Local,draftHostVar!~,dIn2!~,~!~!Local,draftHostVar!~,dIn0!~,~!~!Local,draftHostVar!~,now2!~,~!~!Local,draftHostVar!~,now0!~
 # Against the third most recent data point.
-doTheDiffDiff ~!Local,draftHostVar!~,diffDiffThird,~!~!Local,draftHostVar!~,dIn3!~,~!~!Local,draftHostVar!~,dIn0!~
+doTheDiffDiff ~!Local,draftHostVar!~,diffDiffThird,~!~!Local,draftHostVar!~,dIn3!~,~!~!Local,draftHostVar!~,dIn0!~,~!~!Local,draftHostVar!~,now3!~,~!~!Local,draftHostVar!~,now0!~
 
 
 # Get the moving mean seeded.
@@ -168,6 +197,7 @@ else
 
     basicMaths Local,muteDiffTotal,~!~!Local,draftHostVar!~,muteDiffTotal!~,+,~!~!Local,draftHostVar!~,diffDiffFirst-0!~
     setNested ~!Local,draftHostVar!~,muteDiffTotal,~!Local,muteDiffTotal!~
+    setNested ~!Local,hostVar!~,muteDiffTotal,~!Local,muteDiffTotal!~
 
 
 # Make it work with Local and Me variables. Although this probably doesn't make sense with most use-cases.
