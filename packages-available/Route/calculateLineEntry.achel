@@ -10,16 +10,12 @@ radiansToDegrees Local,inverseRunwayAngleDegrees,~!Me,inverseRunwayAngle!~
 apToMeWithContext ~!Local,instanceName!~,routePlanning,runwayAngle
 radiansToDegrees Local,runwayAngleDegrees,~!Me,runwayAngle!~
 
-# TODO Take into account that when we enter into this, we might not be facing the right way. We will therefore need to turn, and this will have an impact on entering into the arc .
-
-# We may want to put an extra way point a short time before entry into the line to get the plane going on a straight couse in a stable way. We'll need to calculate it here to offset everything, but add it last, so it's in the right order.
-
 set Local,extention,unknown
 if ~!Local,extendKM!~,!=,0,
-	debug 1,No extention before entering approach.
-	calculateNewPosition Local,extention,~!Local,inverseRunwayAngleDegrees!~,~!Local,radius!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
-else
 	debug 1,~!Local,extendKM!~KM extention before entering approach.
+	calculateNewPosition Local,extention,~!Local,inverseRunwayAngleDegrees!~,~!Local,extendKM!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
+else
+	debug 1,No extention before entering approach.
 	setNested Local,extention,longitude,~!Local,lineEntryLongitude!~
 	setNested Local,extention,latitude,~!Local,lineEntryLatitude!~
 
