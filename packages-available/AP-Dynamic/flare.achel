@@ -1,4 +1,5 @@
 # Flare for touch down. --flare=instanceName ~ ap,dynamic
+#onDefine registerOnceForEvent AP,flare,flare
 
 parameters {"instanceName":"default"}
 
