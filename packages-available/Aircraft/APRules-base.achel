@@ -475,41 +475,41 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,finalApproach,altitudeEvents"],
 	setNested ["~!Me,stuff!~,input,events,flaps1,eventName","AP,flaps1"]
 	setNested ["~!Me,stuff!~,input,events,flaps1,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,flaps5,testValue","~!AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps5,testValue","~!AP,state,~!Tmp,instanceName!~,flapsAltitudes,5!~"]
 	setNested ["~!Me,stuff!~,input,events,flaps5,description","Flaps 5."]
 	setNested ["~!Me,stuff!~,input,events,flaps5,operator","<"]
 	setNested ["~!Me,stuff!~,input,events,flaps5,eventName","AP,flaps5"]
 	setNested ["~!Me,stuff!~,input,events,flaps5,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,flaps15,testValue","~!AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps15,testValue","~!AP,state,~!Tmp,instanceName!~,flapsAltitudes,15!~"]
 	setNested ["~!Me,stuff!~,input,events,flaps15,description","Flaps 15."]
 	setNested ["~!Me,stuff!~,input,events,flaps15,operator","<"]
 	setNested ["~!Me,stuff!~,input,events,flaps15,eventName","AP,flaps15"]
 	setNested ["~!Me,stuff!~,input,events,flaps15,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,flaps20,testValue","~!AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps20,testValue","~!AP,state,~!Tmp,instanceName!~,flapsAltitudes,20!~"]
 	setNested ["~!Me,stuff!~,input,events,flaps20,description","Flaps 20."]
 	setNested ["~!Me,stuff!~,input,events,flaps20,operator","<"]
 	setNested ["~!Me,stuff!~,input,events,flaps20,eventName","AP,flaps25"]
 	setNested ["~!Me,stuff!~,input,events,flaps20,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,flaps25,testValue","~!AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps25,testValue","~!AP,state,~!Tmp,instanceName!~,flapsAltitudes,25!~"]
 	setNested ["~!Me,stuff!~,input,events,flaps25,description","Flaps 25."]
 	setNested ["~!Me,stuff!~,input,events,flaps25,operator","<"]
 	setNested ["~!Me,stuff!~,input,events,flaps25,eventName","AP,flaps25"]
 	setNested ["~!Me,stuff!~,input,events,flaps25,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,flaps30,testValue","~!AP,state,~!Tmp,instanceName!~,flapsAltitudes,1!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps30,testValue","~!AP,state,~!Tmp,instanceName!~,flapsAltitudes,30!~"]
 	setNested ["~!Me,stuff!~,input,events,flaps30,description","Flaps 30."]
 	setNested ["~!Me,stuff!~,input,events,flaps30,operator","<"]
 	setNested ["~!Me,stuff!~,input,events,flaps30,eventName","AP,flaps30"]
 	setNested ["~!Me,stuff!~,input,events,flaps30,debugLevel","1"]
 
-	setNested ["~!Me,stuff!~,input,events,flaps30,testValue","~!AP,state,~!Tmp,instanceName!~,landingFlare!~"]
-	setNested ["~!Me,stuff!~,input,events,flaps30,description","Time to flare."]
-	setNested ["~!Me,stuff!~,input,events,flaps30,operator","<"]
-	setNested ["~!Me,stuff!~,input,events,flaps30,eventName","AP,flare"]
-	setNested ["~!Me,stuff!~,input,events,flaps30,debugLevel","1"]
+	setNested ["~!Me,stuff!~,input,events,flare,testValue","~!AP,state,~!Tmp,instanceName!~,landingFlare!~"]
+	setNested ["~!Me,stuff!~,input,events,flare,description","Time to flare."]
+	setNested ["~!Me,stuff!~,input,events,flare,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,flare,eventName","AP,flare"]
+	setNested ["~!Me,stuff!~,input,events,flare,debugLevel","1"]
 
 
 
@@ -527,11 +527,11 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,flare,pitch"],
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,1
-	setNested ~!Me,stuff!~,output,multiplier,0.2
+	setNested ~!Me,stuff!~,output,multiplier,1
 
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,altitude-ft"]
-	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,landingFlair"]
+	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,landingFlare"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,elevator-req"]
 	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/elevator ~%value%~"]
 
