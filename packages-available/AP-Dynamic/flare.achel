@@ -1,0 +1,12 @@
+# Flare for touch down. --flare=instanceName ~ ap,dynamic
+
+parameters {"instanceName":"default"}
+
+debug 1,Flare ~!Local,instanceName!~.
+
+setAPState flare,~!Local,instanceName!~
+
+thrust ~!Local,instanceName!~,0
+
+registerForEvent Timer,getOrientation,deliver,clientSocket,~!Local,instanceName!~,ls /gear
+registerForEvent Timer,getOrientation,checkOnGround,~!Local,instanceName!~

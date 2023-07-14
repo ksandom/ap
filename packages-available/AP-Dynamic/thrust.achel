@@ -1,0 +1,18 @@
+# Set the thrust (0-1) for the aircraft. --thrust=instanceName,thrust ~ dynamic
+
+parameters {"instanceName":"default","thrust":"0"}
+
+debug 1,Thrust for ~!Local,instanceName!~ set to ~!Local,thrust!~.
+
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[0]/throttle ~!Local,thrust!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[1]/throttle ~!Local,thrust!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[2]/throttle ~!Local,thrust!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[3]/throttle ~!Local,thrust!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[4]/throttle ~!Local,thrust!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[5]/throttle ~!Local,thrust!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[6]/throttle ~!Local,thrust!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[7]/throttle ~!Local,thrust!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[8]/throttle ~!Local,thrust!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[9]/throttle ~!Local,thrust!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[10]/throttle ~!Local,thrust!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[11]/throttle ~!Local,thrust!~

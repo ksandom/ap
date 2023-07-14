@@ -2,7 +2,7 @@
 
 parameters {"instanceName":"default","brakeLevel":"0"}
 
-debug 1,Wheel brakes ~!Local,flapsLevel!~ for ~!Local,instanceName!~.
+debug 1,Wheel brakes ~!Local,brakeLevel!~ for ~!Local,instanceName!~.
 
 deliver clientSocket,~!Local,instanceName!~,set /controls/gear/brake-parking ~!Local,brakeLevel!~
 deliver clientSocket,~!Local,instanceName!~,set /controls/gear/brake-left ~!Local,brakeLevel!~

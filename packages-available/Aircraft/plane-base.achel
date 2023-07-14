@@ -14,11 +14,13 @@ massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,v2,170
     setNested ~!Me,stuff!~,vCruise,300
     setNested ~!Me,stuff!~,vLand,155
+    setNested ~!Me,stuff!~,relaxWhenStopping,60
 
     # Altitudes.
     setNested ~!Me,stuff!~,safeAltitude,4000
     setNested ~!Me,stuff!~,altitudeOffsetAtSealevel,1150
     setNested ~!Me,stuff!~,trailerCruiseAltitude,10000
+    setNested ~!Me,stuff!~,landingFlair,100
 
     # Thrust.
     setNested ~!Me,stuff!~,trailerTakeOffThrust,1
@@ -51,6 +53,10 @@ massSet ["AP,state,~!Local,instanceName!~"],
     degreesToRadians Local,pointsCleaningAngleToleranceRadians,~!~!Me,stuff!~,pointsCleaningAngleToleranceDegrees!~
     setNested ~!Me,stuff!~,pointsCleaningAngleToleranceRadians,~!Local,pointsCleaningAngleToleranceRadians!~
     setNested ~!Me,stuff!~,maxPointsToSkip,2
+
+    # Hard-coded values.
+    setNested ~!Me,stuff!~,hardCoded,0,0
+    setNested ~!Me,stuff!~,hardCoded,1,1
 
 # Line capture.
 # NOTE that If these settings get added to. They need to be added to trailerProfile.achel.

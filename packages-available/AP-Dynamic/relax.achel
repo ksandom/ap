@@ -1,0 +1,11 @@
+# Relax the plane. (used after --stop.) --relax=instanceName ~ ap,dynamic
+#onDefine registerOnceForEvent AP,relax,relax
+
+parameters {"instanceName":"default"}
+
+debug 1,Relaxing ~!Local,instanceName!~.
+
+thrust ~!Local,instanceName!~,0
+speedBrake ~!Local,instanceName!~,0
+brake ~!Local,instanceName!~,1
+reverser ~!Local,instanceName!~,0

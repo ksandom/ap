@@ -505,6 +505,66 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,finalApproach,altitudeEvents"],
 	setNested ["~!Me,stuff!~,input,events,flaps30,eventName","AP,flaps30"]
 	setNested ["~!Me,stuff!~,input,events,flaps30,debugLevel","1"]
 
+	setNested ["~!Me,stuff!~,input,events,flaps30,testValue","~!AP,state,~!Tmp,instanceName!~,landingFlare!~"]
+	setNested ["~!Me,stuff!~,input,events,flaps30,description","Time to flare."]
+	setNested ["~!Me,stuff!~,input,events,flaps30,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,flaps30,eventName","AP,flare"]
+	setNested ["~!Me,stuff!~,input,events,flaps30,debugLevel","1"]
+
+
+
+# Flare.
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "flare", ~!AP,stateRules,base,base!~]
+massSet ["AP,stateRules,~!Tmp,instanceName!~,flare,pitch"],
+	setNested ["~!Me,stuff!~,algorithm","direct"]
+	# setNested ~!Me,stuff!~,debug,1
+
+	setNested ~!Me,stuff!~,input,min,-100
+	setNested ~!Me,stuff!~,input,center,0
+	setNested ~!Me,stuff!~,input,max,0
+	setNested ~!Me,stuff!~,input,multiplier,1
+
+	setNested ~!Me,stuff!~,output,min,-1
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,1
+	setNested ~!Me,stuff!~,output,multiplier,0.2
+
+	# TODO These need to be abstracted out
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,altitude-ft"]
+	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,landingFlair"]
+	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,elevator-req"]
+	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/elevator ~%value%~"]
+
+
+# Stop.
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "stop", ~!AP,stateRules,base,base!~]
+massSet ["AP,stateRules,~!Tmp,instanceName!~,stop,speedEvents"],
+
+	# Speed based events
+	setNested ~!Me,stuff!~,input,min,-1
+	setNested ~!Me,stuff!~,input,center,0
+	setNested ~!Me,stuff!~,input,max,4000
+	setNested ~!Me,stuff!~,input,multiplier,1
+
+	setNested ~!Me,stuff!~,output,min,1
+	setNested ~!Me,stuff!~,output,center,0
+	setNested ~!Me,stuff!~,output,max,-1
+	setNested ~!Me,stuff!~,output,multiplier,1
+
+	# TODO These need to be abstracted out
+	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,airspeed-kt"]
+	setNested ["~!Me,stuff!~,input,goal","0"]
+	setNested ["~!Me,stuff!~,destination,variable",""]
+	setNested ["~!Me,stuff!~,destination,textOutput",""]
+
+	setNested ["~!Me,stuff!~,input,events,relax,testValue","AP,state,~!Tmp,instanceName!~,relaxWhenStopping"]
+	setNested ["~!Me,stuff!~,input,events,relax,description","We're slow enough to relax now."]
+	setNested ["~!Me,stuff!~,input,events,relax,operator","<"]
+	setNested ["~!Me,stuff!~,input,events,relax,eventName","AP,relax"]
+	setNested ["~!Me,stuff!~,input,events,relax,debugLevel","1"]
+
+# Relax.
+setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "relax", ~!AP,stateRules,base,base!~]
 
 
 # Speed controlled

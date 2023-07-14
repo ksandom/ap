@@ -2,6 +2,6 @@
 
 parameters {"instanceName":"default","brakeLevel":"0"}
 
-debug 1,Speedbrake ~!Local,flapsLevel!~ for ~!Local,instanceName!~.
+debug 1,Speedbrake ~!Local,brakeLevel!~ for ~!Local,instanceName!~.
 
-deliver clientSocket,~!Local,instanceName!~,set /controls/flight/speedbrake-level ~!Local,brakeLevel!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/flight/speedbrake ~!Local,brakeLevel!~
