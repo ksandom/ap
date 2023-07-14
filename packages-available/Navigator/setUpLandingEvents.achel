@@ -43,9 +43,6 @@ setNested AP,events,finalApproach,
     debug 1,plotApproach: Final approach for instance ~!Local,instanceName!~
     # TODO set speedGoal?
 
-    # TODO Replace this with a dynamic altitude.
-    altitude ~!Local,instanceName!~,200
-
     # TODO trailerProfile for holding the line in landing configuration?
 
     # Set up for glide slope.
@@ -57,7 +54,7 @@ setNested AP,events,finalApproach,
 
     flaps ~!Local,instanceName!~,1
 
-    registerForEvent Navigator,ticked,~!AP,events,calculateAltitude!~
+    registerForEvent Navegator,ticked,~!AP,events,calculateAltitude!~
 
     setAPState finalApproach,~!Local,instanceName!~
 
