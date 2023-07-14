@@ -23,3 +23,6 @@ massSet ["AP,state,~!Local,instanceName!~"],
 
     # Manoeuvrability.
     setNested ~!Me,stuff!~,cruiseTurningRadiusKM,4
+
+# Reload the rules now that we have the full configuration.
+APRules-base ~!Local,instanceName!~

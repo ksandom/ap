@@ -4,6 +4,8 @@
 
 parameters {"instanceName":"default"}
 
+debug 1,Setting up config for ~!Local,instanceName!~.
+
 massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,type,plane
 

@@ -26,3 +26,7 @@ massSet ["AP,state,~!Local,instanceName!~"],
 
 registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,0,~!Local,instanceName!~
 registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,1,~!Local,instanceName!~
+
+
+# Reload the rules now that we have the full configuration.
+APRules-base ~!Local,instanceName!~
