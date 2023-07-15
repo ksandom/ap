@@ -531,7 +531,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,flare,pitch"],
 
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,altitude-ft"]
-	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,landingFlare"]
+	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,altitude-deviance"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,elevator-req"]
 	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/flight/elevator ~%value%~"]
 

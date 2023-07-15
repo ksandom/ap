@@ -6,6 +6,8 @@ parameters {"instanceName":"default"}
 debug 1,Flare ~!Local,instanceName!~.
 
 setAPState flare,~!Local,instanceName!~
+getAPVar ~!Local,instanceName!~,landingFlare,Local,landingFlare
+altitude ~!Local,instanceName!~,~!Local,landingFlare!~
 
 thrust ~!Local,instanceName!~,0
 

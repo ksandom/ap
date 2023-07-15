@@ -1,6 +1,17 @@
 # Calculate how far (in feet) off the desired altitude we are. ~ AP,correction,deviance,notInstanceSafe
 parameters {"instanceName":"default"}
 
-basicMaths Local,altitudeDifference,~!AP,state,~!Local,instanceName!~,altitude-goal!~,-,~!AP,state,~!Local,instanceName!~,altitude-ft!~
-basicMaths Local,altitudeDifference,~!Local,altitudeDifference!~,+,~!AP,state,~!Local,instanceName!~,altitudeOffsetAtSealevel!~
-setNested AP,state,~!Local,instanceName!~,altitude-deviance,~!Local,altitudeDifference!~
+# Figure out which offset we should use.
+getAPVar ~!Local,instanceName!~,altitudeOffsetActive,Local,offsetName
+getAPVar ~!Local,instanceName!~,~!Local,offsetName!~,Local,offsetValue
+
+# Get data.
+getAPVar ~!Local,instanceName!~,altitude-goal,Local,altitudeGoal
+getAPVar ~!Local,instanceName!~,altitude-ft,Local,altitudeInFeet
+
+# Do the calculations.
+basicMaths Local,altitudeDifference,~!Local,altitudeGoal!~,-,~!Local,altitudeInFeet!~
+basicMaths Local,altitudeDifference,~!Local,altitudeDifference!~,+,~!Local,offsetValue!~
+
+# Set the result.
+setAPVar ~!Local,instanceName!~,altitude-deviance,~!Local,altitudeDifference!~
