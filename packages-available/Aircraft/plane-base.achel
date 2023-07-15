@@ -75,7 +75,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
     setNested ~!Me,stuff!~,overshootOffset,0
 
     # The length of the virtual bar between the plane and the aim point on the line to track.
-    setNested ~!Me,stuff!~,maxBarLength,80000
+    setNested ~!Me,stuff!~,maxBarLength,8000
 
     # Used to center our wiggles around the line. This setting governs how many iterations go into the mean.
     setNested ~!Me,stuff!~,longMeanIterations,200
@@ -130,7 +130,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
 
 
     # Use CleanStream to remove bad data.
-    setNested ~!Me,stuff!~,useCleanStream,1
+    setNested ~!Me,stuff!~,useCleanStream,0
 
 # Cruise settings.
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
