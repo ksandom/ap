@@ -15,5 +15,9 @@ altitudeOffset ~!Local,instanceName!~,altitudeOffsetLanding
 
 thrust ~!Local,instanceName!~,0
 
+# Re-calculate the altitude-deviance so that it's definitely refresh when balance next reads it.
+calculateAltitudeDeviance ~!Local,instanceName!~
+
+# Start checking whether we are on the ground yet.
 registerForEvent Timer,getOrientation,deliver,clientSocket,~!Local,instanceName!~,ls /gear
 registerForEvent Timer,getOrientation,checkOnGround,~!Local,instanceName!~
