@@ -440,7 +440,7 @@ if ~!Local,ready!~,==,1,
 
 
 
-            debug 1,Overshoot oA=~!Local,overshootCounterAngle!~  dC=~!Local,distanceDiff!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecondSmoothed!~ oss=~!Local,overshootSeconds!~
+            debug 2,Overshoot oA=~!Local,overshootCounterAngle!~  dC=~!Local,distanceDiff!~ tC=~!Local,nowChange!~ m/s=~!Local,metersPerSecondSmoothed!~ oss=~!Local,overshootSeconds!~
 
             # Did we overshoot?
             set Local,before,0
