@@ -13,5 +13,9 @@ getAPVar ~!Local,instanceName!~,altitude-ft,Local,altitudeInFeet
 basicMaths Local,altitudeDifference,~!Local,altitudeGoal!~,-,~!Local,altitudeInFeet!~
 basicMaths Local,altitudeDifference,~!Local,altitudeDifference!~,+,~!Local,offsetValue!~
 
+if ~!Local,offsetName!~,==,altitudeOffsetLanding,
+    if ~!Local,altitudeDifference!~,<,0,
+        set Local,altitudeDifference,0
+
 # Set the result.
 setAPVar ~!Local,instanceName!~,altitude-deviance,~!Local,altitudeDifference!~

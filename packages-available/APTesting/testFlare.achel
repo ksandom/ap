@@ -1,12 +1,31 @@
 # Flare for touch down. --flare=instanceName ~ ap,dynamic
 
-parameters {"instanceName":"default"}
-
+parameters {"instanceName":"default","altitude":"0"}
 
 setAPState flare,~!Local,instanceName!~
-getAPVar ~!Local,instanceName!~,landingFlare,Local,landingFlare
-altitude ~!Local,instanceName!~,~!Local,landingFlare!~
+
+if ~!Local,altitude!~,==,0,
+    getAPVar ~!Local,instanceName!~,landingFlare,Local,landingFlare
+    altitude ~!Local,instanceName!~,~!Local,landingFlare!~
+else
+    altitude ~!Local,instanceName!~,~!Local,altitude!~
 
 altitudeOffset ~!Local,instanceName!~,altitudeOffsetLanding
 
 thrust ~!Local,instanceName!~,0
+
+calculateAltitudeDeviance
+
+getAPVar ~!Local,instanceName!~,altitude-deviance,Local,altitudeDeviance
+getAPVar ~!Local,instanceName!~,altitude-goal,Local,altitudeGoal
+getAPVar ~!Local,instanceName!~,altitude-ft,Local,altitudeFt
+getAPVar ~!Local,instanceName!~,altitude-agl-ft,Local,altitudeAGL
+getAPVar ~!Local,instanceName!~,elevator-req,Local,ele-req
+getAPVar ~!Local,instanceName!~,altitudeOffsetActive,Local,altitudeOffsetActive
+
+debug 1,alt-act:  ~!Local,altitudeOffsetActive!~
+debug 1,alt-dev:  ~!Local,altitudeDeviance!~
+debug 1,alt-goal: ~!Local,altitudeGoal!~
+debug 1,alt-ft:   ~!Local,altitudeFt!~
+debug 1,alt-agl:  ~!Local,altitudeAGL!~
+debug 1,ele-req:  ~!Local,ele-req!~

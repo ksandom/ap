@@ -517,18 +517,18 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,finalApproach,altitudeEvents"],
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "flare", ~!AP,stateRules,base,base!~]
 massSet ["AP,stateRules,~!Tmp,instanceName!~,flare,pitch"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
-	# setNested ~!Me,stuff!~,debug,1
+	setNested ~!Me,stuff!~,debug,1
 
 	getAPVar ~!Tmp,instanceName!~,landingFlare,Local,landingFlare
 	setNested ~!Me,stuff!~,input,min,-~!Local,landingFlare!~
 	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,0
+	setNested ~!Me,stuff!~,input,max,~!Local,landingFlare!~
 	setNested ~!Me,stuff!~,input,multiplier,1
 
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
 	setNested ~!Me,stuff!~,output,max,1
-	setNested ~!Me,stuff!~,output,multiplier,1
+	setNested ~!Me,stuff!~,output,multiplier,-1
 
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,altitude-deviance"]
