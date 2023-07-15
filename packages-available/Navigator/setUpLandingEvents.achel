@@ -34,7 +34,6 @@ setNested AP,events,calculateAltitude,
     altitude ~!Local,instanceName!~,~!Local,finalAltitude!~,2
 
 
-# TODO write finalApproach
 # set altitudeGoal to 100 # TODO this will eventually need to take the actual runway altitude into account.
 # slow down the plane
 # put down the gear
@@ -65,11 +64,8 @@ debug 1,plotApproach: Registered ~!AP,events,finalApproach!~ to Flight,finalAppr
 # TODO write beginTouchDown
 setNested AP,events,beginTouchDown,
     debug 1,plotApproach: Begining touchdown for instance ~!Global,~!AP,events,beginTouchDown!~!~
-    # TODO set speedGoal
-    altitude ~!Local,instanceName!~,0
 
-    # TODO setAPState for landing.
-    # TODO trailerProfile for holding the line in touchDown configuration?
+    # This is currently handled by altitude events in finalApproach in the AP rules.
 
 registerForEvent Flight,beginTouchDown,~!AP,events,beginTouchDown!~
 debug 1,plotApproach: Registered ~!Global,~!AP,events,beginTouchDown!~!~ to Flight,beginTouchDown

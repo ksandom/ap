@@ -48,7 +48,7 @@ massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,flapsAltitudes,30,1000
 
     # Gear.
-    setNested ~!Me,stuff!~,gear,down,1500
+    setNested ~!Me,stuff!~,gear,down,2000
 
     # Points cleaning.
     setNested ~!Me,stuff!~,pointsCleaningAngleToleranceDegrees,3

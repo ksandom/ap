@@ -5,9 +5,13 @@ parameters {"instanceName":"default"}
 
 debug 1,Flare ~!Local,instanceName!~.
 
+unregisterForEvent Navegator,ticked,~!AP,events,calculateAltitude!~
+
 setAPState flare,~!Local,instanceName!~
 getAPVar ~!Local,instanceName!~,landingFlare,Local,landingFlare
 altitude ~!Local,instanceName!~,~!Local,landingFlare!~
+
+altitudeOffset ~!Local,instanceName!~,altitudeOffsetLanding
 
 thrust ~!Local,instanceName!~,0
 
