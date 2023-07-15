@@ -1,0 +1,12 @@
+# Flare for touch down. --flare=instanceName ~ ap,dynamic
+
+parameters {"instanceName":"default"}
+
+
+setAPState flare,~!Local,instanceName!~
+getAPVar ~!Local,instanceName!~,landingFlare,Local,landingFlare
+altitude ~!Local,instanceName!~,~!Local,landingFlare!~
+
+altitudeOffset ~!Local,instanceName!~,altitudeOffsetLanding
+
+thrust ~!Local,instanceName!~,0
