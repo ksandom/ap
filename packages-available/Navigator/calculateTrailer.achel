@@ -540,8 +540,10 @@ if ~!Local,ready!~,==,1,
                     set Local,profileSelector,close
 
             if ~!Local,absoluteHeadingOffset!~,>,~!Local,farHeadingDiffRadians!~,
-                if ~!Local,absDistanceInMeters!~,>,~!Local,farDistance!~,
-                    set Local,profileSelector,far
+                set Local,profileSelector,far
+
+            if ~!Local,absDistanceInMeters!~,>,~!Local,farDistance!~,
+                set Local,profileSelector,far
 
             set Local,trailerProfileToApply,na
             set Local,shouldReset,0
