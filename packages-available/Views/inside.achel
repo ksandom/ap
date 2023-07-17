@@ -2,4 +2,4 @@
 
 parameters {"instanceName":"default"}
 
-setView ~!Local,instanceName!~,inside,0,-12
+setView ~!Local,instanceName!~,inside
