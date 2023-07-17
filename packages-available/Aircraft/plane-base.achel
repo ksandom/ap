@@ -140,7 +140,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
 # Cruise settings.
 massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,5
-    setNested ~!Me,stuff!~,overshootMultiplier,0.6
+    setNested ~!Me,stuff!~,overshootMultiplier,0.8
     setNested ~!Me,stuff!~,overshootOffset,-0.2
     setNested ~!Me,stuff!~,maxBarLength,20000
 
@@ -193,7 +193,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,strengthLongMean,0
 
     setNested ~!Me,stuff!~,farShouldReset,1
-    setNested ~!Me,stuff!~,farHeadingDiffDegrees,15
+    setNested ~!Me,stuff!~,farHeadingDiffDegrees,10
     setNested ~!Me,stuff!~,farDistance,600
     setNested ~!Me,stuff!~,trailerProfileFar,trailerCruiseFindLine
 
