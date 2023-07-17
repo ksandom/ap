@@ -1,0 +1,16 @@
+# Set the view. --setView=instanceName,viewName,[offsetHeading],[offsetPitch] ~ views
+
+parameters {"instanceName":"default","viewName":"inside","offsetHeading":"","offsetPitch":""}
+
+getAPVarWithContext ~!Local,instanceName!~,views,~!Local,viewName!~,Local,viewNumber
+deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/view-number ~!Local,viewNumber!~
+
+debug 1,Set ~!Local,instanceName!~ to view "~!Local,viewName!~"(~!Local,viewNumber!~).
+
+if ~!Local,offsetHeading!~,!=,,
+    debug 1,  Offset heading: ~!Local,offsetHeading!~
+    deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/heading-offset-deg ~!Local,offsetHeading!~
+
+if ~!Local,offsetPitch!~,!=,,
+    debug 1,  Offset pitch: ~!Local,offsetPitch!~
+    deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/pitch-offset-deg ~!Local,offsetPitch!~

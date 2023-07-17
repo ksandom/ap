@@ -60,6 +60,11 @@ massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,hardCoded,0,0
     setNested ~!Me,stuff!~,hardCoded,1,1
 
+    # Views
+    setNested ~!Me,stuff!~,views,inside,0
+    setNested ~!Me,stuff!~,views,outside,1
+    setNested ~!Me,stuff!~,views,passenger,17
+
 # Line capture.
 # NOTE that If these settings get added to. They need to be added to trailerProfile.achel.
 
@@ -198,7 +203,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     # setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseHoldLine
     setNested ~!Me,stuff!~,trailerProfileClose,na
 
-    setNested ~!Me,stuff!~,minSeconds,120
+    setNested ~!Me,stuff!~,minSeconds,0
 
     setNested ~!Me,stuff!~,useCleanStream,1
 

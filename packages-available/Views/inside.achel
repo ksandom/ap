@@ -1,8 +1,5 @@
-# Use the inside view. --inside=instanceName ~
+# Use the inside view. --inside=instanceName ~ views
 
 parameters {"instanceName":"default"}
 
-deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/view-number 0
-
-# deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/heading-offset-deg -25
-# deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/pitch-offset-deg 7
+setView ~!Local,instanceName!~,inside,0,-12

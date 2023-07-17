@@ -1,8 +1,5 @@
-# Use the passenger view. --passenger=instanceName ~
+# Use the passenger view. --passenger=instanceName ~ views
 
 parameters {"instanceName":"default"}
 
-deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/view-number 17
-
-# deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/heading-offset-deg -25
-# deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/pitch-offset-deg 7
+setView ~!Local,instanceName!~,passenger

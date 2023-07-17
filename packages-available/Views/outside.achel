@@ -1,8 +1,5 @@
-# Use the outside view. --outside=instanceName ~
+# Use the outside view. --outside=instanceName ~ views
 
 parameters {"instanceName":"default"}
 
-deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/view-number 1
-
-deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/heading-offset-deg -25
-deliver clientSocket,~!Local,instanceName!~,set /sim/current-view/pitch-offset-deg 7
+setView ~!Local,instanceName!~,outside,-25,7
