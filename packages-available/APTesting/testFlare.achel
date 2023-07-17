@@ -10,8 +10,6 @@ if ~!Local,altitude!~,==,0,
 else
     altitude ~!Local,instanceName!~,~!Local,altitude!~
 
-altitudeOffset ~!Local,instanceName!~,altitudeOffsetLanding
-
 thrust ~!Local,instanceName!~,0
 
 calculateAltitudeDeviance

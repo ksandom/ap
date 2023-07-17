@@ -2,8 +2,10 @@
 parameters {"instanceName":"default"}
 
 # Figure out which offset we should use.
-getAPVar ~!Local,instanceName!~,altitudeOffsetActive,Local,offsetName
-getAPVar ~!Local,instanceName!~,~!Local,offsetName!~,Local,offsetValue
+getAPVar ~!Local,instanceName!~,altitudeOffsetAtSealevel,Local,offsetSeaLevel
+getAPVar ~!Local,instanceName!~,altitudeOffsetLanding,Local,offsetLanding
+
+# altitudeOffsetLanding altitudeOffsetAtSealevel
 
 # Get data.
 getAPVar ~!Local,instanceName!~,altitude-goal,Local,altitudeGoal
@@ -11,11 +13,12 @@ getAPVar ~!Local,instanceName!~,altitude-ft,Local,altitudeInFeet
 
 # Do the calculations.
 basicMaths Local,altitudeDifference,~!Local,altitudeGoal!~,-,~!Local,altitudeInFeet!~
-basicMaths Local,altitudeDifference,~!Local,altitudeDifference!~,+,~!Local,offsetValue!~
+basicMaths Local,altitudeDifferenceSeaLevel,~!Local,altitudeDifference!~,+,~!Local,offsetSeaLevel!~
+basicMaths Local,altitudeDifferenceLanding,~!Local,altitudeDifference!~,+,~!Local,offsetLanding!~
 
-if ~!Local,offsetName!~,==,altitudeOffsetLanding,
-    if ~!Local,altitudeDifference!~,<,0,
-        set Local,altitudeDifference,0
+if ~!Local,altitudeDifferenceLanding!~,<,0,
+    set Local,altitudeDifferenceLanding,0
 
 # Set the result.
-setAPVar ~!Local,instanceName!~,altitude-deviance,~!Local,altitudeDifference!~
+setAPVar ~!Local,instanceName!~,altitude-deviance,~!Local,altitudeDifferenceSeaLevel!~
+setAPVar ~!Local,instanceName!~,altitude-landingDeviance,~!Local,altitudeDifferenceLanding!~

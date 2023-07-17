@@ -22,7 +22,7 @@ massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,altitudeOffsetLanding,0
     setNested ~!Me,stuff!~,altitudeOffsetActive,altitudeOffsetAtSealevel
     setNested ~!Me,stuff!~,trailerCruiseAltitude,10000
-    setNested ~!Me,stuff!~,landingFlare,500
+    setNested ~!Me,stuff!~,landingFlare,1000
 
     # Thrust.
     setNested ~!Me,stuff!~,trailerTakeOffThrust,1

@@ -49,7 +49,7 @@ setNested AP,events,finalApproach,
     setAPVar ~!Local,instanceName!~,altitude-goal-start,~!Local,currentAltitudeGoal!~
 
     # TODO This will need to be fixed for airports that are not at sea level.
-    setAPVar ~!Local,instanceName!~,altitude-goal-end,0
+    setAPVar ~!Local,instanceName!~,altitude-goal-end,250
 
     flaps ~!Local,instanceName!~,1
 
@@ -65,7 +65,8 @@ debug 1,plotApproach: Registered ~!AP,events,finalApproach!~ to Flight,finalAppr
 setNested AP,events,beginTouchDown,
     debug 1,plotApproach: Begining touchdown for instance ~!Global,~!AP,events,beginTouchDown!~!~
 
-    # This is currently handled by altitude events in finalApproach in the AP rules.
+    setAPState touchDown,~!Local,instanceName!~
+    thrust ~!Local,instanceName!~,0
 
 registerForEvent Flight,beginTouchDown,~!AP,events,beginTouchDown!~
 debug 1,plotApproach: Registered ~!Global,~!AP,events,beginTouchDown!~!~ to Flight,beginTouchDown

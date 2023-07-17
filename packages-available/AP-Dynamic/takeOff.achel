@@ -15,7 +15,6 @@ resetTrailer ~!Local,instanceName!~
 # Prepare the plane for flight
 flaps ~!Local,instanceName!~,5
 speedBrake ~!Local,instanceName!~,0
-altitudeOffset ~!Local,instanceName!~,altitudeOffsetAtSealevel
 
 # Set up the navigation. This will need to be replaced with something more intellegent once I'm ready to add proper routes.
 currentRunwayEnd ~!Local,instanceName!~

@@ -1,8 +1,0 @@
-# Set which altitudeOffset to use. --altitudeOffset=instanceName,offsetName ~ ap,dynamic
-
-parameters {"instanceName":"default","offsetName":"altitudeOffsetAtSealevel"}
-
-getAPVar ~!Local,instanceName!~,~!Local,offsetName!~,Local,offsetValue
-setAPVar ~!Local,instanceName!~,altitudeOffsetActive,~!Local,offsetName!~
-
-debug 1,Set altitudeOffsetName to  ~!Local,offsetName!~(~!Local,Local,offsetValue!~) for ~!Local,instanceName!~.
