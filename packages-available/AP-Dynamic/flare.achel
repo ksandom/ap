@@ -10,6 +10,7 @@ unregisterForEvent Navegator,ticked,~!AP,events,calculateAltitude!~
 setAPState flare,~!Local,instanceName!~
 getAPVar ~!Local,instanceName!~,landingFlare,Local,landingFlare
 altitude ~!Local,instanceName!~,~!Local,landingFlare!~
+pitch ~!Local,instanceName!~,0
 
 # Re-calculate the altitude-deviance so that it's definitely refresh when balance next reads it.
 calculateAltitudeDeviance ~!Local,instanceName!~

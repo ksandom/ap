@@ -29,7 +29,7 @@ setNested AP,events,calculateAltitude,
     basicMaths Local,rangeRemaining,~!Local,range!~,-,~!Local,rangeProgress!~
     basicMaths Local,finalAltitude,~!Local,rangeRemaining!~,+,~!Local,altitudeGoalEnd!~
 
-    debug 1,calculateAltitude: fa=~!Local,finalAltitude!~   s=~!Local,altitudeGoalStart!~ e=~!Local,altitudeGoalEnd!~   r=~!Local,range!~ rp=~!Local,rangeProgress!~ rr=~!Local,rangeRemaining!~ fa=~!Local,rangeRemaining!~
+    # debug 1,calculateAltitude: fa=~!Local,finalAltitude!~   s=~!Local,altitudeGoalStart!~ e=~!Local,altitudeGoalEnd!~   r=~!Local,range!~ rp=~!Local,rangeProgress!~ rr=~!Local,rangeRemaining!~ fa=~!Local,rangeRemaining!~
 
     altitude ~!Local,instanceName!~,~!Local,finalAltitude!~,2
 
@@ -52,6 +52,7 @@ setNested AP,events,finalApproach,
     setAPVar ~!Local,instanceName!~,altitude-goal-end,150
 
     flaps ~!Local,instanceName!~,1
+    pitch ~!Local,instanceName!~,0
 
     registerForEvent Navegator,ticked,~!AP,events,calculateAltitude!~
 
@@ -68,6 +69,10 @@ setNested AP,events,beginTouchDown,
     setAPState touchDown,~!Local,instanceName!~
     thrust ~!Local,instanceName!~,0
 
-registerForEvent Flight,beginTouchDown,~!AP,events,beginTouchDown!~
+# Trigger from waypoint.
+# registerForEvent Flight,beginTouchDown,~!AP,events,beginTouchDown!~
+
+# Trigger from altitude event.
 registerForEvent AP,touchDown,~!AP,events,beginTouchDown!~
+
 debug 1,plotApproach: Registered ~!Global,~!AP,events,beginTouchDown!~!~ to Flight,beginTouchDown

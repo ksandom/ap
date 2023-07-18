@@ -2,4 +2,3 @@
 parameters {"instanceName":"default","pitch":"0"}
 
 setNested AP,state,~!Local,instanceName!~,pitch-goal,~!Local,pitch!~
-setAPState sustain,~!Local,instanceName!~
