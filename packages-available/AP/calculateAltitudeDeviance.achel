@@ -4,6 +4,7 @@ parameters {"instanceName":"default"}
 # Figure out which offset we should use.
 getAPVar ~!Local,instanceName!~,altitudeOffsetAtSealevel,Local,offsetSeaLevel
 getAPVar ~!Local,instanceName!~,altitudeOffsetLanding,Local,offsetLanding
+getAPVar ~!Local,instanceName!~,landingFlare,Local,flareAltitude
 
 # altitudeOffsetLanding altitudeOffsetAtSealevel
 
@@ -11,7 +12,7 @@ getAPVar ~!Local,instanceName!~,altitudeOffsetLanding,Local,offsetLanding
 getAPVar ~!Local,instanceName!~,altitude-goal,Local,altitudeGoal
 getAPVar ~!Local,instanceName!~,altitude-ft,Local,altitudeInFeet
 
-# Do the calculations.
+# Do the deviance calculations.
 basicMaths Local,altitudeDifference,~!Local,altitudeGoal!~,-,~!Local,altitudeInFeet!~
 basicMaths Local,altitudeDifferenceSeaLevel,~!Local,altitudeDifference!~,+,~!Local,offsetSeaLevel!~
 basicMaths Local,altitudeDifferenceLanding,~!Local,altitudeDifference!~,+,~!Local,offsetLanding!~
@@ -19,6 +20,16 @@ basicMaths Local,altitudeDifferenceLanding,~!Local,altitudeDifference!~,+,~!Loca
 if ~!Local,altitudeDifferenceLanding!~,<,0,
     set Local,altitudeDifferenceLanding,0
 
+# Do the flare progress calculations.
+if ~!Local,altitudeInFeet!~,>,~!Local,flareAltitude!~,
+    set Local,flareProgress,0
+elseIf ~!Local,altitudeInFeet!~,<,0,
+    set Local,flareProgress,1
+else
+    basicMaths Local,inverseFlareProgress,~!Local,altitudeInFeet!~,/,~!Local,flareAltitude!~
+    basicMaths Local,flareProgress,1,-,~!Local,inverseFlareProgress!~
+
 # Set the result.
 setAPVar ~!Local,instanceName!~,altitude-deviance,~!Local,altitudeDifferenceSeaLevel!~
 setAPVar ~!Local,instanceName!~,altitude-landingDeviance,~!Local,altitudeDifferenceLanding!~
+setAPVar ~!Local,instanceName!~,altitude-flareProgress,~!Local,flareProgress!~
