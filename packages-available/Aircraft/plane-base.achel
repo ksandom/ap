@@ -42,10 +42,10 @@ massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,flapsMap,30,1
 
     setNested ~!Me,stuff!~,flapsAltitudes,1,4000
-    setNested ~!Me,stuff!~,flapsAltitudes,5,3500
-    setNested ~!Me,stuff!~,flapsAltitudes,15,3000
-    setNested ~!Me,stuff!~,flapsAltitudes,20,2000
-    setNested ~!Me,stuff!~,flapsAltitudes,25,1500
+    setNested ~!Me,stuff!~,flapsAltitudes,5,3800
+    setNested ~!Me,stuff!~,flapsAltitudes,15,3300
+    setNested ~!Me,stuff!~,flapsAltitudes,20,2800
+    setNested ~!Me,stuff!~,flapsAltitudes,25,2200
     setNested ~!Me,stuff!~,flapsAltitudes,30,1000
 
     # Gear.
@@ -243,3 +243,76 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseHoldLine"],
     setNested ~!Me,stuff!~,useCleanStream,1
 
 trailerProfile ~!Local,instanceName!~,trailerCruiseFindLine
+
+
+massSet ["AP,state,~!Local,instanceName!~,arc"],
+    # Basic operations.
+    # Tuning how much value each input has.
+    setNested ~!Me,stuff!~,distanceMultiplier,0.0004
+    setNested ~!Me,stuff!~,headingMultiplier,7
+
+    # Adding a little weight to help it around a corner.
+    setNested ~!Me,stuff!~,headingManualOffset,-0.2
+
+    # The max (and therefore min=max*-1) range of output.
+    setNested ~!Me,stuff!~,max,10
+
+    # How much of the input is from the distance. The rest is from the heading.
+    setNested ~!Me,stuff!~,percentDistance,0.3
+
+
+    # Auto-tuning.
+    # When to tune the sensitivity. If distance is below, reduce the sensitivity. If it's higher, increase it.
+    setNested ~!Me,stuff!~,rawDistanceLowTrigger,250
+    setNested ~!Me,stuff!~,rawDistanceHighTrigger,1000
+
+    # What to multiply the sensitivity by to increase or decrease it. Set to 1 to disable.
+    setNested ~!Me,stuff!~,sensitivityIncMultiplier,1.1
+    setNested ~!Me,stuff!~,sensitivityDecMultiplier,0.95
+
+    # Max and min sensitivity values.
+    setNested ~!Me,stuff!~,sensitivityMax,1
+    setNested ~!Me,stuff!~,sensitivityMin,0.8
+
+    # The starting value for the sensitivity.
+    setNested ~!Me,stuff!~,sensitivitySeed,1
+
+    # How often to tune the settings. New values only come about once a second. So it should be at least longer than that, probably more.
+    setNested ~!Me,stuff!~,interval,3
+
+
+massSet ["AP,state,~!Local,instanceName!~,line"],
+    # Basic operations.
+    # Tuning how much value each input has.
+    setNested ~!Me,stuff!~,distanceMultiplier,0.0005
+    setNested ~!Me,stuff!~,headingMultiplier,7
+
+    # Adding a little weight to help it around a corner.
+    setNested ~!Me,stuff!~,headingManualOffset,0
+
+    # The max (and therefore min=max*-1) range of output.
+    setNested ~!Me,stuff!~,max,10
+
+    # How much of the input is from the distance. The rest is from the heading.
+    setNested ~!Me,stuff!~,percentDistance,0.7
+
+
+    # Auto-tuning.
+    # When to tune the sensitivity. If distance is below, reduce the sensitivity. If it's higher, increase it.
+    setNested ~!Me,stuff!~,rawDistanceLowTrigger,150
+    setNested ~!Me,stuff!~,rawDistanceHighTrigger,250
+
+    # What to multiply the sensitivity by to increase or decrease it. Set to 1 to disable.
+    setNested ~!Me,stuff!~,sensitivityIncMultiplier,0.98
+    setNested ~!Me,stuff!~,sensitivityDecMultiplier,1.1
+
+    # Max and min sensitivity values.
+    setNested ~!Me,stuff!~,sensitivityMax,1
+    setNested ~!Me,stuff!~,sensitivityMin,0.4
+
+    # The starting value for the sensitivity.
+    setNested ~!Me,stuff!~,sensitivitySeed,0.5
+
+    # How often to tune the settings. New values only come about once a second. So it should be at least longer than that, probably more.
+    setNested ~!Me,stuff!~,interval,3
+

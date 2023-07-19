@@ -49,7 +49,7 @@ setNested AP,events,finalApproach,
     setAPVar ~!Local,instanceName!~,altitude-goal-start,~!Local,currentAltitudeGoal!~
 
     # TODO This will need to be fixed for airports that are not at sea level.
-    setAPVar ~!Local,instanceName!~,altitude-goal-end,150
+    setAPVar ~!Local,instanceName!~,altitude-goal-end,0
 
     flaps ~!Local,instanceName!~,1
     pitch ~!Local,instanceName!~,0
