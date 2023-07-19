@@ -461,9 +461,9 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,~!Local,scope!~,pitch"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
 	# setNested ~!Me,stuff!~,debug,1
 
-	setNested ~!Me,stuff!~,input,min,-20
+	setNested ~!Me,stuff!~,input,min,-30
 	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,20
+	setNested ~!Me,stuff!~,input,max,30
 	setNested ~!Me,stuff!~,input,multiplier,1
 
 	setNested ~!Me,stuff!~,output,min,-1
@@ -569,9 +569,9 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,~!Local,scope!~,altitude"],
 massSet ["AP,stateRules,~!Tmp,instanceName!~,~!Local,scope!~,pitch"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
 
-	setNested ~!Me,stuff!~,input,min,-20
+	setNested ~!Me,stuff!~,input,min,-30
 	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,20
+	setNested ~!Me,stuff!~,input,max,30
 	setNested ~!Me,stuff!~,input,multiplier,1
 
 	setNested ~!Me,stuff!~,output,min,-1
@@ -625,7 +625,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,~!Local,scope!~,altitude"],
 
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
-	setNested ~!Me,stuff!~,output,max,10
+	setNested ~!Me,stuff!~,output,max,15
 	setNested ~!Me,stuff!~,output,multiplier,1
 
 	# TODO These need to be abstracted out
@@ -637,9 +637,9 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,~!Local,scope!~,altitude"],
 massSet ["AP,stateRules,~!Tmp,instanceName!~,~!Local,scope!~,pitch"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
 
-	setNested ~!Me,stuff!~,input,min,-20
+	setNested ~!Me,stuff!~,input,min,-30
 	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,20
+	setNested ~!Me,stuff!~,input,max,30
 	setNested ~!Me,stuff!~,input,multiplier,1
 
 	setNested ~!Me,stuff!~,output,min,-1
