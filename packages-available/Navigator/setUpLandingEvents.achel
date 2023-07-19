@@ -49,7 +49,7 @@ setNested AP,events,finalApproach,
     setAPVar ~!Local,instanceName!~,altitude-goal-start,~!Local,currentAltitudeGoal!~
 
     # TODO This will need to be fixed for airports that are not at sea level.
-    setAPVar ~!Local,instanceName!~,altitude-goal-end,0
+    setAPVar ~!Local,instanceName!~,altitude-goal-end,100
 
     flaps ~!Local,instanceName!~,1
     pitch ~!Local,instanceName!~,0
@@ -70,9 +70,9 @@ setNested AP,events,beginTouchDown,
     thrust ~!Local,instanceName!~,0
 
 # Trigger from waypoint.
-# registerForEvent Flight,beginTouchDown,~!AP,events,beginTouchDown!~
+registerForEvent Flight,beginTouchDown,~!AP,events,beginTouchDown!~
 
 # Trigger from altitude event.
-registerForEvent AP,touchDown,~!AP,events,beginTouchDown!~
+# registerForEvent AP,touchDown,~!AP,events,beginTouchDown!~
 
 debug 1,plotApproach: Registered ~!Global,~!AP,events,beginTouchDown!~!~ to Flight,beginTouchDown

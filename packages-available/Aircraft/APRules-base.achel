@@ -459,11 +459,11 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,~!Local,scope!~,altitude"],
 
 massSet ["AP,stateRules,~!Tmp,instanceName!~,~!Local,scope!~,pitch"],
 	setNested ["~!Me,stuff!~,algorithm","direct"]
-	setNested ~!Me,stuff!~,debug,1
+	# setNested ~!Me,stuff!~,debug,1
 
-	setNested ~!Me,stuff!~,input,min,-10
+	setNested ~!Me,stuff!~,input,min,-20
 	setNested ~!Me,stuff!~,input,center,0
-	setNested ~!Me,stuff!~,input,max,10
+	setNested ~!Me,stuff!~,input,max,20
 	setNested ~!Me,stuff!~,input,multiplier,1
 
 	setNested ~!Me,stuff!~,output,min,-1
