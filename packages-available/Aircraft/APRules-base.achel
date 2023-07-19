@@ -625,7 +625,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,~!Local,scope!~,altitude"],
 
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
-	setNested ~!Me,stuff!~,output,max,14
+	setNested ~!Me,stuff!~,output,max,12
 	setNested ~!Me,stuff!~,output,multiplier,1
 
 	# TODO These need to be abstracted out
