@@ -1,4 +1,4 @@
-# Set settings for a cessana 172 ~ AP,rules,plane,aircraft
+# Set settings for a cessana 172 ~ AP,rules,plane,aircraft,planeConfig
 #onDefine aliasFeature plane-c172,172
 parameters {"instanceName":"default"}
 

@@ -3,13 +3,25 @@
 #   Start the autopilot in a common configuration.
 #
 # Syntax:
-#   $0 [abreviatedAircraftName]
+#   $0 [[[abreviatedAircraftName] host] /path/to/file.kml]
 #     abreviatedAircraftName is the name of the aircraft to use. This can be found with ap --help=aircraft .
 #
 # Examples:
 #   Simply start the autopilot.
-#     $0 
+#     $0
 #
+#   Start the autopilot with the configuration for a specific plane. (ap --help=planeConfig)
+#     $0 172
+#
+#   Start the autopilot with a specific plane, and the simulator running on another host.
+#     $0 172 another.host
+#
+#   Start the autopilot with a specific plane, connecting to another host, and updating live KML for a live view on something like Google Earth.
+#     $0 172 another.host /tmp/history.kml
+#
+#   Another example with aircraft, host, and KML.
+#     $0 777 d1 /tmp/history.kml
+
 
 requiredParms="$0"
 . `dirname $0`/libs/includeLibs.sh
@@ -17,7 +29,21 @@ requiredParms="$0"
 if [ "$1" != '' ]; then
 	extra="$extra --$1"
 else
-	extra="$extra --172"
+	extra="$extra --777"
 fi
 
-ap -v --fgfs-balance $extra --startAP
+if [ "$2" != '' ]; then
+	host="$2"
+else
+	host="localhost"
+fi
+
+if [ "$3" != '' ]; then
+	history="--liveKML=default,4000,$3"
+else
+	history=""
+fi
+
+set -x
+ap -v --fgfs-balance="$host" $extra "$history" --startAP
+set +x
