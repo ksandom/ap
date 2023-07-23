@@ -462,7 +462,7 @@ if ~!Local,ready!~,==,1,
 
 
         # Calculate FOMO from headingOffset.
-        # absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
+        absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
         set Local,fomoValue,0
         if ~!Local,closer!~,<,~!Local,fartherThreshold!~,
             basicMaths Local,fomoValue,~!Local,metersPerSecondSmoothed!~,/,200
@@ -507,7 +507,7 @@ if ~!Local,ready!~,==,1,
         if ~!Local,closer!~,>,~!Local,closerThreshold!~,
             set Local,useSpeed,1
 
-        if ~!Local,closer!~,>,~!Local,fartherThreshold!~,
+        if ~!Local,closer!~,<,~!Local,fartherThreshold!~,
             set Local,useSpeed,1
 
         if ~!Local,useSpeed!~,==,1,
@@ -517,9 +517,10 @@ if ~!Local,ready!~,==,1,
                 else
                     basicMaths Local,speedInRange,~!Local,metersPerSecondSmoothed!~,-,~!Local,calmMinSpeed!~
                     basicMaths Local,speed,~!Local,speedInRange!~,/,~!Local,calmBand!~
+                    absolute Local,speed,~!Local,speed!~
 
-                    if ~!Local,distanceDiff!~,<,0,
-                        basicMaths Local,speed,~!Local,speed!~,*,-1
+                if ~!Local,distanceDiff!~,<,0,
+                    basicMaths Local,speed,~!Local,speed!~,*,-1
 
 
         # Calculate longMean to centre our oscillations.
@@ -682,9 +683,11 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,calmInRange,~!Local,calmInRange!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,calmMaxSpeed,~!Local,calmMaxSpeed!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,calmMinSpeed,~!Local,calmMinSpeed!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,changeSide,~!Local,changeSide!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeDistance,~!Local,closeDistance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeHeadingDiffRadians,~!Local,closeHeadingDiffRadians!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closer,~!Local,closer!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closerThreshold,~!Local,closerThreshold!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeSince,~!Local,closeSince!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,closeTime,~!Local,closeTime!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,cSquared,~!Local,cSquared!~
@@ -706,6 +709,7 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,endTime,~!Local,endTime!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,farDistance,~!Local,farDistance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,farHeadingDiffRadians,~!Local,farHeadingDiffRadians!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,fartherThreshold,~!Local,fartherThreshold!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,finalAim,~!Local,finalAim!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,fomoValue,~!Local,fomoValue!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,havePeaked,~!Local,havePeaked!~
@@ -714,8 +718,10 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingOffsetDesenitised,~!Local,headingOffsetDesenitised!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,headingSide,~!Local,headingSide!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,in,~!Local,in!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,isCloser,~!Local,isCloser!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistance,~!Local,lastDistance!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistanceDiffAbsolute,~!Local,lastDistanceDiffAbsolute!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastDistancePolarity,~!Local,lastDistancePolarity!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastNow,~!Local,lastNow!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,lastPole,~!Local,lastPole!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,longMeanIterations,~!Local,longMeanIterations!~
@@ -783,3 +789,4 @@ if ~!Local,ready!~,==,1,
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,trailerProfileStart,~!Local,trailerProfileStart!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,trailerProfileToApply,~!Local,trailerProfileToApply!~
         setAPVarWithContext ~!Local,instanceName!~,trailerDebug,useCleanStream,~!Local,useCleanStream!~
+        setAPVarWithContext ~!Local,instanceName!~,trailerDebug,useSpeed,~!Local,useSpeed!~
