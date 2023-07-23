@@ -502,15 +502,24 @@ if ~!Local,ready!~,==,1,
         # Calculate speed. - Pump the brakes when we are manoeuvring too fast.
         # Re-use the calm settings.
         set Local,speed,0
-        if ~!Local,metersPerSecondSmoothed!~,>,~!Local,calmMinSpeed!~,
-            if ~!Local,metersPerSecondSmoothed!~,>=,~!Local,calmMaxSpeed!~,
-                set Local,speed,1
-            else
-                basicMaths Local,speedInRange,~!Local,metersPerSecondSmoothed!~,-,~!Local,calmMinSpeed!~
-                basicMaths Local,speed,~!Local,speedInRange!~,/,~!Local,calmBand!~
+        set Local,useSpeed,0
 
-                if ~!Local,distanceDiff!~,<,0,
-                    basicMaths Local,speed,~!Local,speed!~,*,-1
+        if ~!Local,closer!~,>,~!Local,closerThreshold!~,
+            set Local,useSpeed,1
+
+        if ~!Local,closer!~,>,~!Local,fartherThreshold!~,
+            set Local,useSpeed,1
+
+        if ~!Local,useSpeed!~,==,1,
+            if ~!Local,metersPerSecondSmoothed!~,>,~!Local,calmMinSpeed!~,
+                if ~!Local,metersPerSecondSmoothed!~,>=,~!Local,calmMaxSpeed!~,
+                    set Local,speed,1
+                else
+                    basicMaths Local,speedInRange,~!Local,metersPerSecondSmoothed!~,-,~!Local,calmMinSpeed!~
+                    basicMaths Local,speed,~!Local,speedInRange!~,/,~!Local,calmBand!~
+
+                    if ~!Local,distanceDiff!~,<,0,
+                        basicMaths Local,speed,~!Local,speed!~,*,-1
 
 
         # Calculate longMean to centre our oscillations.
