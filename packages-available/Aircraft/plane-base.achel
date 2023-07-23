@@ -190,7 +190,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,strengthOvershoot,0.03
     setNested ~!Me,stuff!~,strengthFomo,0.5
     setNested ~!Me,stuff!~,strengthNudge,0.001
-    setNested ~!Me,stuff!~,strengthSpeed,0
+    setNested ~!Me,stuff!~,strengthSpeed,0.002
     setNested ~!Me,stuff!~,strengthLongMean,0
 
     setNested ~!Me,stuff!~,farShouldReset,1
