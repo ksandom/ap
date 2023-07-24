@@ -465,7 +465,8 @@ if ~!Local,ready!~,==,1,
         absolute Local,absoluteHeadingOffset,~!Local,headingOffset!~
         set Local,fomoValue,0
         if ~!Local,closer!~,<,~!Local,fartherThreshold!~,
-            basicMaths Local,fomoValue,~!Local,metersPerSecondSmoothed!~,/,200
+            basicMaths Local,fomoValue,~!Local,metersPerSecondSmoothed!~,/,2000
+            basicMaths Local,fomoValue,~!Local,fomoValue!~,*,~!Local,absDistanceInMeters!~
 
             if ~!Local,distanceInMetersStable!~,<,0,
                 basicMaths Local,fomoValue,~!Local,fomoValue!~,*,-1

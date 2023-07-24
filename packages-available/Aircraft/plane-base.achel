@@ -23,7 +23,7 @@ massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,altitudeOffsetActive,altitudeOffsetAtSealevel
     setNested ~!Me,stuff!~,trailerCruiseAltitude,10000
     setNested ~!Me,stuff!~,landingFlare,1000
-    setNested ~!Me,stuff!~,beginTouchDown,100
+    setNested ~!Me,stuff!~,beginTouchDown,300
 
     # Thrust.
     setNested ~!Me,stuff!~,trailerTakeOffThrust,1
@@ -154,7 +154,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,strengthHeading,0.2
     setNested ~!Me,stuff!~,strengthBarAngle,0
     setNested ~!Me,stuff!~,strengthOvershoot,0.17
-    setNested ~!Me,stuff!~,strengthFomo,1
+    setNested ~!Me,stuff!~,strengthFomo,0.2
     setNested ~!Me,stuff!~,strengthNudge,0
     setNested ~!Me,stuff!~,strengthSpeed,0
     setNested ~!Me,stuff!~,strengthLongMean,0
@@ -165,7 +165,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
     setNested ~!Me,stuff!~,trailerProfileFar,na
 
     setNested ~!Me,stuff!~,closeShouldReset,1
-    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,15
+    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,30
     setNested ~!Me,stuff!~,closeDistance,400
     setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseSteadyLine
 
@@ -187,14 +187,14 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,strengthTrailer,0.5
     setNested ~!Me,stuff!~,strengthHeading,0
     setNested ~!Me,stuff!~,strengthBarAngle,0.0
-    setNested ~!Me,stuff!~,strengthOvershoot,0.02
-    setNested ~!Me,stuff!~,strengthFomo,0.3
+    setNested ~!Me,stuff!~,strengthOvershoot,0.04
+    setNested ~!Me,stuff!~,strengthFomo,0.03
     setNested ~!Me,stuff!~,strengthNudge,0.001
-    setNested ~!Me,stuff!~,strengthSpeed,0.04
+    setNested ~!Me,stuff!~,strengthSpeed,0.008
     setNested ~!Me,stuff!~,strengthLongMean,0
 
     setNested ~!Me,stuff!~,farShouldReset,1
-    setNested ~!Me,stuff!~,farHeadingDiffDegrees,30
+    setNested ~!Me,stuff!~,farHeadingDiffDegrees,50
     setNested ~!Me,stuff!~,farDistance,600
     setNested ~!Me,stuff!~,trailerProfileFar,trailerCruiseFindLine
 
