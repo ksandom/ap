@@ -23,7 +23,7 @@ massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,altitudeOffsetActive,altitudeOffsetAtSealevel
     setNested ~!Me,stuff!~,trailerCruiseAltitude,10000
     setNested ~!Me,stuff!~,landingFlare,1000
-    setNested ~!Me,stuff!~,beginTouchDown,300
+    setNested ~!Me,stuff!~,beginTouchDown,350
 
     # Thrust.
     setNested ~!Me,stuff!~,trailerTakeOffThrust,1
@@ -187,7 +187,7 @@ massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
     setNested ~!Me,stuff!~,strengthTrailer,0.5
     setNested ~!Me,stuff!~,strengthHeading,0
     setNested ~!Me,stuff!~,strengthBarAngle,0.0
-    setNested ~!Me,stuff!~,strengthOvershoot,0.04
+    setNested ~!Me,stuff!~,strengthOvershoot,0.03
     setNested ~!Me,stuff!~,strengthFomo,0.03
     setNested ~!Me,stuff!~,strengthNudge,0.001
     setNested ~!Me,stuff!~,strengthSpeed,0.008
