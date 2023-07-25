@@ -20,7 +20,7 @@ massSet ["AP,state,~!Local,instanceName!~"],
     setNested ~!Me,stuff!~,safeAltitude,4000
     setNested ~!Me,stuff!~,altitudeOffsetAtSealevel,1250
     setNested ~!Me,stuff!~,altitudeOffsetLanding,0
-    setNested ~!Me,stuff!~,altitudeOffsetActive,altitudeOffsetAtSealevel
+    setNested ~!Me,stuff!~,cruiseAltitude,10000
     setNested ~!Me,stuff!~,trailerCruiseAltitude,10000
     setNested ~!Me,stuff!~,landingFlare,1000
     setNested ~!Me,stuff!~,beginTouchDown,350
@@ -28,9 +28,14 @@ massSet ["AP,state,~!Local,instanceName!~"],
     # Thrust.
     setNested ~!Me,stuff!~,trailerTakeOffThrust,1
     setNested ~!Me,stuff!~,climbThrust,0.8
+    setNested ~!Me,stuff!~,thrustReverse,0
+    setNested ~!Me,stuff!~,thrustMin,0
+    setNested ~!Me,stuff!~,thrustMax,1
 
     # Manoeuvrability.
     setNested ~!Me,stuff!~,trailerCruiseTurningRadiusKM,10
+    setNested ~!Me,stuff!~,extendApproachKM,10
+    setNested ~!Me,stuff!~,takeOffPitchGoal,15
 
     # Flaps.
     setNested ~!Me,stuff!~,flapsMap,0,0
@@ -50,6 +55,9 @@ massSet ["AP,state,~!Local,instanceName!~"],
 
     # Gear.
     setNested ~!Me,stuff!~,gear,down,3000
+
+    # Controls
+    setNested ~!Me,stuff!~,invert,yaw,0
 
     # Points cleaning.
     setNested ~!Me,stuff!~,pointsCleaningAngleToleranceDegrees,3

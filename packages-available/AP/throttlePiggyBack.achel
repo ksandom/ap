@@ -1,13 +1,7 @@
 # Piggyback the throttle for any engines above 1 ~ AP,hack
 
-parameters engine,instance
+parameters instance
 
-set Local,piggyCurrent,~!AP,state,~!Local,instance!~,throttle-req!~
-set Local,piggyLast,~!AP,state,~!Local,instance!~,throttle-piggyBack-~!Local,engine!~!~
+getAPVar ~!Local,instance!~,throttle-req,Local,value
 
-debug 3,Instance=~!Local,instance!~ Engine=~!Local,engine!~ Current=~!Local,piggyLast!~ Last=~!Local,piggyLast!~
-
-if ~!Local,piggyCurrent!~,!=,~!Local,piggyLast!~,
-	debug 2,Piggy-backed ~!Local,piggyCurrent!~ for engine ~!Local,engine!~ of instance ~!Local,default!~
-	setNested AP,state,~!Local,instance!~,throttle-piggyBack-~!Local,engine!~,~!Local,piggyCurrent!~
-	deliver clientSocket,~!Local,instance!~,set /controls/engines/engine[~!Local,engine!~]/throttle ~!AP,state,~!Local,instance!~,throttle-req!~
+thrust ~!Local,instance!~,~!Local,value!~,1

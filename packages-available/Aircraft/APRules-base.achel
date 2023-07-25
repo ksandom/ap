@@ -7,7 +7,6 @@ debug 1,Setting up rules for ~!Local,instanceName!~.
 
 # TODO double check out the events are called (I can't remember). If they don't convey the instanceName (which I think they don't), it can be set in this macro as the value being passed, and also being amended to the event name so that there isn't clash.
 
-
 # Structure: AP,stateRules,instanceName,stateName,stateComponent
 
 # Base settings
@@ -82,6 +81,7 @@ massSet ["AP,stateRules,base,base,yaw"],
 	setNested ~!Me,stuff!~,output,max,0.4
 	setNested ~!Me,stuff!~,output,multiplier,1
 
+
 	# TODO These need to be abstracted out
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,line,decision"]
 	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,base,yaw,input,center"]
@@ -131,7 +131,7 @@ massSet ["AP,stateRules,base,baseAltitude,altitude"],
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,altitude-deviance"]
 	setNested ["~!Me,stuff!~,input,goal","AP,stateRules,base,baseAltitude,altitude,input,center"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,throttle-req"]
-	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/engines/current-engine/throttle ~%value%~"]
+	setNested ["~!Me,stuff!~,destination,textOutput",""]
 
 
 
@@ -141,7 +141,6 @@ massSet ["AP,stateRules,base,baseAltitude,altitude"],
 # Stand on the runway
 set Local,scope,stand
 setNested ["AP", "stateRules", "~!Tmp,instanceName!~", "~!Local,scope!~", ~!AP,stateRules,base,base!~]
-
 
 
 # Line up and wait
@@ -193,7 +192,7 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,~!Local,scope!~,groundspeed"],
 	setNested ["~!Me,stuff!~,input,variable","AP,state,~!Tmp,instanceName!~,groundspeed-kt"]
 	setNested ["~!Me,stuff!~,input,goal","AP,state,~!Tmp,instanceName!~,groundspeed-goal"]
 	setNested ["~!Me,stuff!~,destination,variable","AP,state,~!Tmp,instanceName!~,throttle-req"]
-	setNested ["~!Me,stuff!~,destination,textOutput","set /controls/engines/current-engine/throttle ~%value%~"]
+	setNested ["~!Me,stuff!~,destination,textOutput",""]
 
 
 	setNested ["~!Me,stuff!~,input,events,ready,description","We seem to be moving. Let's go!"]
@@ -218,7 +217,6 @@ massSet ["AP,stateRules,~!Tmp,instanceName!~,~!Local,scope!~,altitude"],
 	setNested ~!Me,stuff!~,output,min,-1
 	setNested ~!Me,stuff!~,output,center,0
 	# TODO Try this again.
-	setNested ~!Me,stuff!~,output,max,1
 	setNested ~!Me,stuff!~,output,max,1
 	setNested ~!Me,stuff!~,output,multiplier,1
 

@@ -3,6 +3,7 @@
 parameters {"instanceName":"default","value":"0"}
 
 
+# Deploy the thrust reverser.
 # I'm doing this so that all of the controls behave the same way.
 set Local,valueOut,false
 if ~!Local,value!~,==,1,
@@ -22,3 +23,8 @@ deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[8]/reve
 deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[9]/reverser ~!Local,valueOut!~
 deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[10]/reverser ~!Local,valueOut!~
 deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[11]/reverser ~!Local,valueOut!~
+
+
+# Set reverse thrust.
+getAPVar ~!Local,instanceName!~,thrustReverse,Local,thrustReverse
+thrust ~!Local,instanceName!~,~!Local,thrustReverse!~

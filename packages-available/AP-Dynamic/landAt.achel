@@ -57,7 +57,9 @@ if ~!Local,numberOfResults!~,==,1,
 		radiansToDegrees Local,angleDegrees,~!Me,runwayAngle!~
 		debug 2,About to calculateLineEntry ~!Local,angleDegrees!~,~!Me,runwayAngle!~
 
-		calculateLineEntry ~!Local,instanceName!~,~!Local,cruiseTurningRadiusKM!~,~!Local,angleDegrees!~,~!Local,approachEntry,lon!~,~!Local,approachEntry,lat!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~,30
+		getAPVar ~!Local,instanceName!~,extendApproachKM,Local,extendApproachKM
+
+		calculateLineEntry ~!Local,instanceName!~,~!Local,cruiseTurningRadiusKM!~,~!Local,angleDegrees!~,~!Local,approachEntry,lon!~,~!Local,approachEntry,lat!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~,~!Local,extendApproachKM!~
 
 
 	# add waypoints

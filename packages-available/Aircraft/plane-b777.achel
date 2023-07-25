@@ -15,18 +15,21 @@ massSet ["AP,state,~!Local,instanceName!~"],
     # Altitudes.
     setNested ~!Me,stuff!~,safeAltitude,4000
     setNested ~!Me,stuff!~,altitudeOffsetAtSealevel,1150
-    setNested ~!Me,stuff!~,cruiseAltitude,10000
 
     # Thrust.
     setNested ~!Me,stuff!~,takeOffThrust,1
     setNested ~!Me,stuff!~,climbThrust,0.8
+    setNested ~!Me,stuff!~,thrustReverse,0
 
     # Manoeuvrability.
     setNested ~!Me,stuff!~,cruiseTurningRadiusKM,10
+    setNested ~!Me,stuff!~,extendApproachKM,30
 
-registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,0,~!Local,instanceName!~
-registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,1,~!Local,instanceName!~
+registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,~!Local,instanceName!~
 
 
 # Reload the rules now that we have the full configuration.
 APRules-base ~!Local,instanceName!~
+
+tune ~!Local,instanceName!~,yaw,1,input
+tune ~!Local,instanceName!~,yaw,1,output
