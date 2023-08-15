@@ -1,4 +1,4 @@
 # Set controls for steady flight
 
-deliver clientSocket,default,set /controls/engines/engine/throttle 0.5
+deliver clientSocket,default,set /controls/engines/current-engine/throttle 0.5
 deliver clientSocket,default,set /controls/flight/flaps 0

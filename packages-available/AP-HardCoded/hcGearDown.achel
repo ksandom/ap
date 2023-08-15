@@ -1,3 +1,4 @@
 # Lower the landing gear. ~ AP
+#onDefine registerForEvent AP,gearDown,hcGearDown
 
-deliver clientSocket,default,set /gear/gear/position-norm 1
+deliver clientSocket,default,set /controls/gear/gear-down true

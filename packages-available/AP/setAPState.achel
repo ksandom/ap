@@ -3,4 +3,5 @@ parameters {"state":"stand","instanceName":"default"}
 
 setNested AP,state,~!Local,instanceName!~,currentState,~!Local,state!~
 
+debug 0,setAPState received ~!Local,instanceName!~:~!Local,state!~
 deliver ["balance","_control","setConfigSrc AP,stateRules,~!AP,state,~!Local,instanceName!~,apRule!~,~!Local,state!~"]

@@ -1,0 +1,10 @@
+# Reset the trailer state so that it doesn't wobble when changing things like waypoints. --resetTrailer=instanceName ~ navigation,trailer
+
+parameters {"instanceName":"default"}
+
+debug 1,Reset trailer for ~!Local,instanceName!~
+unset AP,state,~!Local,instanceName!~,track
+
+# Reset CleanStream.
+unset CleanDistance,~!Local,instanceName!~
+unset CleanDistance,~!Local,instanceName!~-draft

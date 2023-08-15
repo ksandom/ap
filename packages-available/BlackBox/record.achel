@@ -1,0 +1,14 @@
+# Record a flight to CSV. --record=instanceName,/path/to/file.csv ~ record,blackbox
+
+parameters {"instanceName":"default","fileName":"/tmp/flight.csv"}
+
+# Configure recording.
+debug 1,Will record the flight log for ~!Local,instanceName!~ to ~!Local,fileName!~
+setAPVar ~!Local,instanceName!~,recordTo,~!Local,fileName!~
+mark ~!Local,instanceName!~,Recording begin.
+
+# Set up recording.
+registerOnceForEvent Navegator,ticked,recordState,~!Local,instanceName!~
+
+# Set up dump on exit.
+registerOnceForEvent Tui,quit,recordStop,~!Local,instanceName!~

@@ -1,9 +1,9 @@
 # Start the auto pilot ~ ap
 
-createTimer getOrientation,600000
-createTimer getPosition,1200000
-createTimer getEngine,2400000
-createTimer calculateStuff,60000
+createTimer getOrientation,600
+createTimer getPosition,1200
+createTimer getEngine,2400
+createTimer calculateStuff,60
 
 
 registerForEvent Timer,getOrientation,deliver,clientSocket,default,ls /orientation
@@ -13,5 +13,6 @@ registerForEvent Timer,getEngine,deliver,clientSocket,default,ls /engines/engine
 
 registerForEvent Timer,calculateStuff,calculateHeadingDeviance
 registerForEvent Timer,calculateStuff,calculateAltitudeDeviance
+registerForEvent Timer,calculateStuff,calculateSpeedDeviance
 
 triggerEvent AP,started

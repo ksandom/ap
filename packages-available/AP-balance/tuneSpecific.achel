@@ -1,0 +1,26 @@
+# Tune an axis in a specific state for a given instance. This works by multiplying the existing multiplier by the multiplier provided. Eg if the existing multiplier is -0.8, and you specify 0.5 here, you'd get -0.4. --tune=instanceName,state,axis,multiplier,direction defaults: default,stand,yaw,1,output ~ balance,tune
+
+parameters {"instanceName":"default","state":"stand","axis":"yaw","multiplier":"1","direction":"output","debug":"-1"}
+
+set Local,original,~!AP,stateRules,~!Local,instanceName!~,~!Local,state!~,~!Local,axis!~,~!Local,direction!~,multiplier!~
+basicMaths Local,new,~!Local,original!~,*,~!Local,multiplier!~
+
+setNested AP,stateRules,~!Local,instanceName!~,~!Local,state!~,~!Local,axis!~,~!Local,direction!~,multiplier,~!Local,new!~
+
+if ~!Local,debug!~,>,-1,
+    setNested AP,stateRules,~!Local,instanceName!~,~!Local,state!~,~!Local,axis!~,debug,~!Local,debug!~
+
+set Local,originalTag,~!Color,brightBlack!~    ~!Color,default!~
+if ~!Local,original!~,<,0,
+    set Local,originalTag,~!Color,yellow!~## ~!Color,default!~
+
+set Local,newTag,~!Color,brightBlack!~    ~!Color,default!~
+if ~!Local,new!~,<,0,
+    set Local,newTag,~!Color,yellow!~## ~!Color,default!~
+
+
+# Debugging:
+setNested ["Local","i",~!AP,stateRules,~!Local,instanceName!~,~!Local,state!~,~!Local,axis!~,input!~]
+setNested ["Local","o",~!AP,stateRules,~!Local,instanceName!~,~!Local,state!~,~!Local,axis!~,output!~]
+
+debug 1,~!Local,originalTag!~~!Color,purple!~~!Local,original!~ ~!Color,brightBlack!~   -> ~!Local,newTag!~~!Color,cyan!~~!Local,new!~~!Color,default!~   |   ~!Local,i,min!~ < ~!Local,i,center!~ < ~!Local,i,max!~  ==> ~!Local,o,min!~ < ~!Local,o,center!~ < ~!Local,o,max!~   |   ~!Local,state!~

@@ -2,7 +2,7 @@
 #onDefine registerForEvent AP,started,startNavigator
 parameters {"giveUpSeconds":"4"}
 
-createTimer navigator,100000
+createTimer navigator,100
 registerForEvent Timer,navigator,navigatorTick
 
 if ~!Navigator,unit!~,==,,

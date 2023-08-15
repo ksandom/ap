@@ -1,4 +1,0 @@
-# Convert degrees to meters. --degreesToMeters=Category,variable,degrees ~ conv,deg,meters
-
-basicMaths ~!Global,degreesToMeters-0!~,~!Global,degreesToMeters-1!~,~!Global,degreesToMeters-2!~,*,40075160
-basicMaths ~!Global,degreesToMeters-0!~,~!Global,degreesToMeters-1!~,~!~!Global,degreesToMeters-0!~,~!Global,degreesToMeters-1!~!~,/,360

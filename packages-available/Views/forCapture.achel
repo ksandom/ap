@@ -1,0 +1,8 @@
+# Apply defaults for doing a capture. --forCapture=instanceName ~ views
+#onDefine aliasFeature forCapture,fc
+
+parameters {"instanceName":"default","hud":"1"}
+
+outside ~!Local,instanceName!~
+hud ~!Local,instanceName!~,~!Local,hud!~
+record

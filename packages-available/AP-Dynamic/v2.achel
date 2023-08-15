@@ -1,9 +1,8 @@
 # When we reach safe take off speed, make it happen ~ AP
 
-set Tmp,instanceName,~!Global,v2-0!~
-if ~!Tmp,instanceName!~,==,,
-	set Tmp,instanceName,default
+parameters instanceName
 
-setNested AP,state,~!Tmp,instanceName!~,pitch-goal,20
-setAPState takeOffClimb,~!Tmp,instanceName!~
+getAPVar ~!Local,instanceName!~,takeOffPitchGoal,Local,takeOffPitchGoal
+setAPVar ~!Local,instanceName!~,pitch-goal,~!Local,takeOffPitchGoal!~
 
+setAPState takeOffClimb,~!Local,instanceName!~

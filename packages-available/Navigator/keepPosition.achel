@@ -1,0 +1,7 @@
+# Record the single position of the aircraft right now for later analysis. As a user, you probably want --recordPosition. --keepPosition=instanceName ~ navigator
+parameters {"instanceName":"default"}
+
+# Save our history.
+getAPVarWithContext ~!Local,instanceName!~,pointsCleaning,shouldSkipPoint,Local,shouldSkipPoint
+if ~!Local,shouldSkipPoint!~,==,0,
+    keepPoint ~!Local,instanceName!~,history,~!AP,state,~!Local,instanceName!~,longitude-deg!~,~!AP,state,~!Local,instanceName!~,latitude-deg!~,~!AP,state,~!Local,instanceName!~,altitude-ft!~

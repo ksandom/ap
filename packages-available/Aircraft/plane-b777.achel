@@ -1,12 +1,35 @@
-# Set settings for a boeing 777 ~ AP,rules,plane,aircraft
+# Set settings for a boeing 777 ~ AP,rules,plane,aircraft,planeConfig
 #onDefine aliasFeature plane-b777,777
+parameters {"instanceName":"default"}
+
+plane-base ~!Local,instanceName!~
 
 # NOTE v1 is currently just a dummy number, but to be correct should be calculated based on aircraft specs, loading, conditions and runway length.
-setNested ["AP","state","default","type","plane"]
-setNested ["AP","state","default","v1","90"]
-setNested ["AP","state","default","v2","170"]
-setNested ["AP","state","default","vCruise","200"]
-setNested ["AP","state","default","safeAltitude","4000"]
-setNested ["AP","state","default","cruiseAltitude","25000"]
+massSet ["AP,state,~!Local,instanceName!~"],
+    # Speeds.
+    setNested ~!Me,stuff!~,v1,90
+    setNested ~!Me,stuff!~,v2,180
+    setNested ~!Me,stuff!~,vCruise,300
+    setNested ~!Me,stuff!~,vLand,155
 
-registerForEvent Timer,piggyBack,throttlePiggyBack,1,default
+    # Altitudes.
+    setNested ~!Me,stuff!~,safeAltitude,4000
+    setNested ~!Me,stuff!~,altitudeOffsetAtSealevel,1150
+
+    # Thrust.
+    setNested ~!Me,stuff!~,takeOffThrust,1
+    setNested ~!Me,stuff!~,climbThrust,0.8
+    setNested ~!Me,stuff!~,thrustReverse,0
+
+    # Manoeuvrability.
+    setNested ~!Me,stuff!~,cruiseTurningRadiusKM,10
+    setNested ~!Me,stuff!~,extendApproachKM,30
+
+registerMultipleTimesForEvent Timer,piggyBack,throttlePiggyBack,~!Local,instanceName!~
+
+
+# Reload the rules now that we have the full configuration.
+APRules-base ~!Local,instanceName!~
+
+tune ~!Local,instanceName!~,yaw,1,input
+tune ~!Local,instanceName!~,yaw,1,output

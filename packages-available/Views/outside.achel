@@ -1,0 +1,5 @@
+# Use the outside view. --outside=instanceName ~ views
+
+parameters {"instanceName":"default"}
+
+setView ~!Local,instanceName!~,outside,-25,7

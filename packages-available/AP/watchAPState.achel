@@ -3,6 +3,6 @@
 
 load startAP
 
-createTimer showAPState,500000
+createTimer showAPState,500
 registerForEvent Timer,showAPState,showAPState,~!Global,watchAPState!~
 

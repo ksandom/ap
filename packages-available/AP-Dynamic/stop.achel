@@ -1,0 +1,13 @@
+# Stop the plane. --stop=instanceName ~ ap,dynamic
+#onDefine registerOnceForEvent AP,stop,stop
+
+parameters {"instanceName":"default"}
+
+debug 1,Stopping ~!Local,instanceName!~.
+
+setAPState stop,~!Local,instanceName!~
+
+thrust ~!Local,instanceName!~,0
+speedBrake ~!Local,instanceName!~,1
+brake ~!Local,instanceName!~,1
+reverser ~!Local,instanceName!~,1

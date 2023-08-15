@@ -1,0 +1,96 @@
+# Clean the position points for an instance. --cleanPoints=[instanceName] . This works by looking at the angle and distance travelled in previous points changes, and projects a predicted location for the new points. If the prediction is off by more than pointsCleaningTolerance percent (0-1 decimal), the prediction will be used instead of the provided value. ~ points,cleaning,data
+
+parameters {"instanceName":"default"}
+
+set Local,useLive,1
+set Local,canDoCalculations,1
+set Local,canPrepare,1
+set Local,shouldSkipPoint,0
+
+getCurrentPosition Local,currentPosition,~!Local,instanceName!~
+getNamedPosition ~!Local,instanceName!~,pointsCleaning,lastPosition,Local,lastPosition
+getAPVarWithContext ~!Local,instanceName!~,pointsCleaning,lastAngle,Local,lastAngle
+getAPVarWithContext ~!Local,instanceName!~,pointsCleaning,iterations,Local,iterations
+getAPVarWithContext ~!Local,instanceName!~,pointsCleaning,pointsSkipped,Local,pointsSkipped
+
+if ~!Local,iterations!~,==,,
+    set Local,iterations,0
+
+if ~!Local,iterations!~,<,2,
+    # We don't have a previous point yet. Use the current one, and don't perform any further calculations.
+    set Local,canDoCalculations,0
+    basicMaths Local,iterations,~!Local,iterations!~,+,1
+    setAPVarWithContext ~!Local,instanceName!~,pointsCleaning,iterations,~!Local,iterations!~
+    setAPVarWithContext ~!Local,instanceName!~,pointsCleaning,pointsSkipped,0
+    setNamedPosition ~!Local,instanceName!~,pointsCleaning,lastPosition,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~,silent
+    getNamedPosition ~!Local,instanceName!~,pointsCleaning,lastPosition,Local,lastPosition
+    debug 1,CLEANPOINTS: Iteration 0
+
+if ~!Local,iterations!~,==,1,
+    # We haven't gone anywhere since the last point. We shouldn't do the final calculations, but we can do the angle and distance for this iteration.
+    set Local,canDoCalculations,0
+    setAPVarWithContext ~!Local,instanceName!~,pointsCleaning,pointsSkipped,0
+    setNamedPosition ~!Local,instanceName!~,pointsCleaning,lastPosition,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~,silent
+    debug 1,CLEANPOINTS ~!Local,instanceName!~: Distance is 0.
+
+
+if ~!Local,iterations!~,>,1,
+    # TODO This will probably need to be optimised so that it only skips the broken point, and not the one after it as well.
+    # Calculate this iteration's angle, and distance, and save them for the next iteration.
+    2CoordsToAngle Local,currentAngle,~!Local,lastPosition,lon!~,~!Local,lastPosition,lat!~,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~
+    setAPVarWithContext ~!Local,instanceName!~,pointsCleaning,lastAngle,~!Local,currentAngle!~
+
+if ~!Local,canDoCalculations!~,==,1,
+    # Do the calculations.
+
+    # How far off are we from the prediction?
+    2CoordsToDistance Local,angleChange,~!Local,lastPosition,lon!~,~!Local,lastPosition,lat!~,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~
+    absolute Local,absoluteAngleChange,~!Local,angleChange!~
+
+    # Is the deviance within the threshold?
+    getAPVar ~!Local,instanceName!~,pointsCleaningAngleToleranceRadians,Local,tolerance
+    if ~!Local,absoluteAngleChange!~,>,~!Local,tolerance!~,
+        set Local,useLive,0
+        basicMaths Local,pointsSkipped,~!Local,pointsSkipped!~,+,1
+        getAPVar ~!Local,instanceName!~,maxPointsToSkip,Local,maxPointsToSkip
+        debug 1,SKIP ~!Local,instanceName!~: ~!Local,absoluteAngleChange!~ > ~!Local,tolerance!~
+        set Local,shouldSkipPoint,1
+
+        if ~!Local,pointsSkipped!~,>,~!Local,maxPointsToSkip!~,
+            # We didn't use live last time. We should definitely do so this time.
+            debug 1,  We would have skipped this point. But we would exceed maxPointsToSkip (~!Local,maxPointsToSkip!~).
+            set Local,useLive,1
+            set Local,pointsSkipped,0
+            set Local,shouldSkipPoint,1
+
+            debug 1,Should skip ~!Local,instanceName!~:  ~!Local,pointsSkipped!~,>,~!Local,maxPointsToSkip!~
+
+        setAPVarWithContext ~!Local,instanceName!~,pointsCleaning,pointsSkipped,~!Local,pointsSkipped!~
+
+    if ~!Local,useLive!~,==,0,
+        setNamedPosition ~!Local,instanceName!~,pointsCleaning,shouldSkip-general,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~
+        debug 1,Requesting skip ~!Local,instanceName!~: ~!Local,predictedLocation,latitude!~,~!Local,predictedLocation,longitude!~
+    else
+        setNamedPosition ~!Local,instanceName!~,pointsCleaning,lastPosition,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~,silent
+
+
+# Final basic checks.
+if ~!Local,currentPosition,longitude!~,==,~!Local,lastPosition,lon!~,
+    debug 1,~!Local,instanceName!~: Longitude didn't change between these two points. Requesting that this point gets skipped.
+    # setNamedPosition ~!Local,instanceName!~,pointsCleaning,shouldSkip-longitude,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~
+    set Local,shouldSkipPoint,1
+
+if ~!Local,currentPosition,latitude!~,==,~!Local,lastPosition,lat!~,
+    debug 1,~!Local,instanceName!~: Latitude didn't change between these two points. Requesting that this point gets skipped.
+    # setNamedPosition ~!Local,instanceName!~,pointsCleaning,shouldSkip-latitude,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~
+    set Local,shouldSkipPoint,1
+
+
+# Send some data back for debugging.
+setAPVarWithContext ~!Local,instanceName!~,pointsCleaning,useLive,~!Local,useLive!~
+setAPVarWithContext ~!Local,instanceName!~,pointsCleaning,canDoCalculations,~!Local,canDoCalculations!~
+
+# Send back the final answer.
+setAPVarWithContext ~!Local,instanceName!~,pointsCleaning,shouldSkipPoint,~!Local,shouldSkipPoint!~
+
+

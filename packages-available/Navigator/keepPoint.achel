@@ -1,0 +1,19 @@
+# Keep a waypoint for later. --keepPoint=instanceName,classification,longitude,latitude,altitudeInFeet,description
+parameters {"instanceName":"default","classification":"","longitude":"","latitude":"","altitudeInFeet":"0","description":""}
+
+if ~!Local,longitude!~,!=,,
+	if ~!Local,latitude!~,!=,,
+		# TODO We'll have to do GC on this pretty soon. Otherwise, this is a memory leak!
+		now Local,now
+
+		feetToMeters Local,altitudeInMeters,~!Local,altitudeInFeet!~
+
+		setNested ["Navigator","~!Local,classification!~","~!Local,instanceName!~","",{"longitude":"~!Local,longitude!~","latitude":"~!Local,latitude!~","altitude":"~!Local,altitudeInMeters!~","description":"~!Local,description!~"}]
+
+		retrieveResults Navigator,~!Local,classification!~,~!Local,instanceName!~
+		countToVar Local,count
+		debug 2,Added point in Navigator,~!Local,classification!~,~!Local,instanceName!~: ~!Local,count!~ - ~!Local,description!~
+	else
+		debug 0,Something sent an empty latitude to --keepPoint. ~!Local,classification!~: ~!Local,description!~
+else
+	debug 0,Something sent an empty longitude to --keepPoint. ~!Local,classification!~: ~!Local,description!~

@@ -1,10 +1,130 @@
-# Set settings for a cessana 172 ~ AP,rules,plane,aircraft
+# Set settings for a cessana 172 ~ AP,rules,plane,aircraft,planeConfig
 #onDefine aliasFeature plane-c172,172
+parameters {"instanceName":"default"}
+
+plane-base ~!Local,instanceName!~
 
 # NOTE v1 is currently just a dummy number, but to be correct should be calculated based on aircraft specs, loading, conditions and runway length. v1 is unlikely to be relevant to the cessna in current testing environments since the runways are typically long.
-setNested ["AP","state","default","type","plane"]
-setNested ["AP","state","default","v1","40"]
-setNested ["AP","state","default","v2","60"]
-setNested ["AP","state","default","vCruise","100"]
-setNested ["AP","state","default","safeAltitude","1500"]
-setNested ["AP","state","default","cruiseAltitude","4000"]
+massSet ["AP,state,~!Local,instanceName!~"],
+    # Speeds.
+    setNested ~!Me,stuff!~,v1,40
+    setNested ~!Me,stuff!~,v2,65
+    setNested ~!Me,stuff!~,vCruise,100
+    setNested ~!Me,stuff!~,vLand,65
+    setNested ~!Me,stuff!~,relaxWhenStopping,20
+
+    # Altitudes.
+    setNested ~!Me,stuff!~,safeAltitude,1000
+    setNested ~!Me,stuff!~,altitudeOffsetAtSealevel,1250
+    setNested ~!Me,stuff!~,altitudeOffsetLanding,0
+    setNested ~!Me,stuff!~,cruiseAltitude,2000
+    setNested ~!Me,stuff!~,trailerCruiseAltitude,2000
+    setNested ~!Me,stuff!~,landingFlare,1000
+    setNested ~!Me,stuff!~,beginTouchDown,50
+
+    # Thrust.
+    setNested ~!Me,stuff!~,takeOffThrust,1
+    setNested ~!Me,stuff!~,climbThrust,1
+    setNested ~!Me,stuff!~,thrustReverse,0
+    setNested ~!Me,stuff!~,thrustMin,1
+    setNested ~!Me,stuff!~,thrustMax,-1
+
+    # Manoeuvrability.
+    setNested ~!Me,stuff!~,cruiseTurningRadiusKM,3
+    setNested ~!Me,stuff!~,extendApproachKM,0
+
+    # Flaps.
+    pass
+        setNested ~!Me,stuff!~,flapsMap,0,0
+        setNested ~!Me,stuff!~,flapsMap,1,0.033
+        setNested ~!Me,stuff!~,flapsMap,5,0.166
+        setNested ~!Me,stuff!~,flapsMap,15,0.5
+        setNested ~!Me,stuff!~,flapsMap,20,0.666
+        setNested ~!Me,stuff!~,flapsMap,25,0.833
+        setNested ~!Me,stuff!~,flapsMap,30,1
+
+    setNested ~!Me,stuff!~,flapsAltitudes,1,4000
+    setNested ~!Me,stuff!~,flapsAltitudes,5,3800
+    setNested ~!Me,stuff!~,flapsAltitudes,15,3300
+    setNested ~!Me,stuff!~,flapsAltitudes,20,2800
+    setNested ~!Me,stuff!~,flapsAltitudes,25,2200
+    setNested ~!Me,stuff!~,flapsAltitudes,30,1000
+
+    # Controls
+    setNested ~!Me,stuff!~,invert,yaw,0
+
+massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
+    # Only apply the overshoot when the headingDiff is greater than this.
+    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,5
+
+    # When an overshoot is needed. Multiply the raw value by this number.
+    setNested ~!Me,stuff!~,overshootMultiplier,0.5
+
+    # When an overshoot is needed. Add this number the raw value.
+    setNested ~!Me,stuff!~,overshootOffset,0
+
+    # The length of the virtual bar between the plane and the aim point on the line to track.
+    setNested ~!Me,stuff!~,maxBarLength,8000
+
+    # Used to center our wiggles around the line. This setting governs how many iterations go into the mean.
+    setNested ~!Me,stuff!~,longMeanIterations,200
+
+
+    # The minimum speed in meters per second that we want to achieve before reducing effort toward the line.
+    setNested ~!Me,stuff!~,calmMinSpeed,10
+
+    # The maximum speed in meters per second that we want to achieve before all effort is removed.
+    setNested ~!Me,stuff!~,calmMaxSpeed,20
+
+
+    # Based the distance from the line.
+    setNested ~!Me,stuff!~,strengthTrailer,0
+
+    # Heading difference compared to the line.
+    setNested ~!Me,stuff!~,strengthHeading,0
+
+    # Imagine a bar between the nose wheel and the aim point. This is the angle of that bar related to plane.
+    setNested ~!Me,stuff!~,strengthBarAngle,0
+
+    # The panic when we are about to overshoot the line.
+    setNested ~!Me,stuff!~,strengthOvershoot,0.1
+
+    # The fear of missing out. If we are going away from the bar, and facing away, take the headingDiff.
+    setNested ~!Me,stuff!~,strengthFomo,0.1
+
+    # Are we making progress towards the line? If not, give it a little nudge. Take the distance.
+    setNested ~!Me,stuff!~,strengthNudge,0.01
+
+    # While calm removes the contributing input going closer to the line. Speed pumps the brakes at any time.
+    setNested ~!Me,stuff!~,strengthSpeed,0.1
+
+    # How strongly to center outselve oscillations on the line.
+    setNested ~!Me,stuff!~,strengthLongMean,0
+
+
+    # When the headingDiff and distance from the line are both greater than these. Apply this profile.
+    setNested ~!Me,stuff!~,farShouldReset,0
+    setNested ~!Me,stuff!~,farHeadingDiffDegrees,2
+    setNested ~!Me,stuff!~,farDistance,2
+    setNested ~!Me,stuff!~,trailerProfileFar,na
+
+    # When the headingDiff and distance from the line are both less than these. Apply this profile.
+    setNested ~!Me,stuff!~,closeShouldReset,0
+    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,2
+    setNested ~!Me,stuff!~,closeDistance,2
+    setNested ~!Me,stuff!~,trailerProfileClose,na
+
+    # Minimum number of seconds to stay in this profile.
+    setNested ~!Me,stuff!~,minSeconds,0
+
+
+    # Use CleanStream to remove bad data.
+    setNested ~!Me,stuff!~,useCleanStream,0
+
+
+
+
+registerOnceForEvent Timer,piggyBack,throttlePiggyBack,~!Local,instanceName!~
+
+# Reload the rules now that we have the full configuration.
+APRules-base ~!Local,instanceName!~

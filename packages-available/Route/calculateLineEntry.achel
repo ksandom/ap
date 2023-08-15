@@ -1,0 +1,50 @@
+# Enter into a line in a controlled way. This is useful to enter into a precise approach. --calculateLineEntry=instanceName=default,radius,angleInDegrees,lineEntryLongitude,lineEntryLatitude,extendKM=0 "entry" is the line entry. "current" is the aircraft position. ~ route,approach,enter,line
+parameters {"instanceName":"default","radius":"1","angleInDegrees":"0","lineEntryLongitude":"0","lineEntryLatitude":"0","currentLongitude":"0","currentLatitude":"0","extendKM":"1"}
+
+keepPoint ~!Local,instanceName!~,interestPoints,~!Local,currentLongitude!~,~!Local,currentLatitude!~,500,originAtTimeOfCalculation
+keepPoint ~!Local,instanceName!~,interestPoints,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~,500,lineEntry
+
+apToMeWithContext ~!Local,instanceName!~,routePlanning,inverseRunwayAngle
+radiansToDegrees Local,inverseRunwayAngleDegrees,~!Me,inverseRunwayAngle!~
+
+apToMeWithContext ~!Local,instanceName!~,routePlanning,runwayAngle
+radiansToDegrees Local,runwayAngleDegrees,~!Me,runwayAngle!~
+
+set Local,extention,unknown
+if ~!Local,extendKM!~,!=,0,
+	debug 1,~!Local,extendKM!~KM extention before entering approach.
+	calculateNewPosition Local,extention,~!Local,inverseRunwayAngleDegrees!~,~!Local,extendKM!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~
+else
+	debug 1,No extention before entering approach.
+	setNested Local,extention,longitude,~!Local,lineEntryLongitude!~
+	setNested Local,extention,latitude,~!Local,lineEntryLatitude!~
+
+
+# Calculate pivot point.
+rotateAngleInDegrees Local,pivotAngle,~!Local,inverseRunwayAngleDegrees!~,270
+calculateNewPosition Local,pivot,~!Local,pivotAngle!~,~!Local,radius!~,~!Local,extention,longitude!~,~!Local,extention,latitude!~
+
+
+debug 2,pivot calculations: runwayAngle=~!Local,runwayAngleDegrees!~,~!Local,inverseRunwayAngleDegrees!~   pivotAngle=~!Local,pivotAngle!~ r=~!Local,radius!~ orgPos=~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~    pivot=~!Local,pivot!~
+
+keepPoint ~!Local,instanceName!~,interestPoints,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~,500,pivot-~!Local,instanceName!~
+
+# Calculate arc entry point. (currentPosition, pivotPosition, radius)
+calculateArcEntryPoint Local,arcEntryPoint,~!Local,radius!~,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
+debug 3,pivot=~!Local,pivot,longitude!~,~!Local,pivot,latitude!~ r=~!Local,radius!~
+
+# Add the entry waypoint and trigger the arc turn.
+addWaypoint ~!Local,instanceName!~,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,Arc,entry,~!Local,instanceName!~,~!Local,pivot,longitude!~,~!Local,pivot,latitude!~
+keepPoint ~!Local,instanceName!~,interestPoints,~!Local,arcEntryPoint,longitude!~,~!Local,arcEntryPoint,latitude!~,500,Arc-entry-~!Local,instanceName!~
+
+# Add extended waypoint.
+if ~!Local,extendKM!~,!=,0,
+	addWaypoint ~!Local,instanceName!~,~!Local,extention,longitude!~,~!Local,extention,latitude!~,Arc,exit,~!Local,instanceName!~
+	keepPoint ~!Local,instanceName!~,interestPoints,~!Local,extention,longitude!~,~!Local,extention,latitude!~,500,Arc-exit-~!Local,instanceName!~
+	keepPoint ~!Local,instanceName!~,interestPoints,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~,500,lineEntry
+else
+	addWaypoint ~!Local,instanceName!~,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~,Arc,exit,~!Local,instanceName!~
+	keepPoint ~!Local,instanceName!~,interestPoints,~!Local,lineEntryLongitude!~,~!Local,lineEntryLatitude!~,500,Arc-exit-~!Local,instanceName!~
+
+# Cleanup
+unset Me,inverseRunwayAngle

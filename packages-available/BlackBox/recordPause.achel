@@ -1,0 +1,10 @@
+# Pause the flight log recording. --recordPause=instanceName ~ record,blackbox
+
+parameters {"instanceName":"default"}
+
+mark ~!Local,instanceName!~,Recording paused.
+recordState ~!Local,instanceName!~
+
+unregisterForEvent Navegator,ticked,recordState,~!Local,instanceName!~
+
+debug 1,Paused flight log for ~!Local,instanceName!~.

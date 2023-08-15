@@ -1,0 +1,6 @@
+# Tell AP to record the position history of the aircraft, for later tracking. --recordPosition=instanceName ~ navigator
+parameters {"instanceName":"default"}
+
+debug 1,Starting tracking of the position of ~!Local,instanceName!~
+createTimer positionHistory,3000
+registerOnceForEvent Timer,positionHistory,keepPosition,~!Local,instanceName!~

@@ -22,12 +22,13 @@ createBalanceFaucet balance
 APRules-base
 
 callFeatureReturn createAP,default,default
+recordPosition default
 
 callFeatureReturn engageAP
 
 # Start up
-createTimer main,100000
-createTimer piggyBack,50000
+createTimer main,100
+createTimer piggyBack,50
 
 registerForEvent Timer,main,deliverAll,100
 registerForEvent Achel,finishEarly,startMainLoop

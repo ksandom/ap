@@ -1,0 +1,5 @@
+# Set the departure location. This is intended to be used internally. ~ ap,route
+
+pass
+
+# TODO Set in the AP state from either the currentRunwayEnd, or current location depending on whether the aircraft is in the air.

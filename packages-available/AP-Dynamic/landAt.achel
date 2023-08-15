@@ -1,0 +1,116 @@
+# Last at a specific airport and runway. Find airports and runways with --listRunways. --landAt=[instanceName=default],[airport=KSFO],[runway=10L],[approachAngleInDegrees=3] ~ AP,land
+parameters {"instanceName":"default","airport":"KSFO","runway":"10L","approachAngleInDegrees":"3"}
+
+debug 1,Prepare landing.
+
+# Find the runway.
+listRunways ~!Local,airport!~,1
+requireItem airport,^~!Local,airport!~$
+requireItem runway,^~!Local,runway!~$
+
+# Create the event for descending.
+set AP-Dynamic,beginDescent,
+	parameters instanceName
+
+	# TODO Write this.
+registerOnceForEvent AP-Dynamic,beginDescent,~!AP-Dynamic,beginDescent!~
+
+
+getAPVar ~!Local,instanceName!~,airspeed-kt,Local,speed
+if ~!Local,speed!~,==,,
+	debug 0,~!Color,red!~WARNING: ~!Color,default!~At least some data is missing. Check the connection and that it has had time to get data.
+
+countToVar Local,numberOfResults
+if ~!Local,numberOfResults!~,==,1,
+	# We've got a runway. Let's save it and get on with it.
+	debug 1,Going to land ~!Local,instanceName!~ at:
+	outNow
+
+	# stashResults Tmp,landAt
+
+	loop
+		setNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+		setNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,~!Result,longitudeEnd!~,~!Result,latitudeEnd!~
+
+	calculateRunwayAngles ~!Local,instanceName!~
+
+	calcFinalApproachDistance ~!Local,instanceName!~,~!Local,approachAngleInDegrees!~
+	calcFinalApproachPos ~!Local,instanceName!~
+	calcApproachDistance ~!Local,instanceName!~
+	calcApproachEntryFromFinalApproach ~!Local,instanceName!~,Tmp,approachEntry
+
+
+	# Convert to KM from meters.
+	basicMaths Tmp,beginDescentDistance,~!Tmp,beginDescentDistance!~,/,1000
+
+	# Calculate direction to plot the approach.
+	first
+	loop
+		getNavBeginLocation Local,startPosition,~!Local,instanceName!~
+
+		debug 2,Using location: ~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~
+
+		getNamedPosition ~!Local,instanceName!~,routePlanning,approachEntry,Local,approachEntry
+		set Local,cruiseTurningRadiusKM,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~
+
+		apToMeWithContext ~!Local,instanceName!~,routePlanning,runwayAngle
+		radiansToDegrees Local,angleDegrees,~!Me,runwayAngle!~
+		debug 2,About to calculateLineEntry ~!Local,angleDegrees!~,~!Me,runwayAngle!~
+
+		getAPVar ~!Local,instanceName!~,extendApproachKM,Local,extendApproachKM
+
+		calculateLineEntry ~!Local,instanceName!~,~!Local,cruiseTurningRadiusKM!~,~!Local,angleDegrees!~,~!Local,approachEntry,lon!~,~!Local,approachEntry,lat!~,~!Local,startPosition,longitude!~,~!Local,startPosition,latitude!~,~!Local,extendApproachKM!~
+
+
+	# add waypoints
+	getNamedPosition ~!Local,instanceName!~,routePlanning,approachEntry,Local,approachEntry
+	addWaypoint ~!Local,instanceName!~,~!Local,approachEntry,lon!~,~!Local,approachEntry,lat!~,Flight,beginDecent,~!Local,instanceName!~
+	getNamedPosition ~!Local,instanceName!~,routePlanning,finalApproach,Local,finalApproach
+	addWaypoint ~!Local,instanceName!~,~!Local,finalApproach,lon!~,~!Local,finalApproach,lat!~,Flight,finalApproach,~!Local,instanceName!~
+
+	getNamedPosition ~!Local,instanceName!~,routePlanning,touchDown,Local,touchDown
+	addWaypoint ~!Local,instanceName!~,~!Local,touchDown,lon!~,~!Local,touchDown,lat!~,Flight,beginTouchDown,~!Local,instanceName!~
+
+	# TODO Add the point to abort the landing.
+
+	# Add the end of the runway to keep the plane straight.
+	getNamedPosition ~!Local,instanceName!~,routePlanning,runwayEnd,Local,runwayEnd
+	addWaypoint ~!Local,instanceName!~,~!Local,runwayEnd,lon!~,~!Local,runwayEnd,lat!~,Flight,runwayEnd,~!Local,instanceName!~
+
+
+	# Set up landing events.
+	setUpLandingEvents ~!Local,instanceName!~
+
+	# TODO Calculate distance to begin descent, from 3 degrees and current altitude.
+	#   TODO ALT Control descent.
+	#   TODO ALT Pitch up slightly.
+	#   TODO ALT Introduce flaps notch 1.
+	#   TODO ALT Pitch up slightly.
+	#   TODO ALT Introduce flaps notch 2.
+	#   TODO ALT Pitch up slightly.
+	#   TODO ALT Lower gear.
+	#   TODO ALT Introduce flaps notch 3.
+	#   TODO ALT Pitch up slightly.
+	#   TODO ALT Touch down.
+	#     TODO Engines down.
+	#     TODO speed brakes.
+	#     TODO Thrust reversers.
+	#   TODO SPD 60.
+	#     TODO Put away thrust reversers.
+	#     TODO Put away speed brakes.
+	# TODO Funnel at 4, 3-1km before that.
+	# TODO Add waypoint of descent.
+
+else
+	debug 1,Could not find this airport/runway. The request was landAt ~!Local,instanceName!~,~!Local,airport!~,~!Local,runway!~.
+
+unset Tmp,landAt
+unset Tmp,altitudeInMeters
+unset Tmp,approachAngleInRadians
+unset Tmp,beginDescentDistance
+unset Tmp,funnelDistance
+unset Tmp,angle
+
+historyToKML ~!Local,instanceName!~
+
+debug 1,Finished setting up the landing.

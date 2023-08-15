@@ -5,119 +5,137 @@ parameters instanceName,noLast
 
 set Navigator,getNext,
 	# Remove the first waypoint
-	removeWaypoint ~!Result,instanceName!~,~!Result,key!~
-	
+	removeWaypoint ~!Me,instanceName!~,~!Me,key!~
+
 	# Clear out our last values since they are not relevant for the new way point.
-	removeLastValues ~!Result,instanceName!~
-	
+	removeLastValues ~!Me,instanceName!~
+
 	# Get the waypoints back so the first one can be chosen again.
 	retrieveResults Navigator,instances,~!Local,instanceName!~
-	
+
 	# Do it all again
-	# processWayPoints ~!Result,instanceName!~,noLast
+	# processWayPoints ~!Me,instanceName!~,noLast
 
-# We just want to work with the waypoints.
-retrieveResults Navigator,instances,~!Result,key!~
+	# Reset our progress state.
+	unset AP,state,~!Local,instanceName!~,lastDistance
+	unset AP,state,~!Local,instanceName!~,distance
 
-# Calculate the status of each waypoint, and store it.
-getWaypointStatus
-stashResults Navigator,instances,~!Local,instanceName!~
+	# Reset arc/line deviation sensitivity.
+	setAPVarWithContext ~!Local,instanceName!~,arcSensitivity,sensitivity,
+	setAPVarWithContext ~!Local,instanceName!~,lineSensitivity,sensitivity,
 
-first
+	# Reset the trailer so that we don't get wobble.
+	# resetTrailer ~!Local,instanceName!~
+
+# Clean points.
+cleanPoints ~!Local,instanceName!~
+getAPVarWithContext ~!Local,instanceName!~,pointsCleaning,shouldSkipPoint,Local,shouldSkipPoint
+
+if ~!Local,shouldSkipPoint!~,==,0,
+	# We just want to work with the waypoints.
+	retrieveResults Navigator,instances,~!Local,instanceName!~
+
+	# Calculate the status of each waypoint, and store it.
+	getWaypointStatus
+	stashResults Navigator,instances,~!Local,instanceName!~
 
 
-loop
-	# Take the current state with the current time
-	microNow Local,now
-	setNested AP,state,~!Local,instanceName!~,now,~!Local,now!~
-	
-	# Save our last values unless noLast has been set.
-	if ~!Local,noLast!~,==,,
-		setNested AP,state,~!Local,instanceName!~,lastDistance,~!AP,state,~!Local,instanceName!~,distance!~
-		setNested AP,state,~!Local,instanceName!~,lastTrack-goal,~!AP,state,~!Local,instanceName!~,track-goal!~
-	
-	# Put the calculated values from getWaypointStatus into the current state.
-	setNested AP,state,~!Local,instanceName!~,distance,~!Result,distance!~
-	setNested AP,state,~!Local,instanceName!~,track-goal,~!Result,heading!~
-	
-	setNested AP,state,~!Local,instanceName!~,destination,longitude,~!Result,longitude!~
-	setNested AP,state,~!Local,instanceName!~,destination,latitude,~!Result,latitude!~
-	
-	# If we don't have a begining distance, let's set it
-	if ~!AP,state,~!Local,instanceName!~,beginingDistance!~,==,,
-		setNested AP,state,~!Local,instanceName!~,beginingDistance,~!AP,state,~!Local,instanceName!~,distance!~
-		debug 1,Navigator: beginingDistance to ~!AP,state,~!Local,instanceName!~,beginingDistance!~
-	
-	
-	# If we have a previous distance and heading, let's do stuff.
-	if ~!AP,state,~!Local,instanceName!~,lastDistance!~,!=,,
-		# get speed over the last iteration.
-		
-		# TODO replace with degreesToDistance
-		# 2CoordsToDistance previousCoords,newCoords / timeDifference
-		# AP,state,~!Local,instanceName!~,longitude-deg
-		# AP,state,~!Local,instanceName!~,latitude-deg
-		# AP,previousState,~!Local,instanceName!~,longitude-deg
-		# AP,previousState,~!Local,instanceName!~,latitude-deg
-		
-		set Local,previousLong,~!AP,previousState,~!Local,instanceName!~,longitude-deg!~
-		set Local,previousLat,~!AP,previousState,~!Local,instanceName!~,latitude-deg!~
-		set Local,currentLong,~!AP,state,~!Local,instanceName!~,longitude-deg!~
-		set Local,currentLat,~!AP,state,~!Local,instanceName!~,latitude-deg!~
-		
-		# longitude-deg
-		# latitude-deg
-		
-		set Local,previousLocation,~!Local,previousLong!~-~!Local,previousLat!~
-		set Local,currentLocation,~!Local,currentLong!~-~!Local,currentLat!~
-		
-		# debug 1,prevPosition=~!Local,previousLocation!~  currentPositon=~!Local,currentLocation!~ instance=~!Local,instanceName!~
-		if ~!Local,previousLocation!~,!=,~!Local,currentLocation!~,
-			# If we have moved, let's Calculate stuff and make decisions
-			debug 3,processWayPoints DEBUG00 2CoordsToDistance Local,degreesSinceLastIteration,~!Local,previousLong!~,~!Local,previousLat!~,~!Local,currentLong!~,~!Local,currentLat!~
-			
-			2CoordsToDistance Local,degreesSinceLastIteration,~!Local,previousLong!~,~!Local,previousLat!~,~!Local,currentLong!~,~!Local,currentLat!~
-			setNested AP,state,~!Local,instanceName!~,degreesSinceLastIteration,~!Local,degreesSinceLastIteration!~
-			
-			degreesToDistance Local,distanceSinceLastIteration,~!Local,degreesSinceLastIteration!~
-			setNested AP,state,~!Local,instanceName!~,distanceSinceLastIteration,~!Local,distanceSinceLastIteration!~
-			
-			basicMaths Local,timeDifference,~!AP,state,~!Local,instanceName!~,now!~,-,~!AP,previousState,~!Local,instanceName!~,now!~
-			setNested AP,state,~!Local,instanceName!~,timeDifference,~!Local,timeDifference!~
-			
-			basicMaths Local,speedOfIteration,~!AP,state,~!Local,instanceName!~,distanceSinceLastIteration!~,/,~!Local,timeDifference!~
-			
-			
-			# Give up threshold from speed*giveUpSeconds
-			basicMaths Local,giveUpThreshold,~!Local,speedOfIteration!~,*,~!Navigator,giveUpSeconds!~
-		
-			# TODO Decide weather to ditch a waypoint if the distance has decreased by a certain amount, but is now increasing.
-			
-			
-			basicMaths Navigator,distanceChange,~!AP,state,~!Local,instanceName!~,lastDistance!~,-,~!AP,state,~!Local,instanceName!~,distance!~
-			basicMaths Navigator,sensitiveChange,~!Navigator,distanceChange!~,*,10
-			
-			debug 3,processWayPoints DEBUG01 distanceD=~!AP,state,~!Local,instanceName!~,distanceSinceLastIteration!~/~!Local,distanceSinceLastIteration!~ timeD=~!Local,timeDifference!~ now=~!AP,state,~!Local,instanceName!~,now!~ before=~!AP,previousState,~!Local,instanceName!~,now!~   ~!Local,giveUpThreshold!~=(~!Local,speedOfIteration!~ * ~!Navigator,giveUpSeconds!~) ?>? ~!AP,state,~!Local,instanceName!~,distance!~ degreesSinceLastIteration=~!Local,degreesSinceLastIteration!~
-			
-			# Are we close to the way point?
-			# debug 1,is if ~!Navigator,sensitiveChange!~,>,~!AP,state,~!Local,instanceName!~,distance!~ ?
-			# if ~!Navigator,sensitiveChange!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
-			debug 4,if ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
-			if ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~,
-				debug 1,processWayPoints: ~!Result,instanceName!~ reached waypoint ~!Result,longitude!~,~!Result,latitude!~.
-				
-				if ~!Result,eventCategory!~,!=,,
-					if ~!Result,eventName!~,!=,,
-						debug 1,processWayPoints: Triggering requested event ~!Result,eventCategory!~,~!Result,eventName!~ with value "~!Result,eventValue!~".
-						triggerEvent ~!Result,eventCategory!~,~!Result,eventName!~,~!Result,eventValue!~
-				
-				callFeature ~!Navigator,getNext!~
-		
-			# Set up some previous values
-			# TODO only do this if the timeDifference is greater than 0.
-			# TODO This should be refactored into a better place
-			copy ["AP,state,~!Local,instanceName!~","AP,previousState,~!Local,instanceName!~"]
-		
-		else
-			pass
-			# debug 0,processWayPoints We have not moved or not got new position data.
+	firstResult
+	loop
+		# Save our last values unless noLast has been set.
+		if ~!Local,noLast!~,==,,
+			setNested AP,state,~!Local,instanceName!~,lastDistance,~!AP,state,~!Local,instanceName!~,distance!~
+			setNested AP,state,~!Local,instanceName!~,lastTrack-goal,~!AP,state,~!Local,instanceName!~,track-goal!~
+
+		# Put the calculated values from getWaypointStatus into the current state.
+		setNested AP,state,~!Local,instanceName!~,distance,~!Result,distance!~
+		setNested AP,state,~!Local,instanceName!~,track-goal,~!Result,heading!~
+
+		setNested AP,state,~!Local,instanceName!~,destination,longitude,~!Result,longitude!~
+		setNested AP,state,~!Local,instanceName!~,destination,latitude,~!Result,latitude!~
+
+		# If we don't have a begining distance, let's set it
+		if ~!AP,state,~!Local,instanceName!~,beginingDistance!~,==,,
+			setNested AP,state,~!Local,instanceName!~,beginingDistance,~!AP,state,~!Local,instanceName!~,distance!~
+
+
+		# If we have a previous distance and heading, let's do stuff.
+		if ~!AP,state,~!Local,instanceName!~,lastDistance!~,!=,,
+			# get speed over the last iteration.
+
+			if ~!AP,state,~!Local,instanceName!~,course-deviance!~,!=,,
+				setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!AP,state,~!Local,instanceName!~,course-deviance!~
+			else
+				setNested AP,state,~!Local,instanceName!~,course-deviance-previous,~!Tmp,deviance!~
+
+			set Local,previousLong,~!AP,previousState,~!Local,instanceName!~,longitude-deg!~
+			set Local,previousLat,~!AP,previousState,~!Local,instanceName!~,latitude-deg!~
+			set Local,currentLong,~!AP,state,~!Local,instanceName!~,longitude-deg!~
+			set Local,currentLat,~!AP,state,~!Local,instanceName!~,latitude-deg!~
+
+			set Local,previousLocation,~!Local,previousLong!~-~!Local,previousLat!~
+			set Local,currentLocation,~!Local,currentLong!~-~!Local,currentLat!~
+
+			# debug 1,prevPosition=~!Local,previousLocation!~  currentPositon=~!Local,currentLocation!~ instance=~!Local,instanceName!~
+			if ~!Local,previousLocation!~,!=,~!Local,currentLocation!~,
+				# If we have moved, let's Calculate stuff and make decisions
+				# Take the current state with the current time
+				microNow Local,now
+				setNested AP,state,~!Local,instanceName!~,now,~!Local,now!~
+
+				debug 3,processWayPoints DEBUG00 2CoordsToDistance Local,degreesSinceLastIteration,~!Local,previousLong!~,~!Local,previousLat!~,~!Local,currentLong!~,~!Local,currentLat!~
+
+				2CoordsToDistance Local,degreesSinceLastIteration,~!Local,previousLong!~,~!Local,previousLat!~,~!Local,currentLong!~,~!Local,currentLat!~
+				setNested AP,state,~!Local,instanceName!~,degreesSinceLastIteration,~!Local,degreesSinceLastIteration!~
+
+				degreesToDistance Local,distanceSinceLastIteration,~!Local,degreesSinceLastIteration!~
+				setNested AP,state,~!Local,instanceName!~,distanceSinceLastIteration,~!Local,distanceSinceLastIteration!~
+
+				basicMaths Local,timeDifference,~!AP,state,~!Local,instanceName!~,now!~,-,~!AP,previousState,~!Local,instanceName!~,now!~
+				setNested AP,state,~!Local,instanceName!~,timeDifference,~!Local,timeDifference!~
+
+				basicMaths Local,speedOfIteration,~!AP,state,~!Local,instanceName!~,degreesSinceLastIteration!~,/,~!Local,timeDifference!~
+
+
+				set Local,shouldDoNext,0
+
+				# Is the waypoint behind us, but close-ISH to us?
+				angleDiffDegrees Local,WaypointHeadingDiff,~!AP,state,~!Local,instanceName!~,track-goal!~,~!AP,state,~!Local,instanceName!~,heading-deg!~
+				absolute Local,absoluteAngleDegrees,~!Local,WaypointHeadingDiff!~
+				if ~!Local,absoluteAngleDegrees!~,>,90,
+					basicMaths Local,allowableRadius,~!AP,state,~!Local,instanceName!~,airspeed-kt!~,*,50
+					getAPVar ~!Local,instanceName!~,distance,Local,distanceToWaypoint
+					degreesToMeters Local,radiusToWaypoint,~!Local,distanceToWaypoint!~
+					if ~!Local,radiusToWaypoint!~,<,~!Local,allowableRadius!~,
+						set Local,shouldDoNext,1
+						debug 1,~!Result,instanceName!~: The waypoint is behind us at ~!Local,WaypointHeadingDiff!~ degrees. And it is (~!Local,radiusToWaypoint!~m) within the allowable radius (~!Local,allowableRadius!~m) for this speed (~!AP,state,~!Local,instanceName!~,airspeed-kt!~).
+
+				if ~!Local,shouldDoNext!~,==,1,
+					debug 1,processWayPoints: ~!Result,instanceName!~ reached waypoint ~!Result,longitude!~,~!Result,latitude!~. ~!Local,giveUpThreshold!~,>,~!AP,state,~!Local,instanceName!~,distance!~
+					keepPoint ~!Local,instanceName!~,passedWaypoints,~!Result,longitude!~,~!Result,latitude!~,~!AP,state,~!Local,instanceName!~,altitude-ft!~,~!Result,eventCategory!~-~!Result,eventName!~-~!Result,eventValue!~
+
+					if ~!Result,pivotLongitude!~,!=,,
+						debug 1,Got a pivot for ~!Local,instanceName!~. Setting that to ~!Result,pivotLongitude!~,~!Result,pivotLatitude!~.
+						setNested AP,state,~!Local,instanceName!~,pivot,longitude,~!Result,pivotLongitude!~
+						setNested AP,state,~!Local,instanceName!~,pivot,latitude,~!Result,pivotLatitude!~
+					else
+						unset AP,state,~!Local,instanceName!~,pivot
+
+					if ~!Result,eventCategory!~,!=,,
+						if ~!Result,eventName!~,!=,,
+							debug 1,processWayPoints: Triggering requested event ~!Result,eventCategory!~,~!Result,eventName!~ with value "~!Result,eventValue!~".
+							triggerEvent ~!Result,eventCategory!~,~!Result,eventName!~,~!Result,eventValue!~
+
+					mark ~!Local,instanceName!~,Reached waypoint ~!Result,key!~: ~!Result,eventCategory!~,~!Result,eventName!~,~!Result,eventValue!~ lon/lat=~!Result,longitude!~,~!Result,latitude!~   lat/lon=~!Result,latitude!~,~!Result,longitude!~
+
+					set Me,key,~!Result,key!~
+					set Me,instanceName,~!Local,instanceName!~
+					callFeature ~!Navigator,getNext!~
+
+				# Set up some previous values
+				# TODO only do this if the timeDifference is greater than 0. Or maybe distance difference would be better?
+				copy ["AP,state,~!Local,instanceName!~","AP,previousState,~!Local,instanceName!~"]
+
+			else
+				pass
+				# debug 0,processWayPoints We have not moved or not got new position data.

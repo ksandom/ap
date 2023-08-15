@@ -1,0 +1,107 @@
+# Choose the profile to use for the SandomTrailer algorithm. --trailerProfile=instanceName,profileName ~ navigation,trailer
+
+parameters {"instanceName":"default","profileName":"trailerCruiseFindLine","shouldReset":"0"}
+
+
+# Test that the profile has changed.
+getAPVar ~!Local,instanceName!~,currentTrailerProfile,Local,currentTrailerProfile
+set Local,shouldChangeProfile,1
+if ~!Local,currentTrailerProfile!~,==,~!Local,profileName!~,
+    set Local,shouldChangeProfile,0
+
+# Test that a profile was requested.
+if ~!Local,profileName!~,==,na,
+    set Local,shouldChangeProfile,0
+else
+    # Test that the profile exists.
+    getAPVarWithContext ~!Local,instanceName!~,~!Local,profileName!~,maxBarLength,Local,testValue
+    if ~!Local,testValue!~,==,,
+        debug 1,~!Color,blackHLWhite!~WARNING~!Color,default!~: Profile ~!Local,profileName!~ in ~!Local,instanceName!~ does not exist.
+        set Local,shouldChangeProfile,0
+
+
+# Do the work.
+if ~!Local,shouldChangeProfile!~,==,1,
+    debug 1,Choosing trailer profile: ~!Color,cyan!~~!Local,profileName!~~!Color,default!~ for instance: ~!Local,instanceName!~.
+    mark ~!Local,instanceName!~,~!Local,profileName!~ (trailerProfile)
+
+    function copyVar,
+        parameters instanceName,profileName,variableName,radiansName
+
+        getAPVarWithContext ~!Local,instanceName!~,~!Local,profileName!~,~!Local,variableName!~,Local,value
+        setAPVar ~!Local,instanceName!~,~!Local,variableName!~,~!Local,value!~
+
+        if ~!Local,value!~,!=,,
+            debug 2,  Copied var: ~!Local,instanceName!~,~!Local,profileName!~,~!Local,variableName!~: ~!Local,value!~
+        else
+            debug 1,  ~!Color,blackHLWhite!~WARNING~!Color,default!~: ~!Local,instanceName!~,~!Local,profileName!~,~!Local,variableName!~ is blank. This is probably a bug that will lead to unexpected things.
+
+        # Convert a degrees value to Radians.
+        if ~!Local,radiansName!~,!=,,
+            degreesToRadians Local,radiansValue,~!Local,value!~
+            setAPVar ~!Local,instanceName!~,~!Local,radiansName!~,~!Local,radiansValue!~
+            debug 1  Converted ~!Local,instanceName!~,~!Local,profileName!~,~!Local,variableName!~ to ~!Local,radiansName!~.
+
+    function generateCalm,
+        parameters instanceName
+        getAPVar ~!Local,instanceName!~,calmMinSpeed,Local,calmMinSpeed
+        getAPVar ~!Local,instanceName!~,calmMaxSpeed,Local,calmMaxSpeed
+
+        basicMaths Local,calmBand,~!Local,calmMaxSpeed!~,-,~!Local,calmMinSpeed!~
+
+        setAPVar ~!Local,instanceName!~,calmBand,~!Local,calmBand!~
+
+
+    # Make the profile active.
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,overshootHeadingThresholdDegrees,overshootHeadingThresholdRadians
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,overshootMultiplier
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,overshootOffset
+
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,maxBarLength
+
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,longMeanIterations
+
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,calmMinSpeed
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,calmMaxSpeed
+
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,farShouldReset
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthTrailer
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthHeading
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthBarAngle
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthOvershoot
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthFomo
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthNudge
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthSpeed
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,strengthLongMean
+
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeShouldReset
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeHeadingDiffDegrees,closeHeadingDiffRadians
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,closeDistance
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,farHeadingDiffDegrees,farHeadingDiffRadians
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,farDistance
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,trailerProfileClose
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,trailerProfileFar
+
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,minSeconds
+
+    copyVar ~!Local,instanceName!~,~!Local,profileName!~,useCleanStream
+
+    # Calculate the calmBand.
+    generateCalm ~!Local,instanceName!~
+
+    # Record which profile is selected.
+    setAPVar ~!Local,instanceName!~,currentTrailerProfile,~!Local,profileName!~
+
+    # Track when it was made active.
+    microNow Local,now
+    setAPVar ~!Local,instanceName!~,trailerProfileStart,~!Local,now!~
+
+    # Reset CleanStream.
+    unset CleanDistance,~!Local,instanceName!~
+    unset CleanDistance,~!Local,instanceName!~-draft
+
+    # Reset trailerProfile if requested.
+    if ~!Local,shouldReset!~,==,1,
+        resetTrailer ~!Local,instanceName!~
+
+

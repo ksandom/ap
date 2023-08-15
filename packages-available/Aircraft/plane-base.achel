@@ -1,0 +1,326 @@
+# Some base settings that every plane should apply. ~ AP,base,rules,plane,aircraft
+
+# These are intentended as sensible defaults. When setting up a specific aircraft, please override any of these settings in the configuration for that aircraft.
+
+parameters {"instanceName":"default"}
+
+debug 1,Setting up config for ~!Local,instanceName!~.
+
+massSet ["AP,state,~!Local,instanceName!~"],
+    setNested ~!Me,stuff!~,type,plane
+
+    # Speeds.
+    setNested ~!Me,stuff!~,v1,90
+    setNested ~!Me,stuff!~,v2,170
+    setNested ~!Me,stuff!~,vCruise,300
+    setNested ~!Me,stuff!~,vLand,155
+    setNested ~!Me,stuff!~,relaxWhenStopping,60
+
+    # Altitudes.
+    setNested ~!Me,stuff!~,safeAltitude,4000
+    setNested ~!Me,stuff!~,altitudeOffsetAtSealevel,1250
+    setNested ~!Me,stuff!~,altitudeOffsetLanding,0
+    setNested ~!Me,stuff!~,cruiseAltitude,10000
+    setNested ~!Me,stuff!~,trailerCruiseAltitude,10000
+    setNested ~!Me,stuff!~,landingFlare,1000
+    setNested ~!Me,stuff!~,beginTouchDown,350
+
+    # Thrust.
+    setNested ~!Me,stuff!~,trailerTakeOffThrust,1
+    setNested ~!Me,stuff!~,climbThrust,0.8
+    setNested ~!Me,stuff!~,thrustReverse,0
+    setNested ~!Me,stuff!~,thrustMin,0
+    setNested ~!Me,stuff!~,thrustMax,1
+
+    # Manoeuvrability.
+    setNested ~!Me,stuff!~,trailerCruiseTurningRadiusKM,10
+    setNested ~!Me,stuff!~,extendApproachKM,10
+    setNested ~!Me,stuff!~,takeOffPitchGoal,15
+
+    # Flaps.
+    setNested ~!Me,stuff!~,flapsMap,0,0
+    setNested ~!Me,stuff!~,flapsMap,1,0.033
+    setNested ~!Me,stuff!~,flapsMap,5,0.166
+    setNested ~!Me,stuff!~,flapsMap,15,0.5
+    setNested ~!Me,stuff!~,flapsMap,20,0.666
+    setNested ~!Me,stuff!~,flapsMap,25,0.833
+    setNested ~!Me,stuff!~,flapsMap,30,1
+
+    setNested ~!Me,stuff!~,flapsAltitudes,1,4000
+    setNested ~!Me,stuff!~,flapsAltitudes,5,3800
+    setNested ~!Me,stuff!~,flapsAltitudes,15,3300
+    setNested ~!Me,stuff!~,flapsAltitudes,20,2800
+    setNested ~!Me,stuff!~,flapsAltitudes,25,2200
+    setNested ~!Me,stuff!~,flapsAltitudes,30,1000
+
+    # Gear.
+    setNested ~!Me,stuff!~,gear,down,3000
+
+    # Controls
+    setNested ~!Me,stuff!~,invert,yaw,0
+
+    # Points cleaning.
+    setNested ~!Me,stuff!~,pointsCleaningAngleToleranceDegrees,3
+    degreesToRadians Local,pointsCleaningAngleToleranceRadians,~!~!Me,stuff!~,pointsCleaningAngleToleranceDegrees!~
+    setNested ~!Me,stuff!~,pointsCleaningAngleToleranceRadians,~!Local,pointsCleaningAngleToleranceRadians!~
+    setNested ~!Me,stuff!~,maxPointsToSkip,2
+
+    # Hard-coded values.
+    setNested ~!Me,stuff!~,hardCoded,0,0
+    setNested ~!Me,stuff!~,hardCoded,1,1
+
+    # Views
+    setNested ~!Me,stuff!~,views,inside,0
+    setNested ~!Me,stuff!~,views,outside,1
+    setNested ~!Me,stuff!~,views,passenger,17
+
+# Line capture.
+# NOTE that If these settings get added to. They need to be added to trailerProfile.achel.
+
+# Take off. - Should be very sticky to the runway.
+massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
+    # Only apply the overshoot when the headingDiff is greater than this.
+    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,5
+
+    # When an overshoot is needed. Multiply the raw value by this number.
+    setNested ~!Me,stuff!~,overshootMultiplier,0.5
+
+    # When an overshoot is needed. Add this number the raw value.
+    setNested ~!Me,stuff!~,overshootOffset,0
+
+    # The length of the virtual bar between the plane and the aim point on the line to track.
+    setNested ~!Me,stuff!~,maxBarLength,8000
+
+    # Used to center our wiggles around the line. This setting governs how many iterations go into the mean.
+    setNested ~!Me,stuff!~,longMeanIterations,200
+
+
+    # The minimum speed in meters per second that we want to achieve before reducing effort toward the line.
+    setNested ~!Me,stuff!~,calmMinSpeed,10
+
+    # The maximum speed in meters per second that we want to achieve before all effort is removed.
+    setNested ~!Me,stuff!~,calmMaxSpeed,20
+
+
+    # Based the distance from the line.
+    setNested ~!Me,stuff!~,strengthTrailer,1.2
+
+    # Heading difference compared to the line.
+    setNested ~!Me,stuff!~,strengthHeading,0
+
+    # Imagine a bar between the nose wheel and the aim point. This is the angle of that bar related to plane.
+    setNested ~!Me,stuff!~,strengthBarAngle,0
+
+    # The panic when we are about to overshoot the line.
+    setNested ~!Me,stuff!~,strengthOvershoot,0
+
+    # The fear of missing out. If we are going away from the bar, and facing away, take the headingDiff.
+    setNested ~!Me,stuff!~,strengthFomo,0
+
+    # Are we making progress towards the line? If not, give it a little nudge. Take the distance.
+    setNested ~!Me,stuff!~,strengthNudge,0
+
+    # While calm removes the contributing input going closer to the line. Speed pumps the brakes at any time.
+    setNested ~!Me,stuff!~,strengthSpeed,0.1
+
+    # How strongly to center outselve oscillations on the line.
+    setNested ~!Me,stuff!~,strengthLongMean,0
+
+
+    # When the headingDiff and distance from the line are both greater than these. Apply this profile.
+    setNested ~!Me,stuff!~,farShouldReset,0
+    setNested ~!Me,stuff!~,farHeadingDiffDegrees,2
+    setNested ~!Me,stuff!~,farDistance,2
+    setNested ~!Me,stuff!~,trailerProfileFar,na
+
+    # When the headingDiff and distance from the line are both less than these. Apply this profile.
+    setNested ~!Me,stuff!~,closeShouldReset,0
+    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,2
+    setNested ~!Me,stuff!~,closeDistance,2
+    setNested ~!Me,stuff!~,trailerProfileClose,na
+
+    # Minimum number of seconds to stay in this profile.
+    setNested ~!Me,stuff!~,minSeconds,0
+
+
+    # Use CleanStream to remove bad data.
+    setNested ~!Me,stuff!~,useCleanStream,0
+
+# Cruise settings.
+massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
+    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,5
+    setNested ~!Me,stuff!~,overshootMultiplier,0.8
+    setNested ~!Me,stuff!~,overshootOffset,-0.2
+    setNested ~!Me,stuff!~,maxBarLength,20000
+
+    setNested ~!Me,stuff!~,longMeanIterations,200
+
+    setNested ~!Me,stuff!~,calmMinSpeed,20
+    setNested ~!Me,stuff!~,calmMaxSpeed,30
+
+    setNested ~!Me,stuff!~,strengthTrailer,1
+    setNested ~!Me,stuff!~,strengthHeading,0.2
+    setNested ~!Me,stuff!~,strengthBarAngle,0
+    setNested ~!Me,stuff!~,strengthOvershoot,0.17
+    setNested ~!Me,stuff!~,strengthFomo,0.5
+    setNested ~!Me,stuff!~,strengthNudge,0
+    setNested ~!Me,stuff!~,strengthSpeed,0
+    setNested ~!Me,stuff!~,strengthLongMean,0
+
+    setNested ~!Me,stuff!~,farShouldReset,0
+    setNested ~!Me,stuff!~,farHeadingDiffDegrees,2
+    setNested ~!Me,stuff!~,farDistance,120
+    setNested ~!Me,stuff!~,trailerProfileFar,na
+
+    setNested ~!Me,stuff!~,closeShouldReset,1
+    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,30
+    setNested ~!Me,stuff!~,closeDistance,400
+    setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseSteadyLine
+
+    setNested ~!Me,stuff!~,minSeconds,30
+
+    setNested ~!Me,stuff!~,useCleanStream,0
+
+massSet ["AP,state,~!Local,instanceName!~,trailerCruiseSteadyLine"],
+    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,0
+    setNested ~!Me,stuff!~,overshootMultiplier,2
+    setNested ~!Me,stuff!~,overshootOffset,0
+    setNested ~!Me,stuff!~,maxBarLength,40000
+
+    setNested ~!Me,stuff!~,longMeanIterations,500
+
+    setNested ~!Me,stuff!~,calmMinSpeed,0.01
+    setNested ~!Me,stuff!~,calmMaxSpeed,20
+
+    setNested ~!Me,stuff!~,strengthTrailer,0.5
+    setNested ~!Me,stuff!~,strengthHeading,0
+    setNested ~!Me,stuff!~,strengthBarAngle,0.0
+    setNested ~!Me,stuff!~,strengthOvershoot,0.03
+    setNested ~!Me,stuff!~,strengthFomo,0.03
+    setNested ~!Me,stuff!~,strengthNudge,0.001
+    setNested ~!Me,stuff!~,strengthSpeed,0.008
+    setNested ~!Me,stuff!~,strengthLongMean,0
+
+    setNested ~!Me,stuff!~,farShouldReset,1
+    setNested ~!Me,stuff!~,farHeadingDiffDegrees,50
+    setNested ~!Me,stuff!~,farDistance,600
+    setNested ~!Me,stuff!~,trailerProfileFar,trailerCruiseFindLine
+
+    setNested ~!Me,stuff!~,closeShouldReset,0
+    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,4
+    setNested ~!Me,stuff!~,closeDistance,120
+    # setNested ~!Me,stuff!~,trailerProfileClose,trailerCruiseHoldLine
+    setNested ~!Me,stuff!~,trailerProfileClose,na
+
+    setNested ~!Me,stuff!~,minSeconds,5
+
+    setNested ~!Me,stuff!~,useCleanStream,1
+
+massSet ["AP,state,~!Local,instanceName!~,trailerCruiseHoldLine"],
+    setNested ~!Me,stuff!~,overshootHeadingThresholdDegrees,0
+    setNested ~!Me,stuff!~,overshootMultiplier,2
+    setNested ~!Me,stuff!~,overshootOffset,0
+    setNested ~!Me,stuff!~,maxBarLength,40000
+
+    setNested ~!Me,stuff!~,longMeanIterations,500
+
+    setNested ~!Me,stuff!~,calmMinSpeed,0.01
+    setNested ~!Me,stuff!~,calmMaxSpeed,2
+
+    setNested ~!Me,stuff!~,strengthTrailer,0.3
+    setNested ~!Me,stuff!~,strengthHeading,0
+    setNested ~!Me,stuff!~,strengthBarAngle,0.0
+    setNested ~!Me,stuff!~,strengthOvershoot,0.01
+    setNested ~!Me,stuff!~,strengthFomo,0.5
+    setNested ~!Me,stuff!~,strengthNudge,0.001
+    setNested ~!Me,stuff!~,strengthSpeed,0.1
+    setNested ~!Me,stuff!~,strengthLongMean,0
+
+    setNested ~!Me,stuff!~,farShouldReset,0
+    setNested ~!Me,stuff!~,farHeadingDiffDegrees,10
+    setNested ~!Me,stuff!~,farDistance,240
+    setNested ~!Me,stuff!~,trailerProfileFar,trailerCruiseSteadyLine
+
+    setNested ~!Me,stuff!~,closeShouldReset,0
+    setNested ~!Me,stuff!~,closeHeadingDiffDegrees,3
+    setNested ~!Me,stuff!~,closeDistance,200
+    setNested ~!Me,stuff!~,trailerProfileClose,na
+
+    setNested ~!Me,stuff!~,minSeconds,0
+
+    setNested ~!Me,stuff!~,useCleanStream,1
+
+trailerProfile ~!Local,instanceName!~,trailerCruiseFindLine
+
+
+massSet ["AP,state,~!Local,instanceName!~,arc"],
+    # Basic operations.
+    # Tuning how much value each input has.
+    setNested ~!Me,stuff!~,distanceMultiplier,0.0004
+    setNested ~!Me,stuff!~,headingMultiplier,7
+
+    # Adding a little weight to help it around a corner.
+    setNested ~!Me,stuff!~,headingManualOffset,-0.2
+
+    # The max (and therefore min=max*-1) range of output.
+    setNested ~!Me,stuff!~,max,10
+
+    # How much of the input is from the distance. The rest is from the heading.
+    setNested ~!Me,stuff!~,percentDistance,0.3
+
+
+    # Auto-tuning.
+    # When to tune the sensitivity. If distance is below, reduce the sensitivity. If it's higher, increase it.
+    setNested ~!Me,stuff!~,rawDistanceLowTrigger,250
+    setNested ~!Me,stuff!~,rawDistanceHighTrigger,1000
+
+    # What to multiply the sensitivity by to increase or decrease it. Set to 1 to disable.
+    setNested ~!Me,stuff!~,sensitivityIncMultiplier,1.1
+    setNested ~!Me,stuff!~,sensitivityDecMultiplier,0.95
+
+    # Max and min sensitivity values.
+    setNested ~!Me,stuff!~,sensitivityMax,1
+    setNested ~!Me,stuff!~,sensitivityMin,0.8
+
+    # The starting value for the sensitivity.
+    setNested ~!Me,stuff!~,sensitivitySeed,1
+
+    # How often to tune the settings. New values only come about once a second. So it should be at least longer than that, probably more.
+    setNested ~!Me,stuff!~,interval,3
+
+
+massSet ["AP,state,~!Local,instanceName!~,line"],
+    # Basic operations.
+    # Tuning how much value each input has.
+    setNested ~!Me,stuff!~,distanceMultiplier,0.0005
+    setNested ~!Me,stuff!~,headingMultiplier,7
+
+    # Adding a little weight to help it around a corner.
+    setNested ~!Me,stuff!~,headingManualOffset,0
+
+    # The max (and therefore min=max*-1) range of output.
+    setNested ~!Me,stuff!~,max,10
+
+    # How much of the input is from the distance. The rest is from the heading.
+    setNested ~!Me,stuff!~,percentDistance,0.7
+
+
+    # Auto-tuning.
+    # When to tune the sensitivity. If distance is below, reduce the sensitivity. If it's higher, increase it.
+    setNested ~!Me,stuff!~,rawDistanceLowTrigger,150
+    setNested ~!Me,stuff!~,rawDistanceHighTrigger,250
+
+    # What to multiply the sensitivity by to increase or decrease it. Set to 1 to disable.
+    setNested ~!Me,stuff!~,sensitivityIncMultiplier,0.98
+    setNested ~!Me,stuff!~,sensitivityDecMultiplier,1.1
+
+    # Max and min sensitivity values.
+    setNested ~!Me,stuff!~,sensitivityMax,1
+    setNested ~!Me,stuff!~,sensitivityMin,0.4
+
+    # The starting value for the sensitivity.
+    setNested ~!Me,stuff!~,sensitivitySeed,0.5
+
+    # How often to tune the settings. New values only come about once a second. So it should be at least longer than that, probably more.
+    setNested ~!Me,stuff!~,interval,3
+

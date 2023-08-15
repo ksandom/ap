@@ -1,0 +1,11 @@
+# Mark a moment in time for the Recorder to make it easier to track events in the data. --mark=instanceName,message ~ record,blackbox
+
+parameters {"instanceName":"default","message":""}
+
+setAPVar ~!Local,instanceName!~,message,~!Local,message!~
+
+if ~!Local,message!~,!=,,
+    debug 1,Marked ~!Local,instanceName!~ with message: ~!Local,message!~
+
+    getCurrentPosition Local,currentPosition
+    keepPoint ~!Local,instanceName!~,interestPoints,~!Local,currentPosition,longitude!~,~!Local,currentPosition,latitude!~,500,~!Local,instanceName!~-~!Local,message!~

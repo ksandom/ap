@@ -1,16 +1,21 @@
 # List waypoints for a specific instance. --listWaypoints=instanceName ~ nav,waypoints
-#onDefine aliasFeature listWaypoints,waypoints
+#onDefine aliasFeature listWaypoints,waypoints,wp
+parameters {"instanceName":"default"}
 
-set Tmp,instanceName,~!Global,listWaypoints-0!~
-if ~!Tmp,instanceName!~,==,,
-	set Tmp,instanceName,default
-
-retrieveResults Navigator,instances,~!Tmp,instanceName!~
+clearResultset
+retrieveResults Navigator,instances,~!Local,instanceName!~
 
 getWaypointStatus
 countToVar Navigator,numberOfWayPoints
 
-templateOut waypoints
-outNow
+loop
+	isolate
+		getCategory Result
+		stashResults AP,state,~!Local,instanceName!~,lastWaypoint
+		unset AP,state,~!Local,instanceName!~,closestRunway,key
 
-unset set Tmp,instanceName
+if ~!Navigator,numberOfWayPoints!~,>,0,
+	templateOut waypoints
+	outNow
+else
+	debug 1,No waypoints.

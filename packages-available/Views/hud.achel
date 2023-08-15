@@ -1,0 +1,5 @@
+# Set the HUD on(1) or off(0). --hud=instanceName,value ~ views
+
+parameters {"instanceName":"default","value":"1"}
+
+deliver clientSocket,~!Local,instanceName!~,set /sim[0]/hud[0]/visibility[1] ~!Local,value!~

@@ -1,13 +1,11 @@
 # Begin decent. --decend=[instanceName] ~ ap,dynamic
-#onDefine registerForEvent Flight,beginDecent,decend
+# #onDefine registerForEvent Flight,beginDecent,decend
+parameters {"instanceName":"default"}
 
-set Tmp,instanceName,~!Global,decend!~
-setIfNothing Tmp,instanceName,default
-
-debug 1,Begin decent for ~!Tmp,instanceName!~
+debug 1,Begin decent for ~!Local,instanceName!~
 
 # Set destination altitude
-altitude 2000
+altitude ~!Local,instanceName!~,2000
 
 
 # TODO set state

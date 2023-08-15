@@ -1,0 +1,9 @@
+# Set a named position within an AP instance. Useful when referring to several locations. Eg for figuring out waypoints. --setNamedPosition=instanceName,context,name,longitude,latitude ~ AP,position
+
+parameters instanceName,context,name,longitude,latitude,silent
+
+setNested AP,state,~!Local,instanceName!~,~!Local,context!~,~!Local,name!~,lon,~!Local,longitude!~
+setNested AP,state,~!Local,instanceName!~,~!Local,context!~,~!Local,name!~,lat,~!Local,latitude!~
+
+if ~!Local,silent!~,==,,
+    keepPoint ~!Local,instanceName!~,interestPoints,~!Local,longitude!~,~!Local,latitude!~,500,~!Local,name!~-~!Local,instanceName!~

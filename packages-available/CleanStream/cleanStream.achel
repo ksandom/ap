@@ -1,0 +1,208 @@
+# Perform one iteration (one data-point) to clean a stream of data. --cleanStream=Category,variable,dataIn,meanSize,offset,multiplier,meanSeed ~ data
+
+parameters {"Category":"CleanStream","variable":"stream1","dataIn":"0","meanSize":"100","offset":"22","multiplier":"1","meanSeed":"1","maxMutesInARow":"5"}
+
+function assertVarSetup,
+    parameters Cat,var,subVar,defaultValue
+
+    set Local,varToAssert,~!Local,Cat!~,~!Local,var!~,~!Local,subVar!~
+    if ~!~!Local,varToAssert!~!~,==,,
+        setNested ~!Local,varToAssert!~,~!Local,defaultValue!~
+
+    if ~!~!Local,varToAssert!~!~,==,0,
+        setNested ~!Local,varToAssert!~,~!Local,defaultValue!~
+
+function shuntVar,
+    parameters Cat,var,fromVarValue,toVarValue
+
+    set Local,fromVar,~!Local,Cat!~,~!Local,var!~,~!Local,fromVarValue!~
+    set Local,toVar,~!Local,Cat!~,~!Local,var!~,~!Local,toVarValue!~
+
+    setNested ~!Local,toVar!~,~!~!Local,fromVar!~!~
+
+function applyTimeBase,
+    parameters Cat2,var2,val2,time2
+
+    if ~!Local,time2!~,==,0,
+        set ~!Local,Cat2!~,~!Local,var2!~,0
+    else
+        basicMaths ~!Local,Cat2!~,~!Local,var2!~,~!Local,val2!~,/,~!Local,time2!~
+
+    makeAvailable ~!Local,Cat2!~,~!Local,var2!~
+
+function doTheDiffDiff,
+    parameters Caty,vary,outputVarName,currentValue,oldValue,currentNow,oldNow
+    # Does all of the diffing for us.
+    set Local,hostVary,~!Local,Caty!~,~!Local,vary!~
+
+    diff Local,timeDiff,~!Local,currentNow!~,~!Local,oldNow!~
+    absolute Local,timeDiff,~!Local,timeDiff!~
+
+    # Keep the time for debugging.
+    setNested ~!Local,hostVary!~,~!Local,outputVarName!~-timeDiff,~!Local,timeDiff!~
+
+    assertVarSetup ~!Local,Caty!~,~!Local,vary!~,~!Local,outputVarName!~-0,0
+    assertVarSetup ~!Local,Caty!~,~!Local,vary!~,~!Local,outputVarName!~1Layer0,0
+    assertVarSetup ~!Local,Caty!~,~!Local,vary!~,~!Local,outputVarName!~-1,0
+
+    shuntVar ~!Local,Caty!~,~!Local,vary!~,~!Local,outputVarName!~-0,~!Local,outputVarName!~-1
+
+    absolute Local,absCurrentValue,~!Local,currentValue!~
+    absolute Local,absOldValue,~!Local,oldValue!~
+
+    diff Local,diffLayer0,~!Local,absOldValue!~,~!Local,absCurrentValue!~
+    absolute Local,absDiffLayer0,~!Local,diffLayer0!~
+    applyTimeBase Local,absDiffLayer0,~!Local,absDiffLayer0!~,~!Local,timeDiff!~
+
+    diff Local,diffLayer1,~!~!Local,hostVary!~,~!Local,outputVarName!~1Layer0!~,~!Local,absDiffLayer0!~
+    absolute Local,absDiffLayer1,~!Local,diffLayer1!~
+    applyTimeBase Local,absDiffLayer1,~!Local,absDiffLayer1!~,~!Local,timeDiff!~
+
+    setNested ~!Local,hostVary!~,~!Local,outputVarName!~-0,~!Local,absDiffLayer1!~
+    setNested ~!Local,hostVary!~,~!Local,outputVarName!~1Layer0,~!Local,absDiffLayer0!~
+
+    debug 2,doTheDiffDiff: in=~!Local,currentValue!~ , ~!Local,oldValue!~   out=~!~!Local,hostVary!~,~!Local,outputVarName!~-0!~ , ~!~!Local,hostVary!~,~!Local,outputVarName!~-1!~   hv=~!Local,hostVary!~ ~!Local,outputVarName!~    dl0=~!Local,diffLayer0!~ (~!Local,absDiffLayer0!~)   dl1=~!Local,diffLayer1!~ (~!Local,absDiffLayer1!~)
+
+function copyState,
+    parameters Category,fromVar,toVar
+
+    copy ["~!Local,Category!~,~!Local,fromVar!~","~!Local,Category!~,~!Local,toVar!~"]
+
+
+# Convenience.
+set Local,draftVariable,~!Local,variable!~-draft
+set Local,hostVar,~!Local,Category!~,~!Local,variable!~
+set Local,draftHostVar,~!Local,Category!~,~!Local,draftVariable!~
+
+copyState ~!Local,Category!~,~!Local,variable!~,~!Local,draftVariable!~
+
+
+# Track failures.
+assertVarSetup ~!Local,draftHostVar!~,mutesInARow,0
+
+
+# Make sure that we are in a state to do the work.
+assertVarSetup ~!Local,draftHostVar!~,dIn0,~!Local,dataIn!~
+assertVarSetup ~!Local,draftHostVar!~,dIn1,~!Local,dataIn!~
+assertVarSetup ~!Local,draftHostVar!~,dIn2,~!Local,dataIn!~
+assertVarSetup ~!Local,draftHostVar!~,dIn3,~!Local,dataIn!~
+
+# assertVarSetup ~!Local,draftHostVar!~,absDiffFirst0,0
+# assertVarSetup ~!Local,draftHostVar!~,absDiffFirst1,0
+
+assertVarSetup ~!Local,draftHostVar!~,trigger2-0,0
+assertVarSetup ~!Local,draftHostVar!~,trigger2-1,0
+
+microNow Local,now
+assertVarSetup ~!Local,draftHostVar!~,now0,~!Local,now!~
+assertVarSetup ~!Local,draftHostVar!~,now1,~!Local,now!~
+assertVarSetup ~!Local,draftHostVar!~,now2,~!Local,now!~
+assertVarSetup ~!Local,draftHostVar!~,now3,~!Local,now!~
+
+
+# Shunt history.
+shuntVar ~!Local,draftHostVar!~,dIn2,dIn3
+shuntVar ~!Local,draftHostVar!~,dIn1,dIn2
+shuntVar ~!Local,draftHostVar!~,dIn0,dIn1
+setNested ~!Local,draftHostVar!~,dIn0,~!Local,dataIn!~
+
+shuntVar ~!Local,draftHostVar!~,now2,now3
+shuntVar ~!Local,draftHostVar!~,now1,now2
+shuntVar ~!Local,draftHostVar!~,now0,now1
+setNested ~!Local,draftHostVar!~,now0,~!Local,now!~
+
+# shuntVar ~!Local,draftHostVar!~,absDiffFirst0,absDiffFirst1
+
+shuntVar ~!Local,draftHostVar!~,trigger2-0,trigger2-1
+
+# Calculate diffs.
+# Against the first most recent data point.
+doTheDiffDiff ~!Local,draftHostVar!~,diffDiffFirst,~!~!Local,draftHostVar!~,dIn1!~,~!~!Local,draftHostVar!~,dIn0!~,~!~!Local,draftHostVar!~,now1!~,~!~!Local,draftHostVar!~,now0!~
+# Against the second most recent data point.
+doTheDiffDiff ~!Local,draftHostVar!~,diffDiffSecond,~!~!Local,draftHostVar!~,dIn2!~,~!~!Local,draftHostVar!~,dIn0!~,~!~!Local,draftHostVar!~,now2!~,~!~!Local,draftHostVar!~,now0!~
+# Against the third most recent data point.
+doTheDiffDiff ~!Local,draftHostVar!~,diffDiffThird,~!~!Local,draftHostVar!~,dIn3!~,~!~!Local,draftHostVar!~,dIn0!~,~!~!Local,draftHostVar!~,now3!~,~!~!Local,draftHostVar!~,now0!~
+
+
+# Get the moving mean seeded.
+assertVarSetup ~!Local,draftHostVar!~,pseudoMovingMean,~!Local,meanSeed!~
+
+
+# Update mean.
+set Me,pseudoMovingMean,~!~!Local,draftHostVar!~,pseudoMovingMean!~
+pseudoMovingMean Me,pseudoMovingMean,~!Me,pseudoMovingMean!~,~!~!Local,draftHostVar!~,diffDiffFirst-0!~,~!Local,meanSize!~
+
+
+# Calculate threshold.
+basicMaths Local,threshold,~!Me,pseudoMovingMean!~,+,~!Local,offset!~
+basicMaths Local,threshold,~!Local,threshold!~,+,~!Local,multiplier!~
+
+if ~!~!Local,draftHostVar!~,mutesInARow!~,>,0,
+    basicMaths Local,extraMultiplier,~!~!Local,draftHostVar!~,mutesInARow!~,+,1
+    basicMaths Local,threshold,~!Local,threshold!~,*,~!Local,extraMultiplier!~
+
+    # Give us some more wiggle room for unknown changes. Eg maybe we were only moving a small amount when we stopped listening, and now things are changing quickly.
+    basicMaths Local,threshold,~!Local,threshold!~,*,~!Local,extraMultiplier!~
+
+setNested ~!Local,draftHostVar!~,threshold,~!Local,threshold!~
+
+
+# Do tests.
+setNested ~!Local,draftHostVar!~,mute,0
+setNested ~!Local,draftHostVar!~,trigger1,0
+setNested ~!Local,draftHostVar!~,trigger2-0,0
+setNested ~!Local,draftHostVar!~,trigger3,0
+
+if ~!~!Local,draftHostVar!~,diffDiffFirst-0!~,>,~!Local,threshold!~,
+    if ~!~!Local,draftHostVar!~,diffDiffSecond-0!~,>,~!Local,threshold!~,
+        setNested ~!Local,draftHostVar!~,trigger1,1
+        setNested ~!Local,draftHostVar!~,mute,1
+
+    if ~!~!Local,draftHostVar!~,diffDiffThird-0!~,>,~!Local,threshold!~,
+        setNested ~!Local,draftHostVar!~,trigger2-0,1
+        setNested ~!Local,hostVar!~,trigger2-0,1
+        setNested ~!Local,draftHostVar!~,mute,1
+
+    if ~!~!Local,draftHostVar!~,trigger2-1!~,==,1,
+        if ~!~!Local,draftHostVar!~,diffDiffThird-0!~,>,~!Local,threshold!~,
+            setNested ~!Local,draftHostVar!~,trigger3,1
+            setNested ~!Local,draftHostVar!~,mute,1
+
+
+# Send output.
+if ~!~!Local,draftHostVar!~,mutesInARow!~,>,~!Local,maxMutesInARow!~,
+    basicMaths Local,newMean,~!~!Local,draftHostVar!~,muteDiffTotal!~,/,~!~!Local,draftHostVar!~,mutesInARow!~
+
+    debug 1,~!Color,brightRed!~WARNING~!Color,default!~: Hit max (~!Local,maxMutesInARow!~) mutes in a row (~!~!Local,draftHostVar!~,mutesInARow!~). Un-muting, and re-seeding the mean to ~!Local,newMean!~
+    setNested ~!Local,draftHostVar!~,mute,0
+    setNested ~!Local,draftHostVar!~,pseudoMovingMean,~!Local,newMean!~
+
+if ~!~!Local,draftHostVar!~,mute!~,!=,1,
+    set Local,muteColor,green
+    setNested ~!Local,draftHostVar!~,dataOut,~!Local,dataIn!~
+
+    # Only persist the data if the data is deemed good.
+    setNested ~!Local,draftHostVar!~,pseudoMovingMean,~!Me,pseudoMovingMean!~
+    setNested ~!Local,draftHostVar!~,mutesInARow,0
+    setNested ~!Local,draftHostVar!~,muteDiffTotal,0
+
+    copyState ~!Local,Category!~,~!Local,draftVariable!~,~!Local,variable!~
+else
+    set Local,muteColor,red
+    setNested ~!Local,hostVar!~,dataOut,
+    setNested ~!Local,hostVar!~,mute,1
+    basicMaths Local,mutesInARow,~!~!Local,draftHostVar!~,mutesInARow!~,+,1
+    setNested ~!Local,draftHostVar!~,mutesInARow,~!Local,mutesInARow!~
+    setNested ~!Local,hostVar!~,mutesInARow,~!Local,mutesInARow!~
+
+    basicMaths Local,muteDiffTotal,~!~!Local,draftHostVar!~,muteDiffTotal!~,+,~!~!Local,draftHostVar!~,diffDiffFirst-0!~
+    setNested ~!Local,draftHostVar!~,muteDiffTotal,~!Local,muteDiffTotal!~
+    setNested ~!Local,hostVar!~,muteDiffTotal,~!Local,muteDiffTotal!~
+
+
+# Make it work with Local and Me variables. Although this probably doesn't make sense with most use-cases.
+makeAvailable ~!Local,hostVar!~
+makeAvailable ~!Local,draftHostVar!~
+
+
+debug 1,CleanStream: ~!Color,~!Local,muteColor!~!~mute=~!~!Local,draftHostVar!~,mute!~~!Color,default!~

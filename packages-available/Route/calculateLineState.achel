@@ -1,0 +1,19 @@
+# Calculate various metrics for how we are following a line. --calculateLineState=instanceName ~ arc,route
+
+parameters {"instanceName":"default"}
+
+pass
+    getAPVar ~!Local,instanceName!~,course-devianceInMeters,Local,distance
+    getAPVar ~!Local,instanceName!~,track-deviance,Local,headingOffset
+
+    basicMaths Local,distance,~!Local,distance!~,*,-1
+
+    combineDistanceAndHeading ~!Local,instanceName!~,Local,decision,line,~!Local,distance!~,~!Local,headingOffset!~
+
+    debug 2,decision=~!Local,decision!~ distance=~!Local,distance!~ headingOffset=~!Local,headingOffset!~
+
+calculateTrailer ~!Local,instanceName!~
+
+getAPVarWithContext ~!Local,instanceName!~,track,aimAngle-deg,Local,aimAngle-deg
+setAPVarWithContext ~!Local,instanceName!~,line,decision,~!Local,aimAngle-deg!~
+

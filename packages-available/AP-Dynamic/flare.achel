@@ -1,0 +1,20 @@
+# Flare for touch down. --flare=instanceName ~ ap,dynamic
+#onDefine registerOnceForEvent AP,flare,flare
+
+parameters {"instanceName":"default"}
+
+debug 1,Flare ~!Local,instanceName!~.
+
+unregisterForEvent Navegator,ticked,~!AP,events,calculateAltitude!~
+
+setAPState flare,~!Local,instanceName!~
+getAPVar ~!Local,instanceName!~,landingFlare,Local,landingFlare
+altitude ~!Local,instanceName!~,~!Local,landingFlare!~
+pitch ~!Local,instanceName!~,0
+
+# Re-calculate the altitude-deviance so that it's definitely refresh when balance next reads it.
+calculateAltitudeDeviance ~!Local,instanceName!~
+
+# Start checking whether we are on the ground yet.
+registerForEvent Timer,getOrientation,deliver,clientSocket,~!Local,instanceName!~,ls /gear
+registerForEvent Timer,getOrientation,checkOnGround,~!Local,instanceName!~

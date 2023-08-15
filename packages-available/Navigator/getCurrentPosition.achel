@@ -1,10 +1,10 @@
 # Get the current position (logitude and latitude) and stick it in the designated location. --getCurrentPosition=Category,variable[,instanceName] . instanceName defaults to "default"
+parameters {"Category":"Local","variable":"currentPosition","instanceName":"default"}
 
-set Tmp,cpInstanceName,~!Global,getCurrentPosition-2!~
-if ~!Tmp,cpInstanceName!~,==,,
-	set Tmp,cpInstanceName,default
+apToMe ~!Local,instanceName!~,longitude-deg
+apToMe ~!Local,instanceName!~,latitude-deg
 
-setNested ~!Global,getCurrentPosition-0!~,~!Global,getCurrentPosition-1!~,longitude,~!AP,state,~!Tmp,cpInstanceName!~,longitude-deg!~
-setNested ~!Global,getCurrentPosition-0!~,~!Global,getCurrentPosition-1!~,latitude,~!AP,state,~!Tmp,cpInstanceName!~,latitude-deg!~
+setNested ~!Local,Category!~,~!Local,variable!~,longitude,~!Me,longitude-deg!~
+setNested ~!Local,Category!~,~!Local,variable!~,latitude,~!Me,latitude-deg!~
 
-unset Tmp,cpInstanceName
+makeAvailable ~!Local,Category!~,~!Local,variable!~

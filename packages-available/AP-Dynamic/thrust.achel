@@ -1,0 +1,39 @@
+# Set the thrust (0-1) for the aircraft. --thrust=instanceName,thrust ~ dynamic
+
+parameters {"instanceName":"default","thrust":"0","debugLevel":"1"}
+
+# Figure out if we should update the thrust.
+getAPVar ~!Local,instanceName!~,thrustLast,Local,thrustLast
+
+if ~!Local,thrustLast!~,!=,~!Local,thrust!~,
+    # Calculate thrust range.
+    getAPVar ~!Local,instanceName!~,thrustMin,Local,thrustMin
+    getAPVar ~!Local,instanceName!~,thrustMax,Local,thrustMax
+    basicMaths Local,thrustRange,~!Local,thrustMax!~,-,~!Local,thrustMin!~
+    basicMaths Local,thrustRawValue,~!Local,thrustRange!~,*,~!Local,thrust!~
+    basicMaths Local,thrustValue,~!Local,thrustMin!~,+,~!Local,thrustRawValue!~
+
+    getAPVar ~!Local,instanceName!~,groundspeed-kt,Local,speed
+
+    debug ~!Local,debugLevel!~,Thrust for ~!Local,instanceName!~ set to ~!Local,thrust!~ (~!Local,thrustMin!~<~!Local,thrustValue!~<~!Local,thrustMax!~ Range=~!Local,thrustRange!~ Raw=~!Local,thrustRawValue!~). Speed=~!Local,speed!~
+
+
+    # Set native thrust values.
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/throttle-all ~!Local,thrustValue!~
+
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[0]/throttle ~!Local,thrustValue!~
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[1]/throttle ~!Local,thrustValue!~
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[2]/throttle ~!Local,thrustValue!~
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[3]/throttle ~!Local,thrustValue!~
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[4]/throttle ~!Local,thrustValue!~
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[5]/throttle ~!Local,thrustValue!~
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[6]/throttle ~!Local,thrustValue!~
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[7]/throttle ~!Local,thrustValue!~
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[8]/throttle ~!Local,thrustValue!~
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[9]/throttle ~!Local,thrustValue!~
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[10]/throttle ~!Local,thrustValue!~
+    deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[11]/throttle ~!Local,thrustValue!~
+
+
+    # Update tracking.
+    setAPVar ~!Local,instanceName!~,thrustLast,~!Local,thrust!~

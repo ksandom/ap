@@ -1,18 +1,23 @@
 # Update the runway data from start to finish. Note that this will replace any previous runway data. --updateRunways=[CSVFile] . If CSVFile is omitted, runways.csv will automatically be downloaded. ~ user,update
+# #onDefine registerForEvent Install,general,updateRunways
 
 debug 1,Clearing out old runways.
 collectionLoad Runways
 unsetCategory Runways
 
 if ~!Global,updateRunways-0!~,!=,,
+	debug 1,Load downloaded data.
 	loadDownloadedRunwayData ~!Global,updateRunways-0!~
 else
+	debug 1,Download runway data.
 	downloadRunways
+	debug 1,Load downloaded data.
 	loadDownloadedRunwayData
 
 processRunways
 
-countToVar Tmp,numberOfresults
+retrieveResults Runways,runways
+countToVar Local,numberOfresults
 clearResultset
 
-debug 1,~!Tmp,numberOfresults!~ runways were processed and saved.
+debug 1,~!Local,numberOfresults!~ runways were processed and saved, ~!Runways,attemptedRunways!~ attempted, and ~!Runways,droppedRunways!~ dropped.

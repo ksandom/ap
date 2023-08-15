@@ -1,0 +1,14 @@
+# Calculate the final approach position. ~ navigator,abstracted
+# Abstracted from plotApproach.
+parameters {"instanceName":"default","finalApproachAngleInDegrees":"3"}
+
+apToMe ~!Local,instanceName!~,safeAltitude
+
+# Take safeAltitude as opposite. Project adjacent as finalApproachDistance using 3 degrees.
+degreesToRadians Me,finalApproachAngle,~!Local,finalApproachAngleInDegrees!~
+rightTriangleGetAdjacentFromAngleAndOpposite Me,finalApproachDistance,~!Me,finalApproachAngle!~,~!Me,safeAltitude!~
+
+setNested Me,testThing,asd
+
+meToAPWithContext ~!Local,instanceName!~,routePlanning,finalApproachAngle
+meToAPWithContext ~!Local,instanceName!~,routePlanning,finalApproachDistance

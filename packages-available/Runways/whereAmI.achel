@@ -1,15 +1,23 @@
 # Workout what runway is closest to our current position. --whereAmI=[instanceName] . instanceName defaults to default. ~ runways,user
 
-if ~!Global,whereAmI-0!~,==,,
-	set Tmp,waiInstanceName,default
-else
-	set Tmp,waiInstanceName,~!Global,whereAmI-0!~
+parameters {"instanceName":"default"}
 
+debug 1,whichRunwayIsClosest ~!AP,state,~!Local,instanceName!~,longitude-deg!~,~!AP,state,~!Local,instanceName!~,latitude-deg!~,1
+whichRunwayIsClosest ~!AP,state,~!Local,instanceName!~,longitude-deg!~,~!AP,state,~!Local,instanceName!~,latitude-deg!~,1
 
-debug 1,whichRunwayIsClosest ~!AP,state,~!Tmp,waiInstanceName!~,longitude-deg!~,~!AP,state,~!Tmp,waiInstanceName!~,latitude-deg!~
+loop
+	isolate
+		getCategory Result
+		stashResults AP,state,~!Local,instanceName!~,closestRunway
+		unset AP,state,~!Local,instanceName!~,closestRunway,key
 
-whichRunwayIsClosest ~!AP,state,~!Tmp,waiInstanceName!~,longitude-deg!~,~!AP,state,~!Tmp,waiInstanceName!~,latitude-deg!~
+	debug 1,2CoordsToDistance Tmp,distanceDegrees,~!AP,state,~!Local,instanceName!~,longitude-deg!~,~!AP,state,~!Local,instanceName!~,latitude-deg!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
 
-unset Tmp,waiInstanceName
+	2CoordsToDistance Tmp,distanceDegrees,~!AP,state,~!Local,instanceName!~,longitude-deg!~,~!AP,state,~!Local,instanceName!~,latitude-deg!~,~!Result,longitudeBegin!~,~!Result,latitudeBegin!~
+	degreesToDistance Tmp,distance,~!Tmp,distanceDegrees!~
+
+	debug 1,Distance from marked runway: ~!Tmp,distance!~km key=~!Result,retrieveKey!~
+
 
 outNow
+

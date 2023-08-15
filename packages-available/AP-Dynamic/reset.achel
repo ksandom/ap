@@ -10,4 +10,7 @@ deliver clientSocket,~!Tmp,instanceName!~,run reset
 setNested AP,state,~!Tmp,instanceName!~,takeOffAbortOK,1
 setAPState stand,~!Tmp,instanceName!~
 
+# TODO This needs to take the instance into account.
+deliver ["balance","_control", "reset"]
+
 triggerEvent AP,reset

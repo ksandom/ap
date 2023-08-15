@@ -1,0 +1,30 @@
+# Set reverse thrust (0,1) for the aircraft. --reverser=instanceName,value ~ dynamic
+
+parameters {"instanceName":"default","value":"0"}
+
+
+# Deploy the thrust reverser.
+# I'm doing this so that all of the controls behave the same way.
+set Local,valueOut,false
+if ~!Local,value!~,==,1,
+    set Local,valueOut,true
+
+debug 1,Reverser for ~!Local,instanceName!~ set to ~!Local,value!~ (~!Local,valueOut!~).
+
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[0]/reverser ~!Local,valueOut!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[1]/reverser ~!Local,valueOut!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[2]/reverser ~!Local,valueOut!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[3]/reverser ~!Local,valueOut!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[4]/reverser ~!Local,valueOut!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[5]/reverser ~!Local,valueOut!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[6]/reverser ~!Local,valueOut!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[7]/reverser ~!Local,valueOut!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[8]/reverser ~!Local,valueOut!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[9]/reverser ~!Local,valueOut!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[10]/reverser ~!Local,valueOut!~
+deliver clientSocket,~!Local,instanceName!~,set /controls/engines/engine[11]/reverser ~!Local,valueOut!~
+
+
+# Set reverse thrust.
+getAPVar ~!Local,instanceName!~,thrustReverse,Local,thrustReverse
+thrust ~!Local,instanceName!~,~!Local,thrustReverse!~

@@ -1,0 +1,7 @@
+# Stop the flight log recording. --recordStop=instanceName ~ record,blackbox
+
+parameters {"instanceName":"default"}
+
+unregisterForEvent Tui,quit,recordDump,~!Local,instanceName!~
+recordPause ~!Local,instanceName!~
+recordDump ~!Local,instanceName!~

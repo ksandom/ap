@@ -1,0 +1,11 @@
+# Calculate various metrics for how we are following an arc. --calculateArcState=instanceName ~ arc,route
+
+parameters {"instanceName":"default"}
+
+calculateRadiusOffset ~!Local,instanceName!~,Local,arcDistance
+calculateHeadingOffset ~!Local,instanceName!~,Local,arcHeadingOffset
+
+combineDistanceAndHeading ~!Local,instanceName!~,Local,arcDecision,arc,~!Local,arcDistance!~,~!Local,arcHeadingOffset!~
+
+# debug 1,decision=~!Local,arcDecision!~ arcDistance=~!Local,arcDistance!~ arcHeadingOffset=~!Local,arcHeadingOffset!~
+setAPVarWithContext ~!Local,instanceName!~,arc,decision,~!Local,arcDecision!~

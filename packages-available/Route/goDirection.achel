@@ -1,17 +1,21 @@
-# Create a waypoint using a heading and distance from the current position. --goDirection=instanceName,angle,distance ~ route
+# Create a waypoint using a heading and distance from the current position. --goDirection=instanceName,angle,distance,[fromLongitude],[fromLatitude],[eventCategory],[eventName],[eventValue] ~ route
+parameters {"instanceName":"default","angle":"118","distance":"10","fromLongitude":"","fromLatitude":""}
 
-# Get the current position and calculate the offset for the waypoint.
-getCurrentPosition Route,currentPosition,~!Global,goDirection-0!~
-degreesToRadians Tmp,angle,~!Global,goDirection-1!~
-KMToDegrees Tmp,distance,~!Global,goDirection-2!~
-angleAndDistanceToCoord Route,offsets,~!Tmp,angle!~,~!Tmp,distance!~
+# Get the current position.
+getCurrentPosition Route,currentPosition,~!Local,instanceName!~
 
-# Apply the offset
-basicMaths Route,newPosition-longitude,~!Route,currentPosition,longitude!~,+,~!Route,offsets,x!~
-basicMaths Route,newPosition-latitude,~!Route,currentPosition,latitude!~,+,~!Route,offsets,y!~
+# Use the current location if we haven't specified one.
+if ~!Local,fromLongitude!~,==,,
+	set Tmp,fromLongitude,~!Route,currentPosition,longitude!~
+	set Tmp,fromLatitude,~!Route,currentPosition,latitude!~
+else
+	set Tmp,fromLongitude,~!Local,fromLongitude!~
+	set Tmp,fromLatitude,~!Local,fromLatitude!~
+
+calculateNewPosition Route,newPosition,~!Local,angle!~,~!Local,distance!~,~!Local,fromLongitude!~,~!Local,fromLatitude!~
 
 # Add the way point
-addWaypoint ~!Global,goDirection-0!~,~!Route,newPosition-longitude!~,~!Route,newPosition-latitude!~
+addWaypoint ~!Local,instanceName!~,~!Route,newPosition,longitude!~,~!Route,newPosition,latitude!~,~!Local,eventCategory!~,~!Local,eventName!~,~!Local,eventValue!~
 
 # Clean up
 unset Route,offsets

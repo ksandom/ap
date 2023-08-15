@@ -1,0 +1,12 @@
+# Save the recorded data from the AP to a the configured CSV file. --saveRecordToCSV=instanceName ~ record,blackbox
+
+parameters {"instanceName":"default"}
+
+retrieveResults AP,recorder,~!Local,instanceName!~
+
+
+getAPVar ~!Local,instanceName!~,recordTo,Local,fileName
+
+debug 1,Recording flight log for ~!Local,instanceName!~ to ~!Local,fileName!~.
+saveCSV ~!Local,fileName!~
+debug 1,Finished recording log for ~!Local,instanceName!~ to ~!Local,fileName!~.

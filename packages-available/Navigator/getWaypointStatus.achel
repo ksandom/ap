@@ -1,17 +1,69 @@
 # Get the current status of each way point in the resultSet.  ~ nav,waypoint
 
+positiveCRC longitude,longitudeID
+positiveCRC latitude,latitudeID
+
+chooseBasedOn longitudeID,longitudeColor,Color
+chooseBasedOn latitudeID,latitudeColor,Color
+
+pass isolate
+	nested
+	outNow
+
+set Me,first,true
 loop
 	# Figure out where we are and where we need to go.
 	getCurrentPosition Navigator,currentPosition,~!Result,instanceName!~
-	
+
 	# Calculate the distance and direction
-	2CoordsToDistance Result,distance,~!Navigator,currentPosition,longitude!~,~!Navigator,currentPosition,latitude!~,~!Result,longitude!~,~!Result,latitude!~
+	2CoordsToDistance Local,distance,~!Navigator,currentPosition,longitude!~,~!Navigator,currentPosition,latitude!~,~!Result,longitude!~,~!Result,latitude!~
 	2CoordsToAngle Result,heading,~!Navigator,currentPosition,longitude!~,~!Navigator,currentPosition,latitude!~,~!Result,longitude!~,~!Result,latitude!~
-	
-	radiansToDegrees Result,heading,~!Result,heading!~
-	
-	basicMaths Result,userDistance,~!Result,distance!~,*,~!Navigator,unitBaseMeasurement!~
-	basicMaths Result,userDistance,~!Result,userDistance!~,/,360
-	round Result,userDistance,~!Result,userDistance!~,2
-	
-	set Navigator,instanceName,~!Result,instanceName!~
+
+	if ~!Result,heading!~,!=,undefined,
+		radiansToDegrees Result,heading,~!Result,heading!~
+
+		basicMaths Result,userDistance,~!Result,distance!~,*,~!Navigator,unitBaseMeasurement!~
+		basicMaths Result,userDistance,~!Result,userDistance!~,/,360
+		round Result,userDistance,~!Result,userDistance!~,2
+
+		set Navigator,instanceName,~!Result,instanceName!~
+	else
+		debug 3,We have no previous location to calculate a track heading.
+
+	microNow Local,now
+	if ~!Result,hadFirstProcess!~,==,,
+		# We haven't done anything with this point before. Let's just set defaults to make processing easier next time around.
+		set Result,timeToWaypoint,unknown
+		set Result,lastProcessTime,~!Local,now!~
+		set Result,distance,~!Local,distance!~
+
+		if ~!Me,first!~,==,true,
+			if ~!Local,distance!~,!=,,
+				set Result,minDistance,~!Local,distance!~
+				set Me,first,false
+		else
+			set Result,minDistance,
+	else
+		# We have looked at this point before. Let's figure out how quickly we are getting closer.
+		basicMaths Local,distanceDifference,~!Result,distance!~,-,~!Local,distance!~
+		if ~!Local,distanceDifference!~,!=,0,
+			set Result,distanceDifference,~!Local,distanceDifference!~
+			basicMaths Result,timeDifference,~!Local,now!~,-,~!Result,lastProcessTime!~
+			basicMaths Result,speed,~!Result,distanceDifference!~,/,~!Result,timeDifference!~
+			if ~!Result,speed!~,>,0.000001,
+				basicMaths Result,timeToWaypoint,~!Local,distance!~,/,~!Result,speed!~
+			else
+				set Result,timeToWaypoint,inf
+			set Result,lastProcessTime,~!Local,now!~
+			set Result,distance,~!Local,distance!~
+
+			if ~!Result,minDistance!~,!=,,
+				if ~!Local,distance!~,<,~!Result,minDistance!~,
+					set Result,minDistance,~!Local,distance!~
+
+	# debug 1,Waypoint: ~!Result,eventCategory!~,~!Result,eventName!~  oN=~!Result,lastProcessTime!~ nN=~!Local,now!~ tD=~!Result,timeDifference!~  d=~!Local,distance!~ (~!Result,distance!~)  dD=~!Result,distanceDifference!~  s=~!Result,speed!~  hfp=~!Result,hadFirstProcess!~  ttwp=~!Result,timeToWaypoint!~
+
+
+	set Result,hadFirstProcess,true
+
+

@@ -1,0 +1,62 @@
+# Unit tests for route. ~ route,unitTest,hidden
+
+set Tmp,wrapCalculateNewPositionTest,
+	parameters angle,longitude,latitude
+	
+	calculateNewPosition Tmp,result,~!Local,angle!~,1,0,0
+	degreesToKM Tmp,longitudeKM,~!Tmp,result,longitude!~
+	degreesToKM Tmp,latitudeKM,~!Tmp,result,latitude!~
+	
+	expect ~!Local,longitude!~,~!Tmp,longitudeKM!~,longitude
+	expect ~!Local,latitude!~,~!Tmp,latitudeKM!~,latitude
+	
+	unset Tmp,result
+	unset Tmp,longitude
+	unset Tmp,latitude
+	unset Tmp,longitudeKM
+	unset Tmp,latitudeKM
+
+defineTest calculateNewPosition - 0,
+	callFeatureNoReturn ~!Tmp,wrapCalculateNewPositionTest!~,0,0,1
+
+defineTest calculateNewPosition - 90,
+	callFeatureNoReturn ~!Tmp,wrapCalculateNewPositionTest!~,90,1,0
+
+defineTest calculateNewPosition - 180,
+	callFeatureNoReturn ~!Tmp,wrapCalculateNewPositionTest!~,180,0,-1
+
+defineTest calculateNewPosition - 270,
+	callFeatureNoReturn ~!Tmp,wrapCalculateNewPositionTest!~,270,-1,0
+
+
+
+#
+#
+#                    X pivot(4,4)
+#               r=3 / \
+#                 /
+# (?,?)arcEntry X      \
+#   ^            \         h=6.5574385243
+#   |              \     \
+#  This?             \
+#              a=5     \  \
+#                        \ \
+#                          X currentPosition(9,1)
+
+defineTest calculateArcEntryPoint,
+	# Calculate expected results.
+	2CoordsToDistance Local,hypotenuse,9,1,4,4
+	2CoordsToAngle Tmp,hypotenuseAngle,9,1,4,4
+	
+	
+	rightTriangleGetAngleFromOppositeAndHypotenuse Local,triangleAngle,3,~!Local,hypotenuse!~
+	basicMaths Local,negativeAngle,~!Local,triangleAngle!~,*,-1
+	rotateAngleInRadians Local,bearing,~!Tmp,hypotenuseAngle!~,~!Local,negativeAngle!~
+	calculateNewPosition Local,expectedResult,~!Local,bearing!~,3,9,1
+	
+	# Do it for real.
+	calculateArcEntryPoint Local,arcEntryPoint,3,9,1,4,4
+	
+	# Test it.
+	roundExpect 4,~!Local,expectedResult,longitude!~,~!Local,arcEntryPoint,longitude!~,longitude
+	roundExpect 4,~!Local,expectedResult,latitude!~,~!Local,arcEntryPoint,latitude!~,latitude

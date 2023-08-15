@@ -1,0 +1,24 @@
+# Get either the current position or the current runway end, depending on whether the plane is moving.(logitude and latitude) and stick it in the designated location. --getCurrentPosition=Category,variable[,instanceName] . instanceName defaults to "default"
+parameters {"Category":"Local","variable":"behinPosition","instanceName":"default"}
+
+haveWaypoints Local,haveWaypoints,~!Local,instanceName!~
+
+
+if ~!Local,haveWaypoints!~,==,waypoints,
+    debug 1,We have waypoints. So using the last one for the point of origin.
+    # This information is provided by listWaypoints
+    setNested ~!Local,Category!~,~!Local,variable!~,longitude,~!AP,state,~!Local,instanceName!~,lastWaypoint,longitude!~
+    setNested ~!Local,Category!~,~!Local,variable!~,latitude,~!AP,state,~!Local,instanceName!~,lastWaypoint,latitude!~
+else
+    isFlying Local,vehicleState,~!Local,instanceName!~
+
+    if ~!Local,vehicleState!~,==,air,
+        debug 1,We are in the air. Using the current location for the point of origin.
+        getCurrentPosition ~!Local,Category!~,~!Local,variable!~
+    else
+        debug 1,We are on the ground. Using the end of the current runway for the point of origin.
+        whereAmI ~!Local,instanceName!~
+        setNested ~!Local,Category!~,~!Local,variable!~,longitude,~!AP,state,~!Local,instanceName!~,closestRunway,longitudeEnd!~
+        setNested ~!Local,Category!~,~!Local,variable!~,latitude,~!AP,state,~!Local,instanceName!~,closestRunway,latitudeEnd!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

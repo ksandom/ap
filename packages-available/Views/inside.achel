@@ -1,0 +1,5 @@
+# Use the inside view. --inside=instanceName ~ views
+
+parameters {"instanceName":"default"}
+
+setView ~!Local,instanceName!~,inside

@@ -1,0 +1,12 @@
+# Check if we are on the ground. --flare=instanceName ~ ap,dynamic
+
+parameters {"instanceName":"default"}
+
+getAPVar ~!Local,instanceName!~,on-ground,Local,onGround
+
+if ~!Local,onGround!~,==,true,
+    unregisterForEvent Timer,getOrientation,deliver,clientSocket,~!Local,instanceName!~,ls /gear
+    unregisterForEvent Timer,getOrientation,checkOnGround,~!Local,instanceName!~
+
+    stop ~!Local,instanceName!~
+

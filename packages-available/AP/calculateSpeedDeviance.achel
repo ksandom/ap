@@ -1,0 +1,5 @@
+# Calculate how far off we are from our desired speed. ~ AP,calculateStuff
+parameters {"instanceName":"default"}
+
+basicMaths Local,altitudeDifference,~!AP,state,~!Local,instanceName!~,airspeed-goal!~,-,~!AP,state,~!Local,instanceName!~,airspeed-kt!~
+setNested AP,state,~!Local,instanceName!~,airspeed-deviance,~!Local,altitudeDifference!~

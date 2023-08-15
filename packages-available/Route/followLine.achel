@@ -1,0 +1,8 @@
+# Start following a line. --followLine=instanceName,startLon,startLat,endLon,endLat
+
+parameters instanceName,startLon,startLat,endLon,endLat
+
+setNamedPosition ~!Local,instanceName!~,line,start,~!Local,startLon!~,~!Local,startLat!~
+setNamedPosition ~!Local,instanceName!~,line,end,~!Local,endLon!~,~!Local,endLat!~
+2CoordsToAngle Local,angle,~!Local,startLon!~,~!Local,startLat!~,~!Local,endLon!~,~!Local,endLat!~
+setAPVarWithContext ~!Local,instanceName!~,line,angle,~!Local,angle!~

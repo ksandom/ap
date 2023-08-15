@@ -1,0 +1,83 @@
+# Combine the arc heading and distance together to make sensible decisions. --combineDistanceAndHeading=instance,Category,variable,distance,heading ~ arc,route
+
+parameters {"instanceName":"default","Category":"Local","variable":"arcHeadingOffset","type":"line","distanceOffset":"0","headingOffset":"0"}
+
+# Tunables.
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,distanceMultiplier,Local,distanceMultiplier
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,headingMultiplier,Local,headingMultiplier
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,headingManualOffset,Local,headingManualOffset
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,max,Local,max
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,percentDistance,Local,percentDistance
+
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,rawDistanceLowTrigger,Local,rawDistanceLowTrigger
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,rawDistanceHighTrigger,Local,rawDistanceHighTrigger
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,sensitivityIncMultiplier,Local,sensitivityIncMultiplier
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,sensitivityDecMultiplier,Local,sensitivityDecMultiplier
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,sensitivityMax,Local,sensitivityMax
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,sensitivityMin,Local,sensitivityMin
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,sensitivitySeed,Local,sensitivitySeed
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~,interval,Local,interval
+
+
+# Get set up on the first run.
+microNow Local,now
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~Sensitivity,lastTune,Local,lastTune
+getAPVarWithContext ~!Local,instanceName!~,~!Local,type!~Sensitivity,sensitivity,Local,sensitivity
+if ~!Local,sensitivity!~,==,,
+    setAPVarWithContext ~!Local,instanceName!~,~!Local,type!~Sensitivity,sensitivity,~!Local,sensitivitySeed!~
+    set Local,sensitivity,~!Local,sensitivitySeed!~
+    set Local,lastTune,~!Local,now!~
+
+# Tune the sensitivity
+absolute Local,absDistanceOffset,~!Local,distanceOffset!~
+basicMaths Local,timeSinceLastTune,~!Local,now!~,-,~!Local,lastTune!~
+if ~!Local,timeSinceLastTune!~,>,~!Local,interval!~,
+    setAPVarWithContext ~!Local,instanceName!~,~!Local,type!~Sensitivity,lastTune,~!Local,now!~
+
+    if ~!Local,absDistanceOffset!~,<,~!Local,rawDistanceLowTrigger!~,
+        basicMaths Local,sensitivity,~!Local,sensitivity!~,*,~!Local,sensitivityDecMultiplier!~
+        debug 2,Sensititivy decrease: ~!Local,sensitivity!~
+    elseIf ~!Local,absDistanceOffset!~,>,~!Local,rawDistanceHighTrigger!~,
+        basicMaths Local,sensitivity,~!Local,sensitivity!~,*,~!Local,sensitivityIncMultiplier!~
+        debug 2,Sensititivy increase: ~!Local,sensitivity!~
+    else
+        debug 2,No change in sensititivy: ~!Local,sensitivity!~
+
+assertWithinRange Local,sensitivity,~!Local,sensitivityMax!~,~!Local,sensitivity!~,~!Local,sensitivityMin!~
+setAPVarWithContext ~!Local,instanceName!~,~!Local,type!~Sensitivity,sensitivity,~!Local,sensitivity!~
+# TODO Apply sensitivity.
+
+
+# Apply multipliers and offsets.
+basicMaths Local,scaledDistanceOffset,~!Local,distanceOffset!~,*,~!Local,distanceMultiplier!~
+basicMaths Local,scaledHeadingOffset,~!Local,headingOffset!~,+,~!Local,headingManualOffset!~
+basicMaths Local,scaledHeadingOffset,~!Local,scaledHeadingOffset!~,*,~!Local,headingMultiplier!~
+
+# Assert the max range.
+basicMaths Local,maxInMeters,~!Local,max!~,*,1000
+assertWithinRange Local,scaledDistanceOffset,~!Local,maxInMeters!~,~!Local,scaledDistanceOffset!~
+assertWithinRange Local,scaledHeadingOffset,~!Local,max!~,~!Local,scaledHeadingOffset!~
+
+# Determine percentages.
+# Distance | 0                                    max |
+#          | All heading                 All distance |
+# basicMaths Local,percentDistance,~!Local,scaledDistanceOffset!~,/,~!Local,max!~
+absolute Local,percentDistance,~!Local,percentDistance!~
+basicMaths Local,percentHeading,1,-,~!Local,percentDistance!~
+
+# Apply percentages.
+basicMaths Local,applyDistance,~!Local,scaledDistanceOffset!~,*,~!Local,percentDistance!~
+basicMaths Local,applyHeading,~!Local,scaledHeadingOffset!~,*,~!Local,percentHeading!~
+
+# Combine.
+basicMaths Local,combined,~!Local,applyDistance!~,+,~!Local,applyHeading!~
+assertWithinRange Local,restrained,~!Local,max!~,~!Local,combined!~
+basicMaths Local,scaled,~!Local,restrained!~,*,~!Local,sensitivity!~
+set ~!Local,Category!~,~!Local,variable!~,~!Local,scaled!~
+
+# (~!Local,now!~,-,~!Local,lastTune!~==>~!Local,timeSinceLastTune!~,>,~!Local,interval!~)
+
+debug 2,Detailed: dO=~!Local,scaledDistanceOffset!~(~!Local,distanceOffset!~) hO=~!Local,scaledHeadingOffset!~(~!Local,headingOffset!~) d%=~!Local,percentDistance!~ h%=~!Local,percentHeading!~ dA=~!Local,applyDistance!~ hA=~!Local,applyHeading!~ s=~!Local,sensitivity!~   v=~!Local,combined!~ , ~!Local,restrained!~ , ~!Local,scaled!~
+debug 2,dO=~!Local,distanceOffset!~ hO=~!Local,headingOffset!~ d%=~!Local,percentDistance!~ h%=~!Local,percentHeading!~ dA=~!Local,applyDistance!~ hA=~!Local,applyHeading!~ s=~!Local,sensitivity!~   v=~!Local,combined!~ , ~!Local,restrained!~ , ~!Local,scaled!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

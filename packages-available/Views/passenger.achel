@@ -1,0 +1,5 @@
+# Use the passenger view. --passenger=instanceName ~ views
+
+parameters {"instanceName":"default"}
+
+setView ~!Local,instanceName!~,passenger

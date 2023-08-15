@@ -1,0 +1,36 @@
+# Calculate arc entry point. (currentPosition, pivotPosition, radius) ~ route,hidden
+parameters Category,value,radius,currentLongitude,currentLatitude,pivotLongitude,pivotLatitude
+
+debug 1,arcEntry: ~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
+
+# Figure out the hypotenuse of the triangle of us, pivot, and intended arc meeting point.
+2CoordsToDistance Local,approachHypotenuse,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
+degreesToKM Local,approachHypotenuse,~!Local,approachHypotenuse!~
+
+# Calculate the angle between the vector to the pivot, and the vector to meet with the arc.
+rightTriangleGetAngleFromOppositeAndHypotenuse Local,arcEntryRawAngle,~!Local,radius!~,~!Local,approachHypotenuse!~
+debug 0,rightTriangleGetAngleFromOppositeAndHypotenuse: ~!Local,arcEntryRawAngle!~=~!Local,radius!~,~!Local,approachHypotenuse!~
+
+radiansToDegrees Local,arcEntryRawAngleInDegrees,~!Local,arcEntryRawAngle!~
+debug 0,radiansToDegrees ~!Local,arcEntryRawAngleInDegrees!~,~!Local,arcEntryRawAngle!~
+
+# Calculate our angle from north to the pivot.
+# TODO At the moment the right-angle is at the pivot. But if we do it at the Arc-entry, it will match the origin much better.
+2CoordsToAngle Local,approachPivotAngle,~!Local,currentLongitude!~,~!Local,currentLatitude!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
+radiansToDegrees Local,approachPivotAngleInDegrees,~!Local,approachPivotAngle!~
+
+# Calculate our angle from north to meet with the arc.
+# basicMaths Local,approachAngle,~!Local,approachPivotAngleInDegrees!~,-,~!Local,arcEntryRawAngleInDegrees!~
+rotateAngleInDegrees Local,entryAngleInDegrees,~!Local,approachPivotAngleInDegrees!~,270
+degreesToRadians Local,entryAngle,~!Local,entryAngleInDegrees!~
+debug 1,a=~!Local,approachPivotAngle!~ ad=~!Local,approachPivotAngleInDegrees!~ rotated=~!Local,entryAngle!~
+
+# Calcuate how far away the arc entry point is from the current position.
+# TODO Is this needed?
+abcSquared Local,approachDistance,~!Local,approachHypotenuse!~,~!Local,radius!~
+
+# Calculate final position.
+calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,entryAngleInDegrees!~,~!Local,radius!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
+debug 0,calculateNewPosition ~!Local,Category!~,~!Local,value!~,~!Local,entryAngleInDegrees!~,~!Local,radius!~,~!Local,pivotLongitude!~,~!Local,pivotLatitude!~
+
+makeAvailable ~!Local,Category!~,~!Local,value!~

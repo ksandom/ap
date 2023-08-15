@@ -1,0 +1,8 @@
+# Get a named position within an AP instance to a specified variable. Useful when referring to several locations. Eg for figuring out waypoints. --getNamedPosition=instanceName,context,name,Category,variable ~ AP,position
+
+parameters instanceName,context,name,Category,variable
+
+setNested ~!Local,Category!~,~!Local,variable!~,lon,~!AP,state,~!Local,instanceName!~,~!Local,context!~,~!Local,name!~,lon!~
+setNested ~!Local,Category!~,~!Local,variable!~,lat,~!AP,state,~!Local,instanceName!~,~!Local,context!~,~!Local,name!~,lat!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

@@ -1,0 +1,6 @@
+# Get a variable within the AP state of the specified instance, and context. --getAPVarWithContext=instanceName,context,varName,Category,variable ~ AP,state
+parameters instanceName,context,varName,Category,variable
+
+set ~!Local,Category!~,~!Local,variable!~,~!AP,state,~!Local,instanceName!~,~!Local,context!~,~!Local,varName!~!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

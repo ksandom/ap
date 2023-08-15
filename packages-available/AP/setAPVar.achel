@@ -1,0 +1,4 @@
+# Set a variable within the AP state of the specified instance. --setAPVar=instanceName,varName,value ~ AP,state
+parameters instanceName,varName,value
+
+setNested AP,state,~!Local,instanceName!~,~!Local,varName!~,~!Local,value!~

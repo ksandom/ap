@@ -1,0 +1,13 @@
+# Set up an AP instance to follow an arc. --arcEntry=instanceName ~ arc,route
+#onDefine registerOnceForEvent Arc,entry,arcEntry
+parameters {"instanceName":"default"}
+
+debug 0,Entering arc turn for ~!Local,instanceName!~.
+# TODO Move the timer creation to a more sensible location. Or optimise it so an empty timer doesn't use CPU.
+createTimer arc,500
+registerOnceForEvent Timer,arc,calculateArcState,~!Local,instanceName!~
+setNested AP,state,~!Local,instanceName!~,arc,radius-desired,~!AP,state,~!Local,instanceName!~,cruiseTurningRadiusKM!~
+setNested AP,state,~!Local,instanceName!~,arc,zero,0
+setAPState followArcSustain,~!Local,instanceName!~
+
+setAPVar ~!Local,instanceName!~,trackingType,arc

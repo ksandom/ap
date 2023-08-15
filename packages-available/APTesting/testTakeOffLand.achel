@@ -1,0 +1,11 @@
+# Test takeOff and land. ~ testing
+#onDefine aliasFeature testTakeOffLand,ttl
+
+debug 0,TTL: record.
+record
+
+debug 0,TTL: takeOff.
+takeOff
+
+debug 0,TTL: landAt.
+landAt

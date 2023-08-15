@@ -1,0 +1,5 @@
+# Stop periodically wrighting the history to KML. --unPeriodicHistoryToKML=instanceName
+parameters instanceName
+
+debug 1,Starting tracking of the position of ~!Local,instanceName!~
+unregisterForEvent Timer,history,~!Navigator,historyHandeler!~,~!Local,instanceName!~

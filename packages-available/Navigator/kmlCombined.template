@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Route/waypoints</name>
+    <description>Waypoints/route for ~!Local,instanceName!~.</description>
+    <Style id="history">
+      <LineStyle>
+        <color>7f00ffff</color>
+        <width>4</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>7f00ff00</color>
+      </PolyStyle>
+    </Style>
+    <Style id="plannedWaypoints">
+      <LineStyle>
+        <color>7f7fffff</color>
+        <width>4</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>7f7fff00</color>
+      </PolyStyle>
+    </Style>
+    <Style id="passedWaypoints">
+      <LineStyle>
+        <color>7fff22ff</color>
+        <width>4</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>7f00ff00</color>
+      </PolyStyle>
+    </Style>
+    <Style id="currentLine">
+      <LineStyle>
+        <color>6f22ff22</color>
+        <width>4</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>4f008800</color>
+      </PolyStyle>
+    </Style>
+    <Placemark>
+      <name>Current waypoint line</name>
+      <description>Current waypoint pair for ~!Local,instanceName!~.</description>
+      <styleUrl>#currentLine</styleUrl>
+      <LineString>
+        <extrude>1</extrude>
+        <tessellate>1</tessellate>
+        <altitudeMode>absolute</altitudeMode>
+        <coordinates>
+          ~!Navigator,origins,~!Local,instanceName!~,longitude!~,~!Navigator,origins,~!Local,instanceName!~,latitude!~,500
+          ~!AP,state,~!Local,instanceName!~,destination,longitude!~,~!AP,state,~!Local,instanceName!~,destination,latitude!~,500
+        </coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>Actual route</name>
+      <description>Actual route for ~!Local,instanceName!~.</description>
+      <styleUrl>#history</styleUrl>
+      <LineString>
+        <extrude>1</extrude>
+        <tessellate>1</tessellate>
+        <altitudeMode>absolute</altitudeMode>
+        <coordinates>
+<~ macro history:
+getHistory ~!Local,instanceName!~,history
+~~          ~%longitude%~,~%latitude%~,~%altitude%~
+
+~>        </coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>Planned waypoints</name>
+      <description>Planned waypoints for ~!Local,instanceName!~.</description>
+      <styleUrl>#plannedWaypoints</styleUrl>
+      <LineString>
+        <extrude>1</extrude>
+        <tessellate>1</tessellate>
+        <altitudeMode>absolute</altitudeMode>
+        <coordinates>
+<~ macro originalWaypoints:
+getHistory ~!Local,instanceName!~,originalWaypoints
+~~          ~%longitude%~,~%latitude%~,~%altitude%~
+
+~>        </coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>Passed waypoints</name>
+      <description>Passed waypoints for ~!Local,instanceName!~.</description>
+      <styleUrl>#passedWaypoints</styleUrl>
+      <LineString>
+        <extrude>1</extrude>
+        <tessellate>1</tessellate>
+        <altitudeMode>absolute</altitudeMode>
+        <coordinates>
+<~ macro passedWaypoints:
+getHistory ~!Local,instanceName!~,passedWaypoints
+~~          ~%longitude%~,~%latitude%~,~%altitude%~
+
+~>        </coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>currentLocation- ~!Local,instanceName!~</name>
+      <Point>
+        <coordinates>~!AP,state,~!Local,instanceName!~,longitude-deg!~,~!AP,state,~!Local,instanceName!~,latitude-deg!~,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>aim- ~!Local,instanceName!~</name>
+      <Point>
+        <coordinates>~!AP,state,~!Local,instanceName!~,track,aimLon!~,~!AP,state,~!Local,instanceName!~,track,aimLat!~,0</coordinates>
+      </Point>
+    </Placemark>
+<~ macro originalWaypoints:
+getHistory ~!Local,instanceName!~,interestPoints
+~~    <Placemark>
+      <name>~%description%~</name>
+      <Point>
+        <coordinates>~%longitude%~,~%latitude%~,0</coordinates>
+      </Point>
+    </Placemark>
+
+~>  </Document>
+</kml>

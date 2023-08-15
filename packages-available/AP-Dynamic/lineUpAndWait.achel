@@ -1,0 +1,5 @@
+# Line up the aircraft on the runway. This assumes the route from the runway has been planned. ~ AP,dynamic
+
+setAPState lineUpAndWait,~!Local,instanceName!~
+setNested ["AP","state","~!Local,instanceName!~","groundspeed-goal","10"]
+

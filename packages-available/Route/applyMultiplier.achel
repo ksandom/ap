@@ -1,0 +1,6 @@
+# Apply a multiplier to a value.. --applyMultiplier=Category,variable,multiplier,value ~ data
+
+parameters Category,variable,multiplier,value
+
+basicMaths ~!Local,Category!~,~!Local,variable!~,~!Local,value!~,*,~!Local,multiplier!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

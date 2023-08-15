@@ -1,0 +1,22 @@
+# Calculate a position from an angle and a distance. --calculateNewPosition=Category,value,angle,distance,fromLongitude,fromLatitude ~ route
+
+parameters {"Category":"Tmp", "value":"newPosition", "angleInDegrees":"90", "distanceInKM":"10" ,"fromLongitude":"", "fromLatitude":""}
+
+# Calculate the offset for the waypoint.
+degreesToRadians Local,angle,~!Local,angleInDegrees!~
+KMToDegrees Local,distanceInDegrees,~!Local,distanceInKM!~
+angleAndDistanceToCoord Local,offsets,~!Local,angle!~,~!Local,distanceInDegrees!~
+
+
+# Apply the offset.
+basicMaths Local,newPosition-longitude,~!Local,fromLongitude!~,+,~!Local,offsets,x!~
+basicMaths Local,newPosition-latitude,~!Local,fromLatitude!~,+,~!Local,offsets,y!~
+
+
+# Add the coordinates.
+setNested ~!Local,Category!~,~!Local,value!~,longitude,~!Local,newPosition-longitude!~
+setNested ~!Local,Category!~,~!Local,value!~,latitude,~!Local,newPosition-latitude!~
+
+debug 1,newPositon: ~!Local,Category!~,~!Local,value!~: angle=~!Local,angle!~ (~!Local,angleInDegrees!~) distance=~!Local,distanceInDegrees!~ (~!Local,distanceInKM!~) from=~!Local,fromLongitude!~,~!Local,fromLatitude!~ offsets=~!Local,offsets!~ newPosition=~!~!Local,Category!~,~!Local,value!~!~
+
+makeAvailable ~!Local,Category!~,~!Local,value!~

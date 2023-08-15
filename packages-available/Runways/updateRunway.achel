@@ -1,0 +1,33 @@
+# Update the start point of the closest runway, and the end of it's counterpart to the current position. This is useful for correcting imprecise measurements in runway data. --updateRunway=instanceName  ~ runways,update
+parameters instanceName
+
+# TODO Do this properly.
+if ~!Local,instanceName!~,==,,
+	set Local,instanceName,default
+
+whereAmI ~!Local,instanceName!~
+loop
+	copyCategory Result,RunwayTmp
+
+loop
+	set Local,longitude,~!AP,state,~!Local,instanceName!~,longitude-deg!~
+	set Local,latitude,~!AP,state,~!Local,instanceName!~,latitude-deg!~
+	
+	if ~!Runways,runways,~!RunwayTmp,myKey!~,airport!~,!=,,
+		# We have data, let's update it.
+		debug 1,Updating ~!RunwayTmp,myKey!~
+		setNested Runways,runways,~!RunwayTmp,myKey!~,longitudeBegin,~!Local,longitude!~
+		setNested Runways,runways,~!RunwayTmp,myKey!~,latitudeBegin,~!Local,latitude!~
+	else
+		debug 1,Failed to update ~!RunwayTmp,myKey!~
+
+	if ~!Runways,runways,~!RunwayTmp,myKeyCounterPart!~,airport!~,!=,,
+		# We have data, let's update it.
+		debug 1,Updating ~!RunwayTmp,myKeyCounterPart!~
+		setNested Runways,runways,~!RunwayTmp,myKeyCounterPart!~,longitudeEnd,~!Local,longitude!~
+		setNested Runways,runways,~!RunwayTmp,myKeyCounterPart!~,latitudeEnd,~!Local,latitude!~
+	else
+		debug 1,Failed to update counterpart ~!RunwayTmp,myKeyCounterPart!~
+
+whereAmI ~!Local,instanceName!~
+unsetCategory RunwayTmp

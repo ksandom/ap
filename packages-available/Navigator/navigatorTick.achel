@@ -5,9 +5,21 @@ isolate
 	loop
 		if ~!Result,key!~,!=,0,
 			set Navigator,instanceName,~!Result,key!~
-			if ~!Navigator,origins,~!Navigator,instanceName!~,longitude!~,==,,
-				setOrigin ~!Navigator,instanceName!~,~!AP,state,~!Navigator,instanceName!~,longitude-deg!~,~!AP,state,~!Navigator,instanceName!~,latitude-deg!~
-			
-			isolate processWayPoints,~!Navigator,instanceName!~
-			if ~!Navigator,instanceName!~,!=,,
-				calculateDeviance ~!Navigator,instanceName!~
+
+			locationHasChanged Local,changed,~!Navigator,instanceName!~
+			if ~!Local,changed!~,==,changed,
+
+				if ~!Navigator,origins,~!Navigator,instanceName!~,longitude!~,==,,
+					setOrigin ~!Navigator,instanceName!~,~!AP,state,~!Navigator,instanceName!~,longitude-deg!~,~!AP,state,~!Navigator,instanceName!~,latitude-deg!~
+
+				isolate
+					processWayPoints ~!Navigator,instanceName!~
+
+				if ~!Navigator,instanceName!~,!=,,
+					calculateDeviance ~!Navigator,instanceName!~
+
+					getAPVar ~!Navigator,instanceName!~,trackingType,Local,trackingType
+					if ~!Local,trackingType!~,!=,arc,
+						calculateLineState ~!Navigator,instanceName!~
+
+				triggerEvent Navegator,ticked,~!Navigator,instanceName!~

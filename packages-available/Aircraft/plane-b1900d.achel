@@ -1,12 +1,50 @@
-# Set settings for a b1990d ~ AP,rules,plane,aircraft
+# Set settings for a b1990d ~ AP,rules,plane,aircraft,planeConfig
 #onDefine aliasFeature plane-b1900d,1900
+parameters {"instanceName":"default"}
+
+plane-base ~!Local,instanceName!~
 
 # NOTE v1 is currently just a dummy number, but to be correct should be calculated based on aircraft specs, loading, conditions and runway length.
-setNested ["AP","state","default","type","plane"]
-setNested ["AP","state","default","v1","80"]
-setNested ["AP","state","default","v2","120"]
-setNested ["AP","state","default","vCruise","140"]
-setNested ["AP","state","default","safeAltitude","2000"]
-setNested ["AP","state","default","cruiseAltitude","17000"]
+massSet ["AP,state,~!Local,instanceName!~"],
+    # Speeds.
+    setNested ~!Me,stuff!~,v1,80
+    setNested ~!Me,stuff!~,v2,120
+    setNested ~!Me,stuff!~,vCruise,260
+    setNested ~!Me,stuff!~,vLand,85
 
-registerForEvent Timer,piggyBack,throttlePiggyBack,1,default
+    # Altitudes.
+    setNested ~!Me,stuff!~,safeAltitude,4000
+    setNested ~!Me,stuff!~,altitudeOffsetAtSealevel,1500
+    setNested ~!Me,stuff!~,altitudeOffsetLanding,0
+    setNested ~!Me,stuff!~,cruiseAltitude,17000
+    setNested ~!Me,stuff!~,cruiseAltitude,10000
+
+    # Thrust.
+    setNested ~!Me,stuff!~,takeOffThrust,1
+    setNested ~!Me,stuff!~,climbThrust,0.9
+
+    # Manoeuvrability.
+    setNested ~!Me,stuff!~,cruiseTurningRadiusKM,6
+    setNested ~!Me,stuff!~,extendApproachKM,1
+    setNested ~!Me,stuff!~,takeOffPitchGoal,35
+
+massSet ["AP,state,~!Local,instanceName!~,trailerTakeOff"],
+    setNested ~!Me,stuff!~,maxBarLength,4000
+    setNested ~!Me,stuff!~,strengthTrailer,3
+    setNested ~!Me,stuff!~,strengthOvershoot,0.01
+    setNested ~!Me,stuff!~,strengthFomo,0.1
+    setNested ~!Me,stuff!~,strengthNudge,0.05
+
+massSet ["AP,state,~!Local,instanceName!~,trailerCruiseFindLine"],
+    setNested ~!Me,stuff!~,strengthTrailer,0
+
+registerOnceForEvent Timer,piggyBack,throttlePiggyBack,~!Local,instanceName!~
+
+# Reload the rules now that we have the full configuration.
+APRules-base ~!Local,instanceName!~
+
+# tuneSpecific ~!Local,instanceName!~,takeOffAccelerate,yaw,-1,output,1
+tuneSpecific ~!Local,instanceName!~,takeOffClimb,yaw,0.3,output,1
+tuneSpecific ~!Local,instanceName!~,sustain,yaw,0.2,output,1
+tune ~!Local,instanceName!~,yaw,0.3,input,1
+tune ~!Local,instanceName!~,yaw,-1,output,1

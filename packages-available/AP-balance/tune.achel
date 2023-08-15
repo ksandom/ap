@@ -1,0 +1,11 @@
+# Tune an axis across all states for a given instance. This works by multiplying the existing multiplier by the multiplier provided. Eg if the existing multiplier is -0.8, and you specify 0.5 here, you'd get -0.4. --tune=instanceName,axis,multiplier,direction,debugLevel defaults: default,yaw,1,output,-1(off) ~ balance,tune
+
+parameters {"instanceName":"default","axis":"yaw","multiplier":"1","direction":"output","debug":"-1"}
+
+debug 1,Tune ~!Local,axis!~ in all ~!Color,green!~~!Local,direction!~~!Color,default!~ states for ~!Local,instanceName!~ by ~!Local,multiplier!~.
+isolate
+    retrieveResults AP,stateRules,~!Local,instanceName!~
+    loop
+        tuneSpecific ~!Local,instanceName!~,~!Result,key!~,~!Local,axis!~,~!Local,multiplier!~,~!Local,direction!~,~!Local,debug!~
+
+    clearResultset
